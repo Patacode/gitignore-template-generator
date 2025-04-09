@@ -1,7 +1,25 @@
 {
-    "cSpell.words": [
-        "Patacode",
-        "toptal",
-        "ureq"
-    ]
+  "cSpell.words": [
+    "CACHEDIR",
+    "clippy",
+    "cmax",
+    "cmin",
+    "Codegineer",
+    "dfixed",
+    "dmax",
+    "dmin",
+    "dryrun",
+    "dtolnay",
+    "Dwarnings",
+    "geekyeggo",
+    "impls",
+    "MSVC",
+    "Patacode",
+    "rustc",
+    "RUSTFLAGS",
+    "ureq"
+  ],
+  "editor.rulers": [
+    80
+  ]
 }
