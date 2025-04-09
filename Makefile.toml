@@ -1,0 +1,6 @@
+[tasks.dev]
+script = [
+    "cargo install cargo-tarpaulin",
+    "cargo install cargo-release",
+    "cargo build",
+]
