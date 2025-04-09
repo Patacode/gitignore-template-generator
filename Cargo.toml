@@ -12,6 +12,10 @@ include = ["src/**", "Cargo.toml", "README.md", "LICENSE-**", "CHANGELOG.md"]
 [dependencies]
 ureq = "3.0.10"
 
+[dev-dependencies]
+criterion = { version = "0.5.1", features = ["html_reports"] }
+test_bin = "0.4.0"
+
 [package.metadata.release]
 pre-release-commit-message = "chore: prepare for release v{{version}}"
 tag-message = "Release {{crate_name}} version {{version}}"
