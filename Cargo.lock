@@ -237,7 +237,7 @@ dependencies = [
 
 [[package]]
 name = "gitignore-template-generator"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "criterion",
  "test_bin",

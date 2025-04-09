@@ -9,6 +9,8 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+## [0.1.0] - 2025-04-09 <a id="0.1.0"></a>
+
 ### Added
 
 - First binary crate release
