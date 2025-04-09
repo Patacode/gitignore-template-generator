@@ -18,7 +18,7 @@ cargo install gitignore-template-generator
 
 Examples:
 
-*Template for rust project:*
+*Generate a basic gitignore template for rust project:*
 
 ```
 $ gitignore-template-generator rust
