@@ -1,0 +1,13 @@
+[package]
+name = "gitignore-template-generator"
+version = "0.0.0"
+edition = "2024"
+description = "Generate templates for .gitignore files"
+authors = ["Patacode <pata.codegineer@gmail.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Patacode/gitignore-template-generator"
+documentation = "https://docs.rs/crate/gitignore-template-generator"
+include = ["src/**", "Cargo.toml", "README.md", "LICENSE-**", "CHANGELOG.md"]
+
+[dependencies]
+ureq = "3.0.10"
