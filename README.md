@@ -22,7 +22,7 @@ Available options:
 $ gitignore-template-generator --help
 Usage: gitignore-template-generator [OPTIONS] <TEMPLATE_NAMES>...
 
-A binary crate to generate templates for .gitignore files
+Generate templates for .gitignore files
 
 Arguments:
   <TEMPLATE_NAMES>...  A non-empty list of existing gitignore template names
