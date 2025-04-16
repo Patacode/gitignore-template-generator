@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+### Changed
+
+- Usage example in README include output redirection to file
+
 ## [0.2.1] - 2025-04-16 <a id="0.2.1"></a>
 
 ### Added
