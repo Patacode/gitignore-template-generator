@@ -13,6 +13,14 @@ include = ["src/**", "Cargo.toml", "README.md", "LICENSE-**", "CHANGELOG.md"]
 
 [dependencies]
 ureq = "3.0.10"
+clap = { version = "4.5.32", default-features = false, features = [
+  "std",
+  "help",
+  "color",
+  "error-context",
+  "derive",
+  "usage",
+] }
 
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }
