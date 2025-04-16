@@ -19,6 +19,7 @@ and this project adheres to
 - Each CLI template arg must be given as a separate value, so ',' char is now
 prohibited from provided values
 - Split of functionalities in separate modules, following facade pattern
+- Description of binary crate in README file, github repo and Cargo.toml
 
 ## [0.1.0] - 2025-04-09 <a id="0.1.0"></a>
 
