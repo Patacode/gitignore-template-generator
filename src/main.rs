@@ -1,6 +1,7 @@
+use clap::CommandFactory;
 use clap::Parser;
 
-use std::{env, process::exit};
+use std::process::exit;
 
 #[derive(Parser, Debug)]
 #[command(version, author, long_about = None)]
@@ -16,6 +17,13 @@ Version: {version}
 Author: {author}
 ")]
 struct Args {
+    #[arg(
+        required = true,
+        value_parser = validate_no_commas,
+        help = "A non-empty list of existing gitignore template names"
+    )]
+    template_names: Vec<String>,
+
     #[arg(
         short = 'a',
         long = "author",
@@ -43,22 +51,28 @@ fn get_call_to_gitignore_template_service(values: &String) -> String {
         })
 }
 
-fn parse_vec_to_comma_separated_list(values: &[String]) -> String {
-    values.join(",")
+fn validate_no_commas(template_name: &str) -> Result<String, String> {
+    if template_name.contains(',') {
+        Err(String::from("Commas are not allowed in file names."))
+    } else {
+        Ok(template_name.to_string())
+    }
 }
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let args = Args::parse();
 
-    if args.len() < 2 {
-        eprintln!(
-            "You must give at least 1 CLI arg but you gave {}",
-            args.len() - 1
-        );
-        exit(1);
+    if args.show_author {
+        let cmd = Args::command();
+        if let Some(author) = cmd.get_author() {
+            println!("{author}");
+        } else {
+            println!("Author information not available.");
+        }
+        return;
     }
 
-    let args = parse_vec_to_comma_separated_list(&args[1..]);
+    let args = args.template_names.join(",");
     let body = get_call_to_gitignore_template_service(&args);
 
     print!("{body}");
