@@ -12,6 +12,8 @@ and this project adheres to
 ### Added
 
 - Custom gitignore templates can be provided
+- Unit and integration tests
+- Benchmarking
 
 ### Changed
 
