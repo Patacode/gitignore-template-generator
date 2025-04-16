@@ -16,9 +16,29 @@ cargo install gitignore-template-generator
 
 ## Usage
 
+Available options:
+
+```
+$ gitignore-template-generator --help
+Usage: gitignore-template-generator [OPTIONS] <TEMPLATE_NAMES>...
+
+A binary crate to generate templates for .gitignore files
+
+Arguments:
+  <TEMPLATE_NAMES>...  A non-empty list of existing gitignore template names
+
+Options:
+  -a, --author   Print author
+  -h, --help     Print help
+  -V, --version  Print version
+
+Version: 0.1.0
+Author: Patacode <pata.codegineer@gmail.com>
+```
+
 Examples:
 
-*Generate a basic gitignore template for rust project:*
+*Generate a gitignore template for simple rust projects:*
 
 ```
 $ gitignore-template-generator rust
@@ -50,6 +70,29 @@ Install `cargo-make`, dev tools and build the package:
 
 ```bash
 ./bootstrap.sh
+```
+
+Run the tests:
+
+```bash
+cargo test # unit + integration tests
+cargo test --lib # unit tests
+cargo test --test integration_tests # integration tests
+```
+
+Generate code coverage report in HTML format under `target/tarpaulin`:
+
+```bash
+cargo tarpaulin \
+  --out Html \
+  --exclude-files src/lib.rs src/main.rs benches/* tests/* \
+  --output-dir target/tarpaulin
+```
+
+Benchmark binary and library crates:
+
+```bash
+cargo bench
 ```
 
 ## License
