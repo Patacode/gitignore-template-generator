@@ -6,7 +6,7 @@ use gitignore_template_generator::validator::validate_no_commas;
 
 #[derive(Parser, Debug)]
 #[command(version, author, long_about = None)]
-#[command(about = "A binary crate to generate templates for .gitignore files")]
+#[command(about = "Generate templates for .gitignore files")]
 #[command(help_template = "\
 {before-help}
 {usage-heading} {usage}
