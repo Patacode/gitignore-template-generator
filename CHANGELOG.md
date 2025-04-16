@@ -9,6 +9,15 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+### Added
+
+- keywords and categories in Cargo.toml for better searchability using
+crates.io search bar
+
+### Changed
+
+- About message displayed in help message
+
 ## [0.2.0] - 2025-04-16 <a id="0.2.0"></a>
 
 ### Changed
