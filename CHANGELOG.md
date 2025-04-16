@@ -9,10 +9,6 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-### Added
-
-- proper suite of unit tests
-
 ### Changed
 
 - clap library to implement a more robust CLI args handling
@@ -20,6 +16,7 @@ and this project adheres to
 prohibited from provided values
 - Split of functionalities in separate modules, following facade pattern
 - Description of binary crate in README file, github repo and Cargo.toml
+- Enhanced usage section in README
 
 ## [0.1.0] - 2025-04-09 <a id="0.1.0"></a>
 
