@@ -7,8 +7,13 @@ authors = ["Patacode <pata.codegineer@gmail.com>"]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Patacode/gitignore-template-generator"
 documentation = "https://docs.rs/crate/gitignore-template-generator"
-keywords = []
-categories = []
+keywords = ["git", "gitignore", "template", "project", "toptal"]
+categories = [
+  "command-line-utilities",
+  "api-bindings",
+  "config",
+  "development-tools",
+]
 include = ["src/**", "Cargo.toml", "README.md", "LICENSE-**", "CHANGELOG.md"]
 
 [dependencies]
