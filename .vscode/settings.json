@@ -17,6 +17,7 @@
     "Patacode",
     "rustc",
     "RUSTFLAGS",
+    "toptal",
     "ureq"
   ],
   "editor.rulers": [
