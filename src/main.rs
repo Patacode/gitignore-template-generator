@@ -1,4 +1,29 @@
+use clap::Parser;
+
 use std::{env, process::exit};
+
+#[derive(Parser, Debug)]
+#[command(version, author, long_about = None)]
+#[command(about = "A binary crate to generate templates for .gitignore files")]
+#[command(help_template = "\
+{before-help}
+{usage-heading} {usage}
+
+{about-with-newline}
+{all-args}{after-help}
+
+Version: {version}
+Author: {author}
+")]
+struct Args {
+    #[arg(
+        short = 'a',
+        long = "author",
+        action = clap::ArgAction::SetTrue,
+        help = "Print author"
+    )]
+    show_author: bool,
+}
 
 fn get_call_to_gitignore_template_service(values: &String) -> String {
     let url =
