@@ -1,7 +1,8 @@
 use clap::CommandFactory;
 use clap::Parser;
 
-use std::process::exit;
+use gitignore_template_generator::get_call_to_gitignore_template_service;
+use gitignore_template_generator::validator::validate_no_commas;
 
 #[derive(Parser, Debug)]
 #[command(version, author, long_about = None)]
@@ -31,32 +32,6 @@ struct Args {
         help = "Print author"
     )]
     show_author: bool,
-}
-
-fn get_call_to_gitignore_template_service(values: &String) -> String {
-    let url =
-        format!("https://www.toptal.com/developers/gitignore/api/{values}");
-
-    ureq::get(url)
-        .call()
-        .unwrap_or_else(|error| {
-            eprintln!("An error occurred during the API call: {error}");
-            exit(2);
-        })
-        .body_mut()
-        .read_to_string()
-        .unwrap_or_else(|_| {
-            eprintln!("An error occurred during body parsing");
-            exit(3);
-        })
-}
-
-fn validate_no_commas(template_name: &str) -> Result<String, String> {
-    if template_name.contains(',') {
-        Err(String::from("Commas are not allowed in file names."))
-    } else {
-        Ok(template_name.to_string())
-    }
 }
 
 fn main() {
