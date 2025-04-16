@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+### Added
+
+- Custom gitignore templates can be provided
+
 ### Changed
 
 - Usage example in README include output redirection to file
