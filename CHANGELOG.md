@@ -9,6 +9,8 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+## [0.2.0] - 2025-04-16 <a id="0.2.0"></a>
+
 ### Changed
 
 - clap library to implement a more robust CLI args handling
