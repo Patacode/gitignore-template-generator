@@ -38,10 +38,12 @@ Author: Patacode <pata.codegineer@gmail.com>
 
 Examples:
 
-*Generate a gitignore template for simple rust projects:*
+*Generate a gitignore template for simple rust projects and store it in a file
+named .gitignore:*
 
 ```
-$ gitignore-template-generator rust
+$ gitignore-template-generator rust > .gitignore
+$ cat .gitignore
 # Created by https://www.toptal.com/developers/gitignore/api/rust
 # Edit at https://www.toptal.com/developers/gitignore?templates=rust
 
