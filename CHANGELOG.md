@@ -9,6 +9,17 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+### Added
+
+- proper suite of unit tests
+
+### Changed
+
+- clap library to implement a more robust CLI args handling
+- Each CLI template arg must be given as a separate value, so ',' char is now
+prohibited from provided values
+- Split of functionalities in separate modules, following facade pattern
+
 ## [0.1.0] - 2025-04-09 <a id="0.1.0"></a>
 
 ### Added
