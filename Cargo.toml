@@ -30,6 +30,7 @@ clap = { version = "4.5.32", default-features = false, features = [
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }
 test_bin = "0.4.0"
+mockito = "1.7.0"
 
 [package.metadata.release]
 pre-release-commit-message = "chore: prepare for release v{{version}}"
