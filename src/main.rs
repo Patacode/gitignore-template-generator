@@ -1,6 +1,8 @@
 use clap::{CommandFactory, Parser};
 
-use gitignore_template_generator::{get_call_to_gitignore_template_service, Args};
+use gitignore_template_generator::{
+    Args, get_call_to_gitignore_template_service,
+};
 
 fn main() {
     let args = Args::parse();
