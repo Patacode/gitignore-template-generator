@@ -1,5 +1,5 @@
-use crate::validator::impls;
+pub use crate::validator::impls::DefaultCliArgsValidator;
 
-pub fn validate_no_commas(template_name: &str) -> Result<String, String> {
-    impls::validate_no_commas(template_name)
+pub trait CliArgsValidator {
+    fn has_no_commas(value: &str) -> Result<String, String>;
 }

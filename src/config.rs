@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use crate::validator::validate_no_commas;
+use crate::validator::{CliArgsValidator, DefaultCliArgsValidator};
 
 #[derive(Parser, Debug)]
 #[command(version, author, long_about = None)]
@@ -18,7 +18,7 @@ Author: {author}
 pub struct Args {
     #[arg(
         required = true,
-        value_parser = validate_no_commas,
+        value_parser = DefaultCliArgsValidator::has_no_commas,
         help = "A non-empty list of existing gitignore template names"
     )]
     pub template_names: Vec<String>,
