@@ -1,38 +1,6 @@
-use clap::CommandFactory;
-use clap::Parser;
+use clap::{CommandFactory, Parser};
 
-use gitignore_template_generator::get_call_to_gitignore_template_service;
-use gitignore_template_generator::validator::validate_no_commas;
-
-#[derive(Parser, Debug)]
-#[command(version, author, long_about = None)]
-#[command(about = "Generate templates for .gitignore files")]
-#[command(help_template = "\
-{before-help}
-{usage-heading} {usage}
-
-{about-with-newline}
-{all-args}{after-help}
-
-Version: {version}
-Author: {author}
-")]
-struct Args {
-    #[arg(
-        required = true,
-        value_parser = validate_no_commas,
-        help = "A non-empty list of existing gitignore template names"
-    )]
-    template_names: Vec<String>,
-
-    #[arg(
-        short = 'a',
-        long = "author",
-        action = clap::ArgAction::SetTrue,
-        help = "Print author"
-    )]
-    show_author: bool,
-}
+use gitignore_template_generator::{get_call_to_gitignore_template_service, Args};
 
 fn main() {
     let args = Args::parse();
