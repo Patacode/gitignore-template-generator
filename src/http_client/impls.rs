@@ -2,7 +2,7 @@ use crate::http_client::api::{HttpClient, ProgramError};
 
 pub struct UreqClient;
 pub struct MockClient {
-    response: Result<String, ProgramError>,
+    pub response: Result<String, ProgramError>,
 }
 
 impl HttpClient for UreqClient {
