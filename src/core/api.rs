@@ -1,6 +1,10 @@
 pub use crate::core::impls::GitignoreTemplateGenerator;
-use crate::http_client::ProgramError;
+use crate::http_client::{HttpClient, ProgramError};
 
 pub trait TemplateGenerator {
-    fn generate(values: &String) -> Result<String, ProgramError>;
+    fn generate_from_api(
+        http_client: &dyn HttpClient,
+        url: &str,
+        values: &String,
+    ) -> Result<String, ProgramError>;
 }

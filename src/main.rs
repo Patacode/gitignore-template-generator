@@ -3,7 +3,8 @@ use std::process::exit;
 use clap::{CommandFactory, Parser};
 
 use gitignore_template_generator::{
-    Args, TemplateGenerator, GitignoreTemplateGenerator
+    Args, GitignoreTemplateGenerator, TemplateGenerator,
+    http_client::UreqClient,
 };
 
 fn main() {
@@ -20,7 +21,11 @@ fn main() {
     }
 
     let args = args.template_names.join(",");
-    let result = GitignoreTemplateGenerator::generate(&args);
+    let result = GitignoreTemplateGenerator::generate_from_api(
+        &UreqClient,
+        "https://www.toptal.com/developers/gitignore/api",
+        &args,
+    );
 
     match result {
         Ok(body) => print!("{body}"),
