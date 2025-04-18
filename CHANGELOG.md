@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+### Added
+
+- task in Makefile to commit and push changelog updates
+
 ### Changed
 
 - logical grouping of tests in all remaining modules
