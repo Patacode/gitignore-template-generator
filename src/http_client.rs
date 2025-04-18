@@ -1,4 +1,4 @@
 mod api;
 mod impls;
 
-pub use api::{HttpClient, UreqClient};
+pub use api::{HttpClient, MockClient, UreqClient};
