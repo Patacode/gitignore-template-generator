@@ -15,3 +15,10 @@ script = [
 
 [tasks.lint]
 script = "cargo clippy --all-targets --all-features --release"
+
+[tasks.full-test]
+script = [
+    "cargo test",
+    "cargo clippy --all-targets --all-features --release",
+    "cargo fmt --check"
+]
