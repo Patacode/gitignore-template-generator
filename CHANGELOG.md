@@ -9,6 +9,8 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+## [0.3.2] - 2025-04-18 <a id="0.3.2"></a>
+
 ### Added
 
 - task in Makefile to commit and push changelog updates
