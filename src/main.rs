@@ -21,11 +21,8 @@ fn main() {
     }
 
     let args = args.template_names.join(",");
-    let result = GitignoreTemplateGenerator::generate_from_api(
-        &UreqClient,
-        "https://www.toptal.com/developers/gitignore/api",
-        &args,
-    );
+    let result =
+        GitignoreTemplateGenerator::generate_from_api(&UreqClient, &args);
 
     match result {
         Ok(body) => print!("{body}"),
