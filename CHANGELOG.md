@@ -13,7 +13,6 @@ and this project adheres to
 
 - Custom gitignore templates can be provided
 - Unit and integration tests
-- Benchmarking
 
 ### Changed
 
