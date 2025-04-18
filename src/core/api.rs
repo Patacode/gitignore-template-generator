@@ -10,42 +10,45 @@ pub trait TemplateGenerator {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use crate::http_client::MockClient;
 
-    use super::*;
+    mod generate_from_api {
+        use super::*;
 
-    #[test]
-    fn it_generates_template_from_api_call_with_gitignore_generator() {
-        let client = MockClient {
-            response: Ok(String::from("all good")),
-        };
-        let values = "rust,python";
+        #[test]
+        fn it_generates_gitignore_template_using_provided_client() {
+            let client = MockClient {
+                response: Ok(String::from("all good")),
+            };
+            let values = "rust,python";
 
-        let expected: Result<String, ProgramError> =
-            Ok(String::from("all good"));
-        let actual =
-            GitignoreTemplateGenerator::generate_from_api(&client, values);
+            let expected: Result<String, ProgramError> =
+                Ok(String::from("all good"));
+            let actual =
+                GitignoreTemplateGenerator::generate_from_api(&client, values);
 
-        assert_eq!(actual, expected);
-    }
+            assert_eq!(actual, expected);
+        }
 
-    #[test]
-    fn it_propagates_error_if_any_with_gitignore_generator() {
-        let client = MockClient {
-            response: Err(ProgramError {
+        #[test]
+        fn it_propagates_error_from_client_if_any() {
+            let client = MockClient {
+                response: Err(ProgramError {
+                    message: String::from("all bad"),
+                    exit_status: 2,
+                }),
+            };
+            let values = "rust,python";
+
+            let expected: Result<String, ProgramError> = Err(ProgramError {
                 message: String::from("all bad"),
                 exit_status: 2,
-            }),
-        };
-        let values = "rust,python";
+            });
+            let actual =
+                GitignoreTemplateGenerator::generate_from_api(&client, values);
 
-        let expected: Result<String, ProgramError> = Err(ProgramError {
-            message: String::from("all bad"),
-            exit_status: 2,
-        });
-        let actual =
-            GitignoreTemplateGenerator::generate_from_api(&client, values);
-
-        assert_eq!(actual, expected);
+            assert_eq!(actual, expected);
+        }
     }
 }
