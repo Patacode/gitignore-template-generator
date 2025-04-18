@@ -9,7 +9,7 @@ mod tests {
     use super::*;
 
     mod has_no_commas {
-        use super:: *;
+        use super::*;
 
         #[test]
         fn it_returns_ok_for_comma_free_values() {
