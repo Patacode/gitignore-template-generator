@@ -15,10 +15,11 @@ and this project adheres to
 - isolation tests to cover edge cases
 - option to change server url
 - tasks in Makefile to format and lint project
+- task in Makefile to run all type of tests at once
 
 ### Changed
 
-- logical grouping of integration tests in module
+- logical grouping some tests in some module
 
 ## [0.3.0] - 2025-04-18 <a id="0.3.0"></a>
 
