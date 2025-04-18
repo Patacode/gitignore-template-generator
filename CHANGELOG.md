@@ -19,6 +19,7 @@ and this project adheres to
 
 - logical grouping of tests in all remaining modules
 - module happy and unhappy in integration tests renamed to success and failure
+- module happy and unhappy in isolation tests renamed to success and failure
 
 ## [0.3.1] - 2025-04-18 <a id="0.3.1"></a>
 
