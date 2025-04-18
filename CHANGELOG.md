@@ -14,6 +14,7 @@ and this project adheres to
 - more integration tests for extended coverage
 - isolation tests to cover edge cases
 - option to change server url
+- tasks in Makefile to format and lint project
 
 ### Changed
 
