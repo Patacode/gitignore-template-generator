@@ -24,8 +24,9 @@ fn it_outputs_correct_combined_templates_from_api() {
     cmd.args(["rust", "python"]);
 
     let output = cmd.output().expect("Failed to execute command");
-    let expected = fs::read_to_string("tests/expected/rust_python_template.txt")
-        .expect("Failed to read expected output file");
+    let expected =
+        fs::read_to_string("tests/expected/rust_python_template.txt")
+            .expect("Failed to read expected output file");
     let actual = String::from_utf8_lossy(&output.stdout);
 
     assert!(output.status.success());
@@ -53,8 +54,9 @@ fn it_outputs_correct_error_when_commas_in_pos_args() {
     cmd.args(["rust", "python,java"]);
 
     let output = cmd.output().expect("Failed to execute command");
-    let expected = fs::read_to_string("tests/expected/comma_pos_args_error.txt")
-        .expect("Failed to read expected output file");
+    let expected =
+        fs::read_to_string("tests/expected/comma_pos_args_error.txt")
+            .expect("Failed to read expected output file");
     let actual = String::from_utf8_lossy(&output.stderr);
 
     assert!(!output.status.success());
