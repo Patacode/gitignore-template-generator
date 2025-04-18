@@ -1,18 +1,11 @@
 use crate::http_client::api::{HttpClient, ProgramError};
 
+#[derive(Default)]
 pub struct UreqClient {
     pub server_url: String,
 }
 pub struct MockClient {
     pub response: Result<String, ProgramError>,
-}
-
-impl UreqClient {
-    pub fn default() -> Self {
-        Self {
-            server_url: String::from(""),
-        }
-    }
 }
 
 impl HttpClient for UreqClient {
