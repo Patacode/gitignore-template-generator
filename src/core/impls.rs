@@ -9,8 +9,8 @@ impl TemplateGenerator for GitignoreTemplateGenerator {
         http_client: &dyn HttpClient,
         values: &str,
     ) -> Result<String, ProgramError> {
-        let url = "https://www.toptal.com/developers/gitignore/api";
-        let full_url = format!("{url}/{values}");
-        http_client.get(&full_url)
+        let uri = "/developers/gitignore/api";
+        let full_uri = format!("{uri}/{values}");
+        http_client.get(&full_uri)
     }
 }

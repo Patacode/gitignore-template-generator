@@ -20,11 +20,11 @@ fn main() {
         return;
     }
 
+    let client = UreqClient {
+        server_url: args.server_url,
+    };
     let args = args.template_names.join(",");
-    let result = GitignoreTemplateGenerator::generate_from_api(
-        &UreqClient::default(),
-        &args,
-    );
+    let result = GitignoreTemplateGenerator::generate_from_api(&client, &args);
 
     match result {
         Ok(body) => print!("{body}"),
