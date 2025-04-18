@@ -31,4 +31,12 @@ pub struct Args {
         help = "Print author"
     )]
     pub show_author: bool,
+
+    #[arg(
+        short = 's',
+        long = "server-url",
+        help = "The url to the server hosting gitignore template generator service",
+        default_value = "https://www.toptal.com"
+    )]
+    pub server_url: String,
 }
