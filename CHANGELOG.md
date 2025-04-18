@@ -11,14 +11,13 @@ and this project adheres to
 
 ### Added
 
-- Custom gitignore templates can be provided
 - Unit and integration tests
 
 ### Changed
 
 - Usage example in README include output redirection to file
 - Internal structure of library and binary crate
-- Usage of struct for core functions access 
+- Usage of struct for core functions access
 
 ## [0.2.1] - 2025-04-16 <a id="0.2.1"></a>
 
