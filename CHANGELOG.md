@@ -9,6 +9,8 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+## [0.3.0] - 2025-04-18 <a id="0.3.0"></a>
+
 ### Added
 
 - Unit and integration tests
