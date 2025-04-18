@@ -12,6 +12,7 @@ and this project adheres to
 ### Added
 
 - task in Makefile to commit and push changelog updates
+- vscode tasks to run Makefile tasks
 
 ### Changed
 
