@@ -102,7 +102,7 @@ fn it_outputs_correct_infos_for_author_option() {
     cmd.arg("-a");
 
     let output = cmd.output().expect("Failed to execute command");
-    let expected = "Patacode <pata.codegineer@gmail.com>";
+    let expected = "Patacode <pata.codegineer@gmail.com>\n";
     let actual = String::from_utf8_lossy(&output.stdout);
 
     assert!(output.status.success());

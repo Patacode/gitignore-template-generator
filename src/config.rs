@@ -17,13 +17,14 @@ Author: {author}
 ")]
 pub struct Args {
     #[arg(
-        required = true,
+        required_unless_present = "author",
         value_parser = DefaultCliArgsValidator::has_no_commas,
         help = "A non-empty list of existing gitignore template names"
     )]
     pub template_names: Vec<String>,
 
     #[arg(
+        id = "author",
         short = 'a',
         long = "author",
         action = clap::ArgAction::SetTrue,
