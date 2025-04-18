@@ -38,6 +38,30 @@ mod tests {
     }
 
     #[test]
+    fn it_fetches_data_correctly_with_ureq_client_and_server_url() {
+        let api_response = "gitignore template for rust";
+        let mut server = Server::new();
+        let base_url = server.url();
+        let uri = "/api/rust";
+
+        let mock = server
+            .mock("GET", uri)
+            .with_status(200)
+            .with_body(api_response)
+            .create();
+
+        let client = UreqClient {
+            server_url: base_url
+        };
+        let expected: Result<String, ProgramError> =
+            Ok(String::from(api_response));
+        let actual = client.get(&uri);
+
+        mock.assert();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
     fn it_gracefully_fails_if_non_200_response_with_ureq_client() {
         let api_response = "error response";
         let mut server = Server::new();
