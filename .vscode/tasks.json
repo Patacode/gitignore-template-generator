@@ -4,12 +4,36 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Run all tests",
+            "type": "shell",
+            "command": "cargo make full-test",
+            "problemMatcher": []
+        },
+        {
             "label": "Format Rust code",
             "type": "shell",
-            "command": "cargo fmt",
+            "command": "cargo make fmt",
             "presentation": {
                 "reveal": "silent"
             },
+            "problemMatcher": []
+        },
+        {
+            "label": "Deploy patch dryrun",
+            "type": "shell",
+            "command": "cargo make deploy-patch-dryrun",
+            "problemMatcher": []
+        },
+        {
+            "label": "Deploy patch",
+            "type": "shell",
+            "command": "cargo make deploy-patch",
+            "problemMatcher": []
+        },
+        {
+            "label": "Update changelog",
+            "type": "shell",
+            "command": "cargo make changelog",
             "problemMatcher": []
         }
     ]
