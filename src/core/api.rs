@@ -24,7 +24,7 @@ mod tests {
         let expected: Result<String, ProgramError> =
             Ok(String::from("all good"));
         let actual =
-            GitignoreTemplateGenerator::generate_from_api(&client, &values);
+            GitignoreTemplateGenerator::generate_from_api(&client, values);
 
         assert_eq!(actual, expected);
     }
@@ -44,7 +44,7 @@ mod tests {
             exit_status: 2,
         });
         let actual =
-            GitignoreTemplateGenerator::generate_from_api(&client, &values);
+            GitignoreTemplateGenerator::generate_from_api(&client, values);
 
         assert_eq!(actual, expected);
     }
