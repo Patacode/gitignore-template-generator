@@ -18,7 +18,7 @@ fn it_outputs_correct_error_when_body_parsing_issue() {
     cmd.arg("rust").args(["--server-url", &base_url]);
 
     let output = cmd.output().expect("Failed to execute command");
-    let expected = "An error occurred during body parsing";
+    let expected = "An error occurred during body parsing\n";
     let actual = String::from_utf8_lossy(&output.stderr);
 
     mock.assert();
