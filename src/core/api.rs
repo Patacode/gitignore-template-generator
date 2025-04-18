@@ -5,6 +5,6 @@ pub trait TemplateGenerator {
     fn generate_from_api(
         http_client: &dyn HttpClient,
         url: &str,
-        values: &String,
+        values: &str,
     ) -> Result<String, ProgramError>;
 }
