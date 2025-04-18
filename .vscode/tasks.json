@@ -19,6 +19,15 @@
             "problemMatcher": []
         },
         {
+            "label": "Format Rust code and commit",
+            "type": "shell",
+            "command": "cargo make fmt-commit",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Deploy patch dryrun",
             "type": "shell",
             "command": "cargo make deploy-patch-dryrun",
