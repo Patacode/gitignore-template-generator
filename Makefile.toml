@@ -22,3 +22,9 @@ script = [
     "cargo clippy --all-targets --all-features --release",
     "cargo fmt --check"
 ]
+
+[tasks.deploy-patch]
+script = "cargo release patch --execute --no-confirm --no-verify"
+
+[tasks.deploy-patch-dryrun]
+script = "cargo release patch --no-confirm --no-verify"
