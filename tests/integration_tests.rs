@@ -92,7 +92,11 @@ fn it_outputs_correct_infos_for_version_option() {
     let actual = String::from_utf8_lossy(&output.stdout);
 
     assert!(output.status.success());
-    assert!(re.is_match(&actual), "String did not match pattern: {}", pattern);
+    assert!(
+        re.is_match(&actual),
+        "String did not match pattern: {}",
+        pattern
+    );
 }
 
 #[test]
