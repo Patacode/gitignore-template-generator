@@ -3,7 +3,7 @@ use std::fs;
 use regex::Regex;
 use test_bin::get_test_bin;
 
-mod happy {
+mod success {
     use super::*;
 
     mod pos_args {
@@ -99,7 +99,7 @@ mod happy {
     }
 }
 
-mod unhappy {
+mod failure {
     use super::*;
 
     mod pos_args {
