@@ -13,6 +13,7 @@ and this project adheres to
 
 - more integration tests for extended coverage
 - isolation tests to cover edge cases
+- option to change server url
 
 ## [0.3.0] - 2025-04-18 <a id="0.3.0"></a>
 
