@@ -31,6 +31,7 @@ clap = { version = "4.5.32", default-features = false, features = [
 criterion = { version = "0.5.1", features = ["html_reports"] }
 test_bin = "0.4.0"
 mockito = "1.7.0"
+regex = "1.11.1"
 
 [package.metadata.release]
 pre-release-commit-message = "chore: prepare for release v{{version}}"

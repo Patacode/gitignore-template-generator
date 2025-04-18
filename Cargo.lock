@@ -433,6 +433,7 @@ dependencies = [
  "clap",
  "criterion",
  "mockito",
+ "regex",
  "test_bin",
  "ureq",
 ]
