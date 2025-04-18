@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+### Changed
+
+- logical grouping of tests in all remaining modules
+
 ## [0.3.1] - 2025-04-18 <a id="0.3.1"></a>
 
 ### Added
