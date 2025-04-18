@@ -102,51 +102,55 @@ mod happy {
 mod unhappy {
     use super::*;
 
-    #[test]
-    fn it_outputs_error_and_fails_when_no_pos_args_provided() {
-        let mut cmd = get_test_bin("gitignore-template-generator");
+    mod pos_args {
+        use super::*;
 
-        let output = cmd.output().expect("Failed to execute command");
-        let expected =
-            fs::read_to_string("tests/expected/no_pos_args_error.txt")
-                .expect("Failed to read expected output file");
-        let actual = String::from_utf8_lossy(&output.stderr);
+        #[test]
+        fn it_outputs_error_and_fails_when_no_pos_args_provided() {
+            let mut cmd = get_test_bin("gitignore-template-generator");
 
-        assert!(!output.status.success());
-        assert_eq!(output.status.code(), Some(2));
-        assert_eq!(actual, expected);
-    }
+            let output = cmd.output().expect("Failed to execute command");
+            let expected =
+                fs::read_to_string("tests/expected/no_pos_args_error.txt")
+                    .expect("Failed to read expected output file");
+            let actual = String::from_utf8_lossy(&output.stderr);
 
-    #[test]
-    fn it_outputs_error_and_fails_when_commas_in_pos_args() {
-        let mut cmd = get_test_bin("gitignore-template-generator");
+            assert!(!output.status.success());
+            assert_eq!(output.status.code(), Some(2));
+            assert_eq!(actual, expected);
+        }
 
-        cmd.args(["rust", "python,java"]);
+        #[test]
+        fn it_outputs_error_and_fails_when_commas_in_pos_args() {
+            let mut cmd = get_test_bin("gitignore-template-generator");
 
-        let output = cmd.output().expect("Failed to execute command");
-        let expected =
-            fs::read_to_string("tests/expected/comma_pos_args_error.txt")
-                .expect("Failed to read expected output file");
-        let actual = String::from_utf8_lossy(&output.stderr);
+            cmd.args(["rust", "python,java"]);
 
-        assert!(!output.status.success());
-        assert_eq!(output.status.code(), Some(2));
-        assert_eq!(actual, expected);
-    }
+            let output = cmd.output().expect("Failed to execute command");
+            let expected =
+                fs::read_to_string("tests/expected/comma_pos_args_error.txt")
+                    .expect("Failed to read expected output file");
+            let actual = String::from_utf8_lossy(&output.stderr);
 
-    #[test]
-    fn it_outputs_error_and_fails_when_template_not_found() {
-        let mut cmd = get_test_bin("gitignore-template-generator");
+            assert!(!output.status.success());
+            assert_eq!(output.status.code(), Some(2));
+            assert_eq!(actual, expected);
+        }
 
-        cmd.args(["foo"]);
+        #[test]
+        fn it_outputs_error_and_fails_when_template_not_found() {
+            let mut cmd = get_test_bin("gitignore-template-generator");
 
-        let output = cmd.output().expect("Failed to execute command");
-        let expected =
-            "An error occurred during the API call: http status: 404\n";
-        let actual = String::from_utf8_lossy(&output.stderr);
+            cmd.args(["foo"]);
 
-        assert!(!output.status.success());
-        assert_eq!(output.status.code(), Some(2));
-        assert_eq!(actual, expected);
+            let output = cmd.output().expect("Failed to execute command");
+            let expected =
+                "An error occurred during the API call: http status: 404\n";
+            let actual = String::from_utf8_lossy(&output.stderr);
+
+            assert!(!output.status.success());
+            assert_eq!(output.status.code(), Some(2));
+            assert_eq!(actual, expected);
+        }
     }
 }
