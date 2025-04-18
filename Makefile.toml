@@ -6,6 +6,9 @@ script = [
 ]
 
 [tasks.fmt]
+script = "cargo fmt"
+
+[tasks.fmt-commit]
 script = [
     "cargo fmt",
     "git add .",
