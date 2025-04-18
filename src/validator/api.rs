@@ -20,7 +20,8 @@ mod tests {
     #[test]
     fn it_checks_that_value_with_commas_has_no_commas() {
         let value = "r,ust";
-        let expected: Result<String, String> = Err(String::from("Commas are not allowed in template names"));
+        let expected: Result<String, String> =
+            Err(String::from("Commas are not allowed in template names"));
         let actual = DefaultCliArgsValidator::has_no_commas(value);
 
         assert_eq!(actual, expected);
