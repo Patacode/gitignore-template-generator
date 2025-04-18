@@ -12,11 +12,13 @@ and this project adheres to
 ### Added
 
 - task in Makefile to commit and push changelog updates
+- task in Makefile to format without commit
 - vscode tasks to run Makefile tasks
 
 ### Changed
 
 - logical grouping of tests in all remaining modules
+- module happy and unhappy in integration tests renamed to success and failure
 
 ## [0.3.1] - 2025-04-18 <a id="0.3.1"></a>
 
