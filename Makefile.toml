@@ -28,3 +28,10 @@ script = "cargo release patch --execute --no-confirm --no-verify"
 
 [tasks.deploy-patch-dryrun]
 script = "cargo release patch --no-confirm --no-verify"
+
+[tasks.changelog]
+script = [
+    "git add .",
+    'git commit -m "chore: update changelog"',
+    "git push"
+]
