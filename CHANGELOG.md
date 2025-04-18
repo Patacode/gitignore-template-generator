@@ -15,6 +15,10 @@ and this project adheres to
 - isolation tests to cover edge cases
 - option to change server url
 
+### Changed
+
+- logical grouping of integration tests in module
+
 ## [0.3.0] - 2025-04-18 <a id="0.3.0"></a>
 
 ### Added
