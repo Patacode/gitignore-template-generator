@@ -61,3 +61,18 @@ fn it_outputs_correct_error_when_commas_in_pos_args() {
     assert_eq!(output.status.code(), Some(2));
     assert_eq!(actual, expected);
 }
+
+#[test]
+fn it_outputs_correct_error_when_template_not_found() {
+    let mut cmd = get_test_bin("gitignore-template-generator");
+
+    cmd.args(["foo"]);
+
+    let output = cmd.output().expect("Failed to execute command");
+    let expected = "An error occurred during the API call: http status: 404\n";
+    let actual = String::from_utf8_lossy(&output.stderr);
+
+    assert!(!output.status.success());
+    assert_eq!(output.status.code(), Some(2));
+    assert_eq!(actual, expected);
+}
