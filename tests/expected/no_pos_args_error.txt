@@ -1,0 +1,6 @@
+error: the following required arguments were not provided:
+  <TEMPLATE_NAMES>...
+
+Usage: gitignore-template-generator <TEMPLATE_NAMES>...
+
+For more information, try '--help'.
