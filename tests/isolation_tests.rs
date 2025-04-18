@@ -15,8 +15,7 @@ fn it_outputs_correct_error_when_body_parsing_issue() {
         .with_body(vec![0, 159, 146, 150])
         .create();
 
-    cmd.arg("rust")
-        .args(["--server-url", &base_url]);
+    cmd.arg("rust").args(["--server-url", &base_url]);
 
     let output = cmd.output().expect("Failed to execute command");
     let expected = "An error occurred during body parsing";
