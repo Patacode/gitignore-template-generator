@@ -55,7 +55,7 @@ mod tests {
         };
         let expected: Result<String, ProgramError> =
             Ok(String::from(api_response));
-        let actual = client.get(&uri);
+        let actual = client.get(uri);
 
         mock.assert();
         assert_eq!(actual, expected);
