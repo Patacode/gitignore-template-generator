@@ -1,3 +1,5 @@
+use std::process::exit;
+
 use clap::{CommandFactory, Parser};
 
 use gitignore_template_generator::{
@@ -18,7 +20,13 @@ fn main() {
     }
 
     let args = args.template_names.join(",");
-    let body = GitignoreTemplateGenerator::generate(&args);
+    let result = GitignoreTemplateGenerator::generate(&args);
 
-    print!("{body}");
+    match result {
+        Ok(body) => print!("{body}"),
+        Err(error) => {
+            eprintln!("{}", error.message);
+            exit(error.exit_status);
+        }
+    }
 }
