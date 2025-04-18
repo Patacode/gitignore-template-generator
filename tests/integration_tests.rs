@@ -108,3 +108,19 @@ fn it_outputs_correct_infos_for_author_option() {
     assert!(output.status.success());
     assert_eq!(actual, expected);
 }
+
+#[test]
+fn it_outputs_correct_infos_for_help_option() {
+    let mut cmd = get_test_bin("gitignore-template-generator");
+
+    cmd.arg("-h");
+
+    let output = cmd.output().expect("Failed to execute command");
+    let expected = fs::read_to_string("tests/expected/help_message.txt")
+        .expect("Failed to read expected output file");
+    let expected = expected.replace("{version}", env!("CARGO_PKG_VERSION"));
+    let actual = String::from_utf8_lossy(&output.stdout);
+
+    assert!(output.status.success());
+    assert_eq!(actual, expected);
+}

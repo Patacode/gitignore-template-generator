@@ -1,0 +1,14 @@
+Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
+
+Generate templates for .gitignore files
+
+Arguments:
+  [TEMPLATE_NAMES]...  A non-empty list of existing gitignore template names
+
+Options:
+  -a, --author   Print author
+  -h, --help     Print help
+  -V, --version  Print version
+
+Version: {version}
+Author: Patacode <pata.codegineer@gmail.com>
