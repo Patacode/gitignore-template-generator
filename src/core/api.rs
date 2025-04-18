@@ -1,5 +1,5 @@
-use crate::core::impls;
+pub use crate::core::impls::GitignoreTemplateGenerator;
 
-pub fn get_call_to_gitignore_template_service(values: &String) -> String {
-    impls::get_call_to_gitignore_template_service(values)
+pub trait TemplateGenerator {
+    fn generate(values: &String) -> String;
 }

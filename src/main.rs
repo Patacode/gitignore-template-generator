@@ -1,7 +1,7 @@
 use clap::{CommandFactory, Parser};
 
 use gitignore_template_generator::{
-    Args, get_call_to_gitignore_template_service,
+    Args, TemplateGenerator, GitignoreTemplateGenerator
 };
 
 fn main() {
@@ -18,7 +18,7 @@ fn main() {
     }
 
     let args = args.template_names.join(",");
-    let body = get_call_to_gitignore_template_service(&args);
+    let body = GitignoreTemplateGenerator::generate(&args);
 
     print!("{body}");
 }
