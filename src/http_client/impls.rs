@@ -1,13 +1,24 @@
 use crate::http_client::api::{HttpClient, ProgramError};
 
-pub struct UreqClient;
+pub struct UreqClient {
+    pub server_url: String,
+}
 pub struct MockClient {
     pub response: Result<String, ProgramError>,
 }
 
+impl UreqClient {
+    pub fn default() -> Self {
+        Self {
+            server_url: String::from(""),
+        }
+    }
+}
+
 impl HttpClient for UreqClient {
     fn get(&self, url: &str) -> Result<String, ProgramError> {
-        let result = ureq::get(url).call();
+        let full_url = format!("{}{url}", self.server_url);
+        let result = ureq::get(full_url).call();
 
         match result {
             Ok(mut response) => match response.body_mut().read_to_string() {

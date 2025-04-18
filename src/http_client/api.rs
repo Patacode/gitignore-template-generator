@@ -28,7 +28,7 @@ mod tests {
             .with_body(api_response)
             .create();
 
-        let client = UreqClient {};
+        let client = UreqClient::default();
         let expected: Result<String, ProgramError> =
             Ok(String::from(api_response));
         let actual = client.get(&format!("{base_url}{uri}"));
@@ -50,7 +50,7 @@ mod tests {
             .with_body(api_response)
             .create();
 
-        let client = UreqClient {};
+        let client = UreqClient::default();
         let expected: Result<String, ProgramError> = Err(ProgramError {
             message: String::from(
                 "An error occurred during the API call: http status: 400",
@@ -75,7 +75,7 @@ mod tests {
             .with_body(vec![0, 159, 146, 150])
             .create();
 
-        let client = UreqClient {};
+        let client = UreqClient::default();
         let expected: Result<String, ProgramError> = Err(ProgramError {
             message: String::from("An error occurred during body parsing"),
             exit_status: 3,
