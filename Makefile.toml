@@ -4,3 +4,11 @@ script = [
     "cargo install cargo-release",
     "cargo build",
 ]
+
+[tasks.fmt]
+script = [
+    "cargo fmt",
+    "git add .",
+    'git commit -m "style: reformat code with cargo fmt"',
+    "git push"
+]

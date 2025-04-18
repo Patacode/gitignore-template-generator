@@ -51,7 +51,7 @@ mod tests {
             .create();
 
         let client = UreqClient {
-            server_url: base_url
+            server_url: base_url,
         };
         let expected: Result<String, ProgramError> =
             Ok(String::from(api_response));
