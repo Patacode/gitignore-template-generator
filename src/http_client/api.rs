@@ -1,4 +1,4 @@
-pub use crate::http_client::impls::UreqClient;
+pub use crate::http_client::impls::{MockClient, UreqClient};
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct ProgramError {
@@ -83,6 +83,19 @@ mod tests {
         let actual = client.get(&format!("{base_url}{uri}"));
 
         mock.assert();
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn it_returns_given_result_with_mock_client() {
+        let client = MockClient {
+            response: Ok(String::from("success response")),
+        };
+
+        let expected: Result<String, ProgramError> =
+            Ok(String::from("success response"));
+        let actual = client.get("/api/rust");
+
         assert_eq!(actual, expected);
     }
 }
