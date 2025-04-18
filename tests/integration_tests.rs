@@ -1,5 +1,6 @@
 use std::fs;
 
+use regex::Regex;
 use test_bin::get_test_bin;
 
 #[test]
@@ -77,4 +78,19 @@ fn it_outputs_correct_error_when_template_not_found() {
     assert!(!output.status.success());
     assert_eq!(output.status.code(), Some(2));
     assert_eq!(actual, expected);
+}
+
+#[test]
+fn it_outputs_correct_infos_for_version_option() {
+    let mut cmd = get_test_bin("gitignore-template-generator");
+
+    cmd.arg("-V");
+
+    let output = cmd.output().expect("Failed to execute command");
+    let pattern = r"^gitignore-template-generator [0-9]+\.[0-9]+\.[0-9]+\n$";
+    let re = Regex::new(pattern).unwrap();
+    let actual = String::from_utf8_lossy(&output.stdout);
+
+    assert!(output.status.success());
+    assert!(re.is_match(&actual), "String did not match pattern: {}", pattern);
 }
