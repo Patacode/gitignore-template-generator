@@ -81,7 +81,10 @@ mod success {
             assert!(result.status.success());
             assert!(
                 expected_output_pattern.is_match(&actual_output),
-                "Actual output <{actual_output}> did not match expected pattern <{expected_output_pattern}>",
+                "{}",
+                error_messages::REGEX_NO_MATCH
+                    .replace("{actual}", &actual_output)
+                    .replace("{expected}", expected_output_pattern.as_str())
             );
         }
 
