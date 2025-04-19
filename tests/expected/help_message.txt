@@ -12,4 +12,4 @@ Options:
   -V, --version                  Print version
 
 Version: {version}
-Author: Patacode <pata.codegineer@gmail.com>
+Author: {author}
