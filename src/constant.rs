@@ -8,3 +8,7 @@ pub mod exit_status {
     pub const GENERIC: i32 = 2;
     pub const BODY_PARSING_ISSUE: i32 = 3;
 }
+
+pub mod template_generator {
+    pub const URI: &str = "/developers/gitignore/api";
+}
