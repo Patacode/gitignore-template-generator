@@ -18,3 +18,7 @@ pub mod template_generator {
 pub mod path {
     pub const TEST_EXPECTATIONS: &str = "tests/expected";
 }
+
+pub mod regex {
+    pub const SEMVER_VERSION: &str = r"[0-9]+\.[0-9]+\.[0-9]+";
+}
