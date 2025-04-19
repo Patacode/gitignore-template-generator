@@ -1,5 +1,7 @@
 pub use crate::http_client::impls::{MockClient, UreqClient};
 
+use crate::constant;
+
 #[derive(Clone, PartialEq, Debug)]
 pub struct ProgramError {
     pub message: String,
@@ -75,27 +77,29 @@ mod tests {
 
                 #[test]
                 fn it_gracefully_fails_if_non_200_response_with_ureq_client() {
-                    let api_response = "error response";
-                    let mut server = Server::new();
-                    let base_url = server.url();
-                    let uri = "/api/rust";
+                    let mut mock_server = Server::new();
+                    let server_url = mock_server.url();
 
-                    let mock = server
-                        .mock("GET", uri)
+                    let http_client = UreqClient::default();
+                    let mock_body = "error response";
+                    let mock_uri = "/api/rust";
+                    let mock = mock_server
+                        .mock("GET", mock_uri)
                         .with_status(400)
-                        .with_body(api_response)
+                        .with_body(mock_body)
                         .create();
 
-                    let client = UreqClient::default();
-                    let expected: Result<String, ProgramError> = Err(
-                        ProgramError {
-                            message: String::from(
-                                "An error occurred during the API call: http status: 400",
-                            ),
-                            exit_status: 2,
-                        },
-                    );
-                    let actual = client.get(&format!("{base_url}{uri}"));
+                    let actual =
+                        http_client.get(&format!("{server_url}{mock_uri}"));
+                    let expected: Result<String, ProgramError> =
+                        Err(ProgramError {
+                            message: constant::error_messages::API_CALL_FAILURE
+                                .replace(
+                                    "{error}",
+                                    constant::error_messages::HTTP_400,
+                                ),
+                            exit_status: constant::exit_status::GENERIC,
+                        });
 
                     mock.assert();
                     assert_eq!(actual, expected);
@@ -104,25 +108,28 @@ mod tests {
                 #[test]
                 fn it_gracefully_fails_if_body_parsing_issue_with_ureq_client()
                 {
-                    let mut server = Server::new();
-                    let base_url = server.url();
-                    let uri = "/api/rust";
+                    let mut mock_server = Server::new();
+                    let server_url = mock_server.url();
 
-                    let mock = server
-                        .mock("GET", uri)
+                    let http_client = UreqClient::default();
+                    let mock_body = vec![0, 159, 146, 150];
+                    let mock_uri = "/api/rust";
+                    let mock = mock_server
+                        .mock("GET", mock_uri)
                         .with_status(200)
-                        .with_body(vec![0, 159, 146, 150])
+                        .with_body(mock_body)
                         .create();
 
-                    let client = UreqClient::default();
+                    let actual =
+                        http_client.get(&format!("{server_url}{mock_uri}"));
                     let expected: Result<String, ProgramError> =
                         Err(ProgramError {
                             message: String::from(
-                                "An error occurred during body parsing",
+                                constant::error_messages::BODY_PARSING_ISSUE,
                             ),
-                            exit_status: 3,
+                            exit_status:
+                                constant::exit_status::BODY_PARSING_ISSUE,
                         });
-                    let actual = client.get(&format!("{base_url}{uri}"));
 
                     mock.assert();
                     assert_eq!(actual, expected);
