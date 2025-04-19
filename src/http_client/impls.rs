@@ -23,13 +23,13 @@ impl HttpClient for UreqClient {
                     message: String::from(
                         constant::error_messages::BODY_PARSING_ISSUE,
                     ),
-                    exit_status: 3,
+                    exit_status: constant::exit_status::BODY_PARSING_ISSUE,
                 }),
             },
             Err(error) => Err(ProgramError {
                 message: constant::error_messages::API_CALL_FAILURE
                     .replace("{error}", &error.to_string()),
-                exit_status: 2,
+                exit_status: constant::exit_status::GENERIC,
             }),
         }
     }
