@@ -25,3 +25,7 @@ pub fn get_version_infos_output_pattern() -> Regex {
 pub fn parse_stdout(stdout: &[u8]) -> Cow<str> {
     String::from_utf8_lossy(stdout)
 }
+
+pub fn parse_pos_args(pos_args: &str) -> Vec<&str> {
+    pos_args.split_whitespace().collect()
+}
