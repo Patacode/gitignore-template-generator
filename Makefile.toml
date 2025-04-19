@@ -54,7 +54,7 @@ env = { "COMMIT_MSG" = "style: reformat code with cargo fmt" }
 run_task = "git-commit"
 
 [tasks.git-commit-changelog]
-env = { "COMMIT_MSG" = "git commit -m \"chore: update changelog\"" }
+env = { "COMMIT_MSG" = "chore: update changelog" }
 run_task = "git-commit"
 
 [tasks.git-push]
