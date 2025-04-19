@@ -49,17 +49,14 @@ mod success {
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_stdout(&result.stdout);
-            let expected_output_pattern = get_version_infos_output_pattern();
+            let expected_output = format!(
+                "{} {}\n",
+                env!("CARGO_PKG_NAME"),
+                env!("CARGO_PKG_VERSION"),
+            );
 
             assert!(result.status.success());
-            assert!(
-                expected_output_pattern.is_match(&actual_output),
-                "{}",
-                get_regex_no_match_error_message(
-                    &actual_output,
-                    &expected_output_pattern
-                )
-            );
+            assert_eq!(actual_output, expected_output);
         }
 
         #[test]
