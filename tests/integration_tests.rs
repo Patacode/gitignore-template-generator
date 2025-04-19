@@ -71,8 +71,8 @@ mod success {
 
             let expected_output_pattern = format!(
                 r"^{} {}\n$",
+                env!("CARGO_PKG_NAME"),
                 constant::regex::SEMVER_VERSION,
-                env!("CARGO_PKG_NAME")
             );
             let expected_output_pattern =
                 Regex::new(&expected_output_pattern).unwrap();
