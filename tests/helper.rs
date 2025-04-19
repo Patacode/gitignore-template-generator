@@ -29,3 +29,12 @@ pub fn parse_stdout(stdout: &[u8]) -> Cow<str> {
 pub fn parse_pos_args(pos_args: &str) -> Vec<&str> {
     pos_args.split_whitespace().collect()
 }
+
+pub fn get_regex_no_match_error_message(
+    actual_output: &str,
+    expected_pattern: &Regex,
+) -> String {
+    constant::error_messages::REGEX_NO_MATCH
+        .replace("{actual}", actual_output)
+        .replace("{expected}", expected_pattern.as_str())
+}
