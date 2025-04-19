@@ -67,10 +67,10 @@ args = ["push"]
 dependencies = ["install-cargo-tarpaulin", "install-cargo-release", "build"]
 
 [tasks.fmt-commit]
-dependencies = ["git-add-changelog", "git-commit-fmt", "git-push"]
+dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
 
 [tasks.full-test]
 run_task = { name = ["test", "lint", "fmt-check"], parallel = true }
 
 [tasks.changelog]
-dependencies = ["git-add-all", "git-commit-changelog", "git-push"]
+dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
