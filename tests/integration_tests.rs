@@ -2,6 +2,7 @@ use std::fs;
 
 use crate::helper::*;
 use gitignore_template_generator::constant::error_messages;
+use rstest::*;
 use test_bin::get_test_bin;
 
 mod helper;
@@ -12,35 +13,24 @@ mod success {
     mod pos_args {
         use super::*;
 
-        #[test]
-        fn it_outputs_template_with_one_pos_arg() {
+        #[rstest]
+        #[case("rust", "rust_template")]
+        #[case("rust python", "rust_python_template")]
+        fn it_outputs_gitignore_templates_from_api(
+            #[case] pos_args: &str,
+            #[case] expectation_file_name: &str,
+        ) {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cli_tool.arg("rust");
+            let pos_args: Vec<&str> = pos_args.split_whitespace().collect();
+            cli_tool.args(&pos_args);
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_stdout(&result.stdout);
             let expected_output =
-                load_expectation_file_as_string("rust_template");
-
-            assert!(result.status.success());
-            assert_eq!(actual_output, expected_output);
-        }
-
-        #[test]
-        fn it_outputs_combined_templates_with_multiple_pos_args() {
-            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-
-            cli_tool.args(["rust", "python"]);
-            let result = cli_tool
-                .output()
-                .expect(error_messages::CMD_EXECUTION_FAILURE);
-
-            let actual_output = parse_stdout(&result.stdout);
-            let expected_output =
-                load_expectation_file_as_string("rust_python_template");
+                load_expectation_file_as_string(expectation_file_name);
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
