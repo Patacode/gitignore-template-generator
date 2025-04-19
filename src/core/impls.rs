@@ -1,4 +1,4 @@
-use crate::http_client::{HttpClient, ProgramError};
+use crate::{constant, http_client::{HttpClient, ProgramError}};
 
 use super::TemplateGenerator;
 
@@ -9,7 +9,7 @@ impl TemplateGenerator for GitignoreTemplateGenerator {
         http_client: &dyn HttpClient,
         values: &str,
     ) -> Result<String, ProgramError> {
-        let uri = "/developers/gitignore/api";
+        let uri = constant::template_generator::URI;
         let full_uri = format!("{uri}/{values}");
         http_client.get(&full_uri)
     }
