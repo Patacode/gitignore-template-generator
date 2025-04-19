@@ -6,7 +6,7 @@ mod unhappy {
 
     #[test]
     fn it_outputs_error_and_fails_when_body_parsing_issue() {
-        let mut cmd = get_test_bin("gitignore-template-generator");
+        let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
         let mut server = Server::new();
         let base_url = server.url();

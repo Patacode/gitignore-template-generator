@@ -11,7 +11,7 @@ mod success {
 
         #[test]
         fn it_outputs_template_with_one_pos_arg() {
-            let mut cmd = get_test_bin("gitignore-template-generator");
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
             cmd.arg("rust");
 
@@ -27,7 +27,7 @@ mod success {
 
         #[test]
         fn it_outputs_combined_templates_with_multiple_pos_args() {
-            let mut cmd = get_test_bin("gitignore-template-generator");
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
             cmd.args(["rust", "python"]);
 
@@ -47,7 +47,7 @@ mod success {
 
         #[test]
         fn it_outputs_version_infos_with_version_option() {
-            let mut cmd = get_test_bin("gitignore-template-generator");
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
             cmd.arg("-V");
 
@@ -67,7 +67,7 @@ mod success {
 
         #[test]
         fn it_outputs_author_infos_with_author_option() {
-            let mut cmd = get_test_bin("gitignore-template-generator");
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
             cmd.arg("-a");
 
@@ -81,7 +81,7 @@ mod success {
 
         #[test]
         fn it_outputs_help_infos_with_help_option() {
-            let mut cmd = get_test_bin("gitignore-template-generator");
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
             cmd.arg("-h");
 
@@ -107,7 +107,7 @@ mod failure {
 
         #[test]
         fn it_outputs_error_and_fails_when_no_pos_args_provided() {
-            let mut cmd = get_test_bin("gitignore-template-generator");
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
             let output = cmd.output().expect("Failed to execute command");
             let expected =
@@ -122,7 +122,7 @@ mod failure {
 
         #[test]
         fn it_outputs_error_and_fails_when_commas_in_pos_args() {
-            let mut cmd = get_test_bin("gitignore-template-generator");
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
             cmd.args(["rust", "python,java"]);
 
@@ -139,7 +139,7 @@ mod failure {
 
         #[test]
         fn it_outputs_error_and_fails_when_template_not_found() {
-            let mut cmd = get_test_bin("gitignore-template-generator");
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
             cmd.args(["foo"]);
 
