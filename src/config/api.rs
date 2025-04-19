@@ -8,7 +8,7 @@ use crate::{
 
 #[derive(Parser, Debug)]
 #[command(version, author, long_about = None)]
-#[command(about = "Generate templates for .gitignore files")]
+#[command(about = constant::parser_infos::ABOUT)]
 #[command(help_template = "\
 {before-help}
 {usage-heading} {usage}

@@ -30,11 +30,14 @@ pub mod cli_options {
         short: 'a',
         long: "author"
     };
-
     pub const SERVER_URL: CliOptionName = CliOptionName {
         short: 's',
         long: "server-url"
     };
+}
+
+pub mod parser_infos {
+    pub const ABOUT: &str = "Generate templates for .gitignore files";
 }
 
 pub mod exit_status {
