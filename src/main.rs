@@ -7,16 +7,18 @@ use gitignore_template_generator::{
 };
 
 fn main() {
-    let args = DefaultArgsParser::parse();
+    let cli_args = DefaultArgsParser::parse();
+    let server_url = cli_args.server_url;
+    let template_names = cli_args.template_names.join(",");
 
-    let client = UreqClient {
-        server_url: args.server_url,
-    };
-    let args = args.template_names.join(",");
-    let result = GitignoreTemplateGenerator::generate_from_api(&client, &args);
+    let http_client = UreqClient { server_url };
+    let generated_template = GitignoreTemplateGenerator::generate_from_api(
+        &http_client,
+        &template_names,
+    );
 
-    match result {
-        Ok(body) => print!("{body}"),
+    match generated_template {
+        Ok(template) => print!("{template}"),
         Err(error) => {
             eprintln!("{}", error.message);
             exit(error.exit_status);
