@@ -2,7 +2,7 @@ use gitignore_template_generator::constant::{error_messages, exit_status};
 use mockito::Server;
 use test_bin::get_test_bin;
 
-mod unhappy {
+mod failure {
     use super::*;
 
     #[test]
