@@ -98,7 +98,7 @@ mod success {
                 cli_tool.output().expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = String::from_utf8_lossy(&result.stdout);
-            let expected_output = "Patacode <pata.codegineer@gmail.com>\n";
+            let expected_output = format!("{}\n", env!("CARGO_PKG_AUTHORS"));
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
