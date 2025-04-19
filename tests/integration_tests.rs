@@ -1,6 +1,6 @@
 use std::fs;
 
-use gitignore_template_generator::constant::{error_messages, path};
+use gitignore_template_generator::constant::{error_messages, path, self};
 use regex::Regex;
 use test_bin::get_test_bin;
 
@@ -70,7 +70,8 @@ mod success {
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let expected_output_pattern = format!(
-                r"^{} [0-9]+\.[0-9]+\.[0-9]+\n$",
+                r"^{} {}\n$",
+                constant::regex::SEMVER_VERSION,
                 env!("CARGO_PKG_NAME")
             );
             let expected_output_pattern =
