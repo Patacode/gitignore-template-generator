@@ -15,6 +15,7 @@
     "impls",
     "MSVC",
     "Patacode",
+    "rstest",
     "rustc",
     "RUSTFLAGS",
     "toptal",
