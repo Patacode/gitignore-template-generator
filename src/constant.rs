@@ -16,5 +16,5 @@ pub mod template_generator {
 }
 
 pub mod path {
-    pub const TEST_RESOURCES: &str = "tests/resources";
+    pub const TEST_RESOURCE_EXPECTATIONS: &str = "tests/expected";
 }
