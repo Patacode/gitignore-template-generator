@@ -1,4 +1,7 @@
-use crate::{constant, http_client::{HttpClient, ProgramError}};
+use crate::{
+    constant,
+    http_client::{HttpClient, ProgramError},
+};
 
 use super::TemplateGenerator;
 
