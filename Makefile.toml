@@ -11,6 +11,29 @@ args = ["install", "cargo-release"]
 command = "cargo"
 args = ["fmt"]
 
+[tasks.fmt-check]
+command = "cargo"
+args = ["fmt", "--check"]
+
+[tasks.lint]
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--release"]
+
+[tasks.deploy]
+command = "cargo"
+args = ["release", "${BUMP_LEVEL}", "--execute", "--no-confirm", "--no-verify"]
+
+[tasks.deploy-dryrun]
+command = "cargo"
+args = ["release", "${BUMP_LEVEL}", "--no-confirm", "--no-verify"]
+
+[tasks.deploy-patch]
+env = { "BUMP_LEVEL" = "patch" }
+run_task = "deploy"
+
+[tasks.deploy-patch-dryrun]
+env = { "BUMP_LEVEL" = "patch" }
+run_task = "deploy-dryrun"
 
 
 # git
@@ -18,49 +41,32 @@ args = ["fmt"]
 command = "git"
 args = ["add", "."]
 
-[tasks.git-commit-env]
+[tasks.git-commit]
 command = "git"
-args = ["commit", "-m", "${DEFAULT_GIT_COMMIT_MSG}"]
+args = ["commit", "-m", "${COMMIT_MSG}"]
+
+[tasks.git-commit-fmt]
+env = { "COMMIT_MSG" = "style: reformat code with cargo fmt" }
+run_task = "git-commit"
+
+[tasks.git-commit-changelog]
+env = { "COMMIT_MSG" = "git commit -m \"chore: update changelog\"" }
+run_task = "git-commit"
 
 [tasks.git-push]
 command = "git"
 args = ["push"]
 
+
+# front tasks
 [tasks.dev]
-dependencies = [
-    "install-cargo-tarpaulin",
-    "install-cargo-release",
-    "build"
-]
+dependencies = ["install-cargo-tarpaulin", "install-cargo-release", "build"]
 
 [tasks.fmt-commit]
-env = { DEFAULT_GIT_COMMIT_MSG = "style: reformat code with cargo fmt" }
-dependencies = [
-    "fmt",
-    "git-add-all",
-    "git-commit-env",
-    "git-push"
-]
-
-[tasks.lint]
-script = "cargo clippy --all-targets --all-features --release"
+dependencies = ["fmt", "git-add-all", "git-commit-fmt", "git-push"]
 
 [tasks.full-test]
-script = [
-    "cargo test",
-    "cargo clippy --all-targets --all-features --release",
-    "cargo fmt --check"
-]
-
-[tasks.deploy-patch]
-script = "cargo release patch --execute --no-confirm --no-verify"
-
-[tasks.deploy-patch-dryrun]
-script = "cargo release patch --no-confirm --no-verify"
+run_task = { name = ["test", "lint", "fmt-check"], parallel = true }
 
 [tasks.changelog]
-script = [
-    "git add .",
-    'git commit -m "chore: update changelog"',
-    "git push"
-]
+dependencies = ["git-add-all", "git-commit-changelog", "git-push"]
