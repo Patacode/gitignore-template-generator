@@ -1,4 +1,7 @@
-use crate::http_client::api::{HttpClient, ProgramError};
+use crate::{
+    constant,
+    http_client::api::{HttpClient, ProgramError},
+};
 
 #[derive(Default)]
 pub struct UreqClient {
@@ -18,15 +21,14 @@ impl HttpClient for UreqClient {
                 Ok(body) => Ok(body),
                 Err(_error) => Err(ProgramError {
                     message: String::from(
-                        "An error occurred during body parsing",
+                        constant::error_messages::BODY_PARSING_ISSUE,
                     ),
                     exit_status: 3,
                 }),
             },
             Err(error) => Err(ProgramError {
-                message: format!(
-                    "An error occurred during the API call: {error}"
-                ),
+                message: constant::error_messages::API_CALL_FAILURE
+                    .replace("{error}", &error.to_string()),
                 exit_status: 2,
             }),
         }
