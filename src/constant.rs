@@ -23,6 +23,20 @@ pub mod help_messages {
         "The url to the server hosting gitignore template generator service";
 }
 
+pub mod cli_options {
+    use crate::helper::CliOptionName;
+
+    pub const AUTHOR: CliOptionName = CliOptionName {
+        short: 'a',
+        long: "author"
+    };
+
+    pub const SERVER_URL: CliOptionName = CliOptionName {
+        short: 's',
+        long: "server-url"
+    };
+}
+
 pub mod exit_status {
     pub const SUCCESS: i32 = 0;
     pub const GENERIC: i32 = 2;
