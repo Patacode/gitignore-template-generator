@@ -25,22 +25,23 @@ mod tests {
                 use super::*;
 
                 #[test]
-                fn it_fetches_data_correctly_with_ureq_client() {
-                    let api_response = "gitignore template for rust";
-                    let mut server = Server::new();
-                    let base_url = server.url();
-                    let uri = "/api/rust";
+                fn it_fetches_and_returns_data_as_string_when_200_response() {
+                    let mut mock_server = Server::new();
+                    let server_url = mock_server.url();
 
-                    let mock = server
-                        .mock("GET", uri)
+                    let http_client = UreqClient::default();
+                    let mock_body = "gitignore template for rust";
+                    let mock_uri = "/api/rust";
+                    let mock = mock_server
+                        .mock("GET", mock_uri)
                         .with_status(200)
-                        .with_body(api_response)
+                        .with_body(mock_body)
                         .create();
 
-                    let client = UreqClient::default();
+                    let actual =
+                        http_client.get(&format!("{server_url}{mock_uri}"));
                     let expected: Result<String, ProgramError> =
-                        Ok(String::from(api_response));
-                    let actual = client.get(&format!("{base_url}{uri}"));
+                        Ok(String::from(mock_body));
 
                     mock.assert();
                     assert_eq!(actual, expected);
@@ -48,23 +49,21 @@ mod tests {
 
                 #[test]
                 fn it_fetches_data_correctly_with_ureq_client_and_server_url() {
-                    let api_response = "gitignore template for rust";
-                    let mut server = Server::new();
-                    let base_url = server.url();
-                    let uri = "/api/rust";
+                    let mut mock_server = Server::new();
+                    let server_url = mock_server.url();
 
-                    let mock = server
-                        .mock("GET", uri)
+                    let http_client = UreqClient { server_url };
+                    let mock_body = "gitignore template for rust";
+                    let mock_uri = "/api/rust";
+                    let mock = mock_server
+                        .mock("GET", mock_uri)
                         .with_status(200)
-                        .with_body(api_response)
+                        .with_body(mock_body)
                         .create();
 
-                    let client = UreqClient {
-                        server_url: base_url,
-                    };
+                    let actual = http_client.get(mock_uri);
                     let expected: Result<String, ProgramError> =
-                        Ok(String::from(api_response));
-                    let actual = client.get(uri);
+                        Ok(String::from(mock_body));
 
                     mock.assert();
                     assert_eq!(actual, expected);
