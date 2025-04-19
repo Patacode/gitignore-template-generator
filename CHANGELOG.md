@@ -9,6 +9,11 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+### Added
+
+- helper module for integration and isolation tests
+- constant module to store globally shared constant fields
+
 ### Changed
 
 - integration and isolation tests refactored
