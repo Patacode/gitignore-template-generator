@@ -13,6 +13,14 @@ and this project adheres to
 
 - integration and isolation tests refactored
 
+### Removed
+
+- fmt dependency in fmt-commit task
+
+### Fixed
+
+- only CHANGELOG.md is commit and pushed in task fmt-commit
+
 ## [0.3.3] - 2025-04-19 <a id="0.3.3"></a>
 
 ### Changed
