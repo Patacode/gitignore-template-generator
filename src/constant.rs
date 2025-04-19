@@ -10,6 +10,7 @@ pub mod error_messages {
         "Commas are not allowed in template names";
     pub const API_CALL_FAILURE: &str =
         "An error occurred during the API call: {error}";
+    pub const HTTP_400: &str = "http status: 400";
 }
 
 pub mod exit_status {
