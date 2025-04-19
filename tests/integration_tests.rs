@@ -1,7 +1,7 @@
 use std::fs;
 
 use crate::helper::load_expectation_file_as_string;
-use gitignore_template_generator::constant::{self, error_messages, path};
+use gitignore_template_generator::constant::{self, error_messages};
 use regex::Regex;
 use test_bin::get_test_bin;
 
