@@ -28,11 +28,11 @@ pub mod cli_options {
 
     pub const AUTHOR: CliOptionName = CliOptionName {
         short: 'a',
-        long: "author"
+        long: "author",
     };
     pub const SERVER_URL: CliOptionName = CliOptionName {
         short: 's',
-        long: "server-url"
+        long: "server-url",
     };
 }
 
