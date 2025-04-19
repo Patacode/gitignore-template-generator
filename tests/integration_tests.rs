@@ -1,6 +1,6 @@
 use std::fs;
 
-use gitignore_template_generator::constant::error_messages;
+use gitignore_template_generator::constant::{error_messages, path};
 use regex::Regex;
 use test_bin::get_test_bin;
 
@@ -13,6 +13,11 @@ mod success {
         #[test]
         fn it_outputs_template_with_one_pos_arg() {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+            let expectation_file_name = "rust_template";
+            let expectation_file_path = format!(
+                "{}/{expectation_file_name}.txt",
+                path::TEST_EXPECTATIONS
+            );
 
             cli_tool.arg("rust");
             let result = cli_tool
@@ -20,9 +25,8 @@ mod success {
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = String::from_utf8_lossy(&result.stdout);
-            let expected_output =
-                fs::read_to_string("tests/expected/rust_template.txt")
-                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
+            let expected_output = fs::read_to_string(expectation_file_path)
+                .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
