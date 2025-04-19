@@ -107,21 +107,26 @@ mod success {
 
         #[test]
         fn it_outputs_help_infos_with_help_option() {
-            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cmd.arg("-h");
+            let expectation_file_name = "help_message";
+            let expectation_file_path = format!(
+                "{}/{expectation_file_name}.txt",
+                path::TEST_EXPECTATIONS
+            );
 
-            let output =
-                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-            let expected =
-                fs::read_to_string("tests/expected/help_message.txt")
-                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
-            let expected =
-                expected.replace("{version}", env!("CARGO_PKG_VERSION"));
-            let actual = String::from_utf8_lossy(&output.stdout);
+            cli_tool.arg("-h");
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            assert!(output.status.success());
-            assert_eq!(actual, expected);
+            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let expected_output = fs::read_to_string(expectation_file_path)
+                .expect(error_messages::FILE_READ_TO_STRING_FAILURE)
+                .replace("{version}", env!("CARGO_PKG_VERSION"));
+
+            assert!(result.status.success());
+            assert_eq!(actual_output, expected_output);
         }
     }
 }
