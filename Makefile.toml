@@ -41,6 +41,10 @@ run_task = "deploy-dryrun"
 command = "git"
 args = ["add", "."]
 
+[tasks.git-add-changelog]
+command = "git"
+args = ["add", "CHANGELOG.md"]
+
 [tasks.git-commit]
 command = "git"
 args = ["commit", "-m", "${COMMIT_MSG}"]
@@ -63,7 +67,7 @@ args = ["push"]
 dependencies = ["install-cargo-tarpaulin", "install-cargo-release", "build"]
 
 [tasks.fmt-commit]
-dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
+dependencies = ["git-add-changelog", "git-commit-fmt", "git-push"]
 
 [tasks.full-test]
 run_task = { name = ["test", "lint", "fmt-check"], parallel = true }
