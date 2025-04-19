@@ -69,10 +69,12 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
+            let expected_output_pattern = format!(
+                r"^{} [0-9]+\.[0-9]+\.[0-9]+\n$",
+                env!("CARGO_PKG_NAME")
+            );
             let expected_output_pattern =
-                r"^gitignore-template-generator [0-9]+\.[0-9]+\.[0-9]+\n$";
-            let expected_output_pattern =
-                Regex::new(expected_output_pattern).unwrap();
+                Regex::new(&expected_output_pattern).unwrap();
             let actual_output = String::from_utf8_lossy(&result.stdout);
 
             assert!(result.status.success());
