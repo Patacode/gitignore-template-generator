@@ -16,11 +16,12 @@ mod failure {
 
             let mut mock_server = Server::new();
             let mock_server_base_url = mock_server.url();
-            let uri = format!("{}/rust", template_generator::URI);
-            let mock = mock_server
-                .mock("GET", uri.as_str())
+            let template_generator_uri =
+                format!("{}/rust", template_generator::URI);
+            let template_generator_mock = mock_server
+                .mock("GET", template_generator_uri.as_str())
                 .with_status(200)
-                .with_body(vec![0, 159, 146, 150])
+                .with_body(vec![0, 159, 146, 150]) // invalid utf-8 sequence
                 .create();
 
             cli_tool
@@ -37,7 +38,7 @@ mod failure {
             let actual_status_code = result.status.code();
             let expected_status_code = Some(exit_status::BODY_PARSING_ISSUE);
 
-            mock.assert();
+            template_generator_mock.assert();
 
             assert_eq!(actual_status_code, expected_status_code);
             assert_eq!(actual_error_message, expected_error_message);
