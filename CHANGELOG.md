@@ -9,6 +9,14 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+### Added
+
+- struct to wrap cli args parsing logic
+
+### Changed
+
+- refactoring of lib and bin crates
+
 ## [0.3.4] - 2025-04-19 <a id="0.3.4"></a>
 
 ### Added
