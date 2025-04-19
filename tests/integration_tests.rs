@@ -1,6 +1,6 @@
 use std::fs;
 
-use gitignore_template_generator::constant::{error_messages, path, self};
+use gitignore_template_generator::constant::{self, error_messages, path};
 use regex::Regex;
 use test_bin::get_test_bin;
 
