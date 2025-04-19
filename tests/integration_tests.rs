@@ -100,57 +100,24 @@ mod failure {
     mod pos_args {
         use super::*;
 
-        #[test]
-        fn it_outputs_error_and_fails_when_no_pos_args_provided() {
+        #[rstest]
+        #[case("", "no_pos_args_error")]
+        #[case("rust python,java", "comma_pos_args_error")]
+        #[case("foo", "template_not_found_error")]
+        fn it_outputs_error_and_fails_when_invalid_pos_args(
+            #[case] pos_args: &str,
+            #[case] expectation_file_name: &str,
+        ) {
             let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
 
+            cli_tools.args(parse_pos_args(pos_args));
             let result = cli_tools
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stderr);
             let expected_output =
-                load_expectation_file_as_string("no_pos_args_error");
-
-            let actual_status_code = result.status.code();
-            let expected_status_code = Some(constant::exit_status::GENERIC);
-
-            assert_eq!(actual_status_code, expected_status_code);
-            assert_eq!(actual_output, expected_output);
-        }
-
-        #[test]
-        fn it_outputs_error_and_fails_when_commas_in_pos_args() {
-            let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
-
-            cli_tools.args(["rust", "python,java"]);
-            let result = cli_tools
-                .output()
-                .expect(error_messages::CMD_EXECUTION_FAILURE);
-
-            let actual_output = parse_bytes(&result.stderr);
-            let expected_output =
-                load_expectation_file_as_string("comma_pos_args_error");
-
-            let actual_status_code = result.status.code();
-            let expected_status_code = Some(constant::exit_status::GENERIC);
-
-            assert_eq!(actual_status_code, expected_status_code);
-            assert_eq!(actual_output, expected_output);
-        }
-
-        #[test]
-        fn it_outputs_error_and_fails_when_template_not_found() {
-            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-
-            cli_tool.args(["foo"]);
-            let result = cli_tool
-                .output()
-                .expect(error_messages::CMD_EXECUTION_FAILURE);
-
-            let actual_output = String::from_utf8_lossy(&result.stderr);
-            let expected_output =
-                load_expectation_file_as_string("template_not_found_error");
+                load_expectation_file_as_string(expectation_file_name);
 
             let actual_status_code = result.status.code();
             let expected_status_code = Some(constant::exit_status::GENERIC);
