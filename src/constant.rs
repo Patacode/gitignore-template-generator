@@ -15,6 +15,14 @@ pub mod error_messages {
         "Author information not available.";
 }
 
+pub mod help_messages {
+    pub const TEMPLATE_NAMES: &str =
+        "A non-empty list of existing gitignore template names";
+    pub const AUTHOR: &str = "Print author";
+    pub const SERVER_URL: &str =
+        "The url to the server hosting gitignore template generator service";
+}
+
 pub mod exit_status {
     pub const SUCCESS: i32 = 0;
     pub const GENERIC: i32 = 2;
@@ -22,6 +30,7 @@ pub mod exit_status {
 }
 
 pub mod template_generator {
+    pub const BASE_URL: &str = "https://www.toptal.com";
     pub const URI: &str = "/developers/gitignore/api";
 }
 

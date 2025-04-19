@@ -1,7 +1,10 @@
 use clap::Parser;
 
 pub use crate::config::impls::DefaultArgsParser;
-use crate::validator::{CliArgsValidator, DefaultCliArgsValidator};
+use crate::{
+    constant,
+    validator::{CliArgsValidator, DefaultCliArgsValidator},
+};
 
 #[derive(Parser, Debug)]
 #[command(version, author, long_about = None)]
@@ -20,7 +23,7 @@ pub struct Args {
     #[arg(
         required_unless_present = "author",
         value_parser = DefaultCliArgsValidator::has_no_commas,
-        help = "A non-empty list of existing gitignore template names"
+        help = constant::help_messages::TEMPLATE_NAMES
     )]
     pub template_names: Vec<String>,
 
@@ -29,15 +32,15 @@ pub struct Args {
         short = 'a',
         long = "author",
         action = clap::ArgAction::SetTrue,
-        help = "Print author"
+        help = constant::help_messages::AUTHOR
     )]
     pub show_author: bool,
 
     #[arg(
         short = 's',
         long = "server-url",
-        help = "The url to the server hosting gitignore template generator service",
-        default_value = "https://www.toptal.com"
+        help = constant::help_messages::SERVER_URL,
+        default_value = constant::template_generator::BASE_URL
     )]
     pub server_url: String,
 }
