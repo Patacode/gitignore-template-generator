@@ -8,6 +8,8 @@ pub mod error_messages {
         "Actual output <{actual}> did not match expected pattern <{expected}>";
     pub const COMMAS_NOT_ALLOWED: &str =
         "Commas are not allowed in template names";
+    pub const API_CALL_FAILURE: &str =
+        "An error occurred during the API call: {error}";
 }
 
 pub mod exit_status {
