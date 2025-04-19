@@ -1,7 +1,7 @@
 use std::fs;
 
 use crate::helper::*;
-use gitignore_template_generator::constant::error_messages;
+use gitignore_template_generator::constant::{self, error_messages};
 use rstest::*;
 use test_bin::get_test_bin;
 
@@ -110,11 +110,15 @@ mod failure {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let expected_output = load_expectation_file_as_string("no_pos_args_error");
             let actual_output = parse_bytes(&result.stderr);
+            let expected_output =
+                load_expectation_file_as_string("no_pos_args_error");
+
+            let actual_status_code = result.status.code();
+            let expected_status_code = Some(constant::exit_status::GENERIC);
 
             assert!(!result.status.success());
-            assert_eq!(result.status.code(), Some(2));
+            assert_eq!(actual_status_code, expected_status_code);
             assert_eq!(actual_output, expected_output);
         }
 
