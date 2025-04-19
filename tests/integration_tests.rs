@@ -75,9 +75,9 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
+            let actual_output = String::from_utf8_lossy(&result.stdout);
             let expected_output_pattern =
                 Regex::new(&expected_output_pattern).unwrap();
-            let actual_output = String::from_utf8_lossy(&result.stdout);
 
             assert!(result.status.success());
             assert!(
