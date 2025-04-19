@@ -94,8 +94,9 @@ mod success {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
             cli_tool.arg("-a");
-            let result =
-                cli_tool.output().expect(error_messages::CMD_EXECUTION_FAILURE);
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = String::from_utf8_lossy(&result.stdout);
             let expected_output = format!("{}\n", env!("CARGO_PKG_AUTHORS"));
