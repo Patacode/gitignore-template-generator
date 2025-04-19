@@ -29,16 +29,16 @@ pub struct Args {
 
     #[arg(
         id = "author",
-        short = 'a',
-        long = "author",
+        short = constant::cli_options::AUTHOR.short,
+        long = constant::cli_options::AUTHOR.long,
         action = clap::ArgAction::SetTrue,
         help = constant::help_messages::AUTHOR
     )]
     pub show_author: bool,
 
     #[arg(
-        short = 's',
-        long = "server-url",
+        short = constant::cli_options::SERVER_URL.short,
+        long = constant::cli_options::SERVER_URL.long,
         help = constant::help_messages::SERVER_URL,
         default_value = constant::template_generator::BASE_URL
     )]
