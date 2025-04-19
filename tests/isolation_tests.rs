@@ -1,9 +1,8 @@
-use gitignore_template_generator::constant::error_messages;
+use gitignore_template_generator::constant::{error_messages, exit_status};
 use mockito::Server;
 use test_bin::get_test_bin;
 
 mod unhappy {
-
     use super::*;
 
     #[test]
@@ -23,14 +22,12 @@ mod unhappy {
         cmd.arg("rust").args(["--server-url", &base_url]);
 
         let output = cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-        let expected = "An error occurred during body parsing\n";
+        let expected = format!("{}\n", error_messages::BODY_PARSING_ISSUE);
         let actual = String::from_utf8_lossy(&output.stderr);
 
         mock.assert();
 
-        assert!(!output.status.success());
-        assert_eq!(output.status.code(), Some(3));
-
+        assert_eq!(output.status.code(), Some(exit_status::BODY_PARSING_ISSUE));
         assert_eq!(actual, expected);
     }
 }
