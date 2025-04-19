@@ -21,7 +21,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let actual_output = parse_stdout(&result.stdout);
             let expected_output =
                 load_expectation_file_as_string("rust_template");
 
@@ -38,7 +38,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let actual_output =parse_stdout(&result.stdout);
             let expected_output =
                 load_expectation_file_as_string("rust_python_template");
 
@@ -59,7 +59,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let actual_output = parse_stdout(&result.stdout);
             let expected_output_pattern = get_version_infos_output_pattern();
 
             assert!(result.status.success());
@@ -81,7 +81,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let actual_output = parse_stdout(&result.stdout);
             let expected_output = format!("{}\n", env!("CARGO_PKG_AUTHORS"));
 
             assert!(result.status.success());
@@ -97,7 +97,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let actual_output = parse_stdout(&result.stdout);
             let expected_output =
                 load_expectation_file_as_string("help_message")
                     .replace("{version}", env!("CARGO_PKG_VERSION"))
