@@ -20,7 +20,7 @@ mod success {
                 cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/rust_template.txt")
-                    .expect("Failed to read expected output file");
+                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
             let actual = String::from_utf8_lossy(&output.stdout);
 
             assert!(output.status.success());
@@ -37,7 +37,7 @@ mod success {
                 cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/rust_python_template.txt")
-                    .expect("Failed to read expected output file");
+                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
             let actual = String::from_utf8_lossy(&output.stdout);
 
             assert!(output.status.success());
@@ -94,7 +94,7 @@ mod success {
                 cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/help_message.txt")
-                    .expect("Failed to read expected output file");
+                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
             let expected =
                 expected.replace("{version}", env!("CARGO_PKG_VERSION"));
             let actual = String::from_utf8_lossy(&output.stdout);
@@ -119,7 +119,7 @@ mod failure {
                 cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/no_pos_args_error.txt")
-                    .expect("Failed to read expected output file");
+                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
             let actual = String::from_utf8_lossy(&output.stderr);
 
             assert!(!output.status.success());
@@ -137,7 +137,7 @@ mod failure {
                 cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/comma_pos_args_error.txt")
-                    .expect("Failed to read expected output file");
+                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
             let actual = String::from_utf8_lossy(&output.stderr);
 
             assert!(!output.status.success());
