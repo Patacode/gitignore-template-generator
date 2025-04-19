@@ -148,9 +148,9 @@ mod failure {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let expected_output =
-                "An error occurred during the API call: http status: 404\n";
             let actual_output = String::from_utf8_lossy(&result.stderr);
+            let expected_output =
+                load_expectation_file_as_string("template_not_found_error");
 
             let actual_status_code = result.status.code();
             let expected_status_code = Some(constant::exit_status::GENERIC);
