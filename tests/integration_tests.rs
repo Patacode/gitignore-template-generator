@@ -48,9 +48,9 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
+            let actual_output = String::from_utf8_lossy(&result.stdout);
             let expected_output = fs::read_to_string(expectation_file_path)
                 .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
-            let actual_output = String::from_utf8_lossy(&result.stdout);
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
