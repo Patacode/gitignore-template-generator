@@ -27,7 +27,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = parse_stdout(&result.stdout);
+            let actual_output = parse_bytes(&result.stdout);
             let expected_output =
                 load_expectation_file_as_string(expectation_file_name);
 
@@ -48,7 +48,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = parse_stdout(&result.stdout);
+            let actual_output = parse_bytes(&result.stdout);
             let expected_output = format!(
                 "{} {}\n",
                 env!("CARGO_PKG_NAME"),
@@ -68,7 +68,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = parse_stdout(&result.stdout);
+            let actual_output = parse_bytes(&result.stdout);
             let expected_output = format!("{}\n", env!("CARGO_PKG_AUTHORS"));
 
             assert!(result.status.success());
@@ -84,7 +84,7 @@ mod success {
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = parse_stdout(&result.stdout);
+            let actual_output = parse_bytes(&result.stdout);
             let expected_output =
                 load_expectation_file_as_string("help_message")
                     .replace("{version}", env!("CARGO_PKG_VERSION"))
@@ -104,18 +104,18 @@ mod failure {
 
         #[test]
         fn it_outputs_error_and_fails_when_no_pos_args_provided() {
-            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+            let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            let output =
-                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-            let expected =
-                fs::read_to_string("tests/expected/no_pos_args_error.txt")
-                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
-            let actual = String::from_utf8_lossy(&output.stderr);
+            let result = cli_tools
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            assert!(!output.status.success());
-            assert_eq!(output.status.code(), Some(2));
-            assert_eq!(actual, expected);
+            let expected_output = load_expectation_file_as_string("no_pos_args_error");
+            let actual_output = parse_bytes(&result.stderr);
+
+            assert!(!result.status.success());
+            assert_eq!(result.status.code(), Some(2));
+            assert_eq!(actual_output, expected_output);
         }
 
         #[test]
