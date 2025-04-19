@@ -24,7 +24,7 @@ impl ArgsParser for DefaultArgsParser {
                 );
             }
 
-            exit(0);
+            exit(constant::exit_status::SUCCESS);
         }
 
         args

@@ -16,6 +16,7 @@ pub mod error_messages {
 }
 
 pub mod exit_status {
+    pub const SUCCESS: i32 = 0;
     pub const GENERIC: i32 = 2;
     pub const BODY_PARSING_ISSUE: i32 = 3;
 }
