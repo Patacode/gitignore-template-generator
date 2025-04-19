@@ -4,6 +4,8 @@ pub mod error_messages {
         "An error occurred during body parsing";
     pub const FILE_READ_TO_STRING_FAILURE: &str =
         "Failed to read expected output file";
+    pub const REGEX_NO_MATCH: &str =
+        "Actual output <{actual}> did not match expected pattern <{expected}>";
 }
 
 pub mod exit_status {
