@@ -6,6 +6,8 @@ pub mod error_messages {
         "Failed to read expected output file";
     pub const REGEX_NO_MATCH: &str =
         "Actual output <{actual}> did not match expected pattern <{expected}>";
+    pub const COMMAS_NOT_ALLOWED: &str =
+        "Commas are not allowed in template names";
 }
 
 pub mod exit_status {
