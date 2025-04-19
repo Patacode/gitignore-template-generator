@@ -1,8 +1,7 @@
 use std::fs;
 
-use crate::helper::load_expectation_file_as_string;
-use gitignore_template_generator::constant::{self, error_messages};
-use regex::Regex;
+use crate::helper::*;
+use gitignore_template_generator::constant::error_messages;
 use test_bin::get_test_bin;
 
 mod helper;
@@ -55,20 +54,13 @@ mod success {
         fn it_outputs_version_infos_with_version_option() {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            let expected_output_pattern = format!(
-                r"^{} {}\n$",
-                env!("CARGO_PKG_NAME"),
-                constant::regex::SEMVER_VERSION,
-            );
-
             cli_tool.arg("-V");
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = String::from_utf8_lossy(&result.stdout);
-            let expected_output_pattern =
-                Regex::new(&expected_output_pattern).unwrap();
+            let expected_output_pattern = get_version_infos_output_pattern();
 
             assert!(result.status.success());
             assert!(
@@ -106,9 +98,10 @@ mod success {
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = String::from_utf8_lossy(&result.stdout);
-            let expected_output = load_expectation_file_as_string("help_message")
-                .replace("{version}", env!("CARGO_PKG_VERSION"))
-                .replace("{author}", env!("CARGO_PKG_AUTHORS"));
+            let expected_output =
+                load_expectation_file_as_string("help_message")
+                    .replace("{version}", env!("CARGO_PKG_VERSION"))
+                    .replace("{author}", env!("CARGO_PKG_AUTHORS"));
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
