@@ -1,4 +1,4 @@
-use std::fs;
+use std::{borrow::Cow, fs, process::Output};
 
 use gitignore_template_generator::constant;
 use regex::Regex;
@@ -20,4 +20,8 @@ pub fn get_version_infos_output_pattern() -> Regex {
         constant::regex::SEMVER_VERSION,
     ))
     .unwrap()
+}
+
+pub fn parse_stdout(stdout: &[u8]) -> Cow<str> {
+    String::from_utf8_lossy(stdout)
 }
