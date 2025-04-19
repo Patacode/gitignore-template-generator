@@ -14,12 +14,13 @@ pub fn load_expectation_file_as_string(expectation_file_name: &str) -> String {
 }
 
 pub fn get_version_infos_output_pattern() -> Regex {
-    Regex::new(&format!(
+    let pattern = format!(
         r"^{} {}\n$",
         env!("CARGO_PKG_NAME"),
         constant::regex::SEMVER_VERSION,
-    ))
-    .unwrap()
+    );
+
+    Regex::new(&pattern).unwrap()
 }
 
 pub fn parse_stdout(stdout: &[u8]) -> Cow<str> {
