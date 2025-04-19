@@ -4,7 +4,7 @@ use crate::http_client::{HttpClient, ProgramError};
 pub trait TemplateGenerator {
     fn generate_from_api(
         http_client: &dyn HttpClient,
-        values: &str,
+        template_names: &str,
     ) -> Result<String, ProgramError>;
 }
 
