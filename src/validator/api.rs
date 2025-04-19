@@ -6,8 +6,8 @@ pub trait CliArgsValidator {
 
 #[cfg(test)]
 mod tests {
-    use crate::constant;
     use super::*;
+    use crate::constant;
 
     mod default_cli_args_validator {
         use super::*;
