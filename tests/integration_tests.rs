@@ -13,6 +13,7 @@ mod success {
         #[test]
         fn it_outputs_template_with_one_pos_arg() {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+
             let expectation_file_name = "rust_template";
             let expectation_file_path = format!(
                 "{}/{expectation_file_name}.txt",
@@ -34,19 +35,25 @@ mod success {
 
         #[test]
         fn it_outputs_combined_templates_with_multiple_pos_args() {
-            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cmd.args(["rust", "python"]);
+            let expectation_file_name = "rust_python_template";
+            let expectation_file_path = format!(
+                "{}/{expectation_file_name}.txt",
+                path::TEST_EXPECTATIONS
+            );
 
-            let output =
-                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-            let expected =
-                fs::read_to_string("tests/expected/rust_python_template.txt")
-                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
-            let actual = String::from_utf8_lossy(&output.stdout);
+            cli_tool.args(["rust", "python"]);
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            assert!(output.status.success());
-            assert_eq!(actual, expected);
+            let expected_output = fs::read_to_string(expectation_file_path)
+                .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
+            let actual_output = String::from_utf8_lossy(&result.stdout);
+
+            assert!(result.status.success());
+            assert_eq!(actual_output, expected_output);
         }
     }
 
