@@ -8,26 +8,38 @@ pub trait CliArgsValidator {
 mod tests {
     use super::*;
 
-    mod has_no_commas {
+    mod default_cli_args_validator {
         use super::*;
 
-        #[test]
-        fn it_returns_ok_for_comma_free_values() {
-            let value = "rust";
-            let expected: Result<String, String> = Ok(String::from(value));
-            let actual = DefaultCliArgsValidator::has_no_commas(value);
+        mod has_no_commas {
+            use super::*;
 
-            assert_eq!(actual, expected);
-        }
+            mod success {
+                use super::*;
 
-        #[test]
-        fn it_returns_error_for_values_with_commas() {
-            let value = "r,ust";
-            let expected: Result<String, String> =
-                Err(String::from("Commas are not allowed in template names"));
-            let actual = DefaultCliArgsValidator::has_no_commas(value);
+                #[test]
+                fn it_returns_ok_for_comma_free_values() {
+                    let value = "rust";
+                    let expected: Result<String, String> = Ok(String::from(value));
+                    let actual = DefaultCliArgsValidator::has_no_commas(value);
+        
+                    assert_eq!(actual, expected);
+                }
+            }
 
-            assert_eq!(actual, expected);
+            mod failure {
+                use super::*;
+
+                #[test]
+                fn it_returns_error_for_values_with_commas() {
+                    let value = "r,ust";
+                    let expected: Result<String, String> =
+                        Err(String::from("Commas are not allowed in template names"));
+                    let actual = DefaultCliArgsValidator::has_no_commas(value);
+        
+                    assert_eq!(actual, expected);
+                }
+            }
         }
     }
 }
