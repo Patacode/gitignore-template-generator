@@ -1,5 +1,3 @@
-use std::fs;
-
 use crate::helper::*;
 use gitignore_template_generator::constant::{self, error_messages};
 use rstest::*;
@@ -117,44 +115,48 @@ mod failure {
             let actual_status_code = result.status.code();
             let expected_status_code = Some(constant::exit_status::GENERIC);
 
-            assert!(!result.status.success());
             assert_eq!(actual_status_code, expected_status_code);
             assert_eq!(actual_output, expected_output);
         }
 
         #[test]
         fn it_outputs_error_and_fails_when_commas_in_pos_args() {
-            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+            let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cmd.args(["rust", "python,java"]);
+            cli_tools.args(["rust", "python,java"]);
+            let result = cli_tools
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let output =
-                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-            let expected =
-                fs::read_to_string("tests/expected/comma_pos_args_error.txt")
-                    .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
-            let actual = String::from_utf8_lossy(&output.stderr);
+            let actual_output = parse_bytes(&result.stderr);
+            let expected_output =
+                load_expectation_file_as_string("comma_pos_args_error");
 
-            assert!(!output.status.success());
-            assert_eq!(output.status.code(), Some(2));
-            assert_eq!(actual, expected);
+            let actual_status_code = result.status.code();
+            let expected_status_code = Some(constant::exit_status::GENERIC);
+
+            assert_eq!(actual_status_code, expected_status_code);
+            assert_eq!(actual_output, expected_output);
         }
 
         #[test]
         fn it_outputs_error_and_fails_when_template_not_found() {
-            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cmd.args(["foo"]);
+            cli_tool.args(["foo"]);
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let output =
-                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-            let expected =
+            let expected_output =
                 "An error occurred during the API call: http status: 404\n";
-            let actual = String::from_utf8_lossy(&output.stderr);
+            let actual_output = String::from_utf8_lossy(&result.stderr);
 
-            assert!(!output.status.success());
-            assert_eq!(output.status.code(), Some(2));
-            assert_eq!(actual, expected);
+            let actual_status_code = result.status.code();
+            let expected_status_code = Some(constant::exit_status::GENERIC);
+
+            assert_eq!(actual_status_code, expected_status_code);
+            assert_eq!(actual_output, expected_output);
         }
     }
 }
