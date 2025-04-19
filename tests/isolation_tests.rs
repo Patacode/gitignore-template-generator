@@ -5,29 +5,37 @@ use test_bin::get_test_bin;
 mod failure {
     use super::*;
 
-    #[test]
-    fn it_outputs_error_and_fails_when_body_parsing_issue() {
-        let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+    mod pos_args {
+        use super::*;
 
-        let mut server = Server::new();
-        let base_url = server.url();
-        let uri = "/developers/gitignore/api/rust";
+        #[test]
+        fn it_outputs_error_and_fails_when_body_parsing_issue() {
+            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
-        let mock = server
-            .mock("GET", uri)
-            .with_status(200)
-            .with_body(vec![0, 159, 146, 150])
-            .create();
+            let mut server = Server::new();
+            let base_url = server.url();
+            let uri = "/developers/gitignore/api/rust";
 
-        cmd.arg("rust").args(["--server-url", &base_url]);
+            let mock = server
+                .mock("GET", uri)
+                .with_status(200)
+                .with_body(vec![0, 159, 146, 150])
+                .create();
 
-        let output = cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-        let expected = format!("{}\n", error_messages::BODY_PARSING_ISSUE);
-        let actual = String::from_utf8_lossy(&output.stderr);
+            cmd.arg("rust").args(["--server-url", &base_url]);
 
-        mock.assert();
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
+            let expected = format!("{}\n", error_messages::BODY_PARSING_ISSUE);
+            let actual = String::from_utf8_lossy(&output.stderr);
 
-        assert_eq!(output.status.code(), Some(exit_status::BODY_PARSING_ISSUE));
-        assert_eq!(actual, expected);
+            mock.assert();
+
+            assert_eq!(
+                output.status.code(),
+                Some(exit_status::BODY_PARSING_ISSUE)
+            );
+            assert_eq!(actual, expected);
+        }
     }
 }
