@@ -1,19 +1,45 @@
-[tasks.dev]
-script = [
-    "cargo install cargo-tarpaulin",
-    "cargo install cargo-release",
-    "cargo build",
-]
+# cargo
+[tasks.install-cargo-tarpaulin]
+command = "cargo"
+args = ["install", "cargo-tarpaulin"]
+
+[tasks.install-cargo-release]
+command = "cargo"
+args = ["install", "cargo-release"]
 
 [tasks.fmt]
-script = "cargo fmt"
+command = "cargo"
+args = ["fmt"]
+
+
+
+# git
+[tasks.git-add-all]
+command = "git"
+args = ["add", "."]
+
+[tasks.git-commit-env]
+command = "git"
+args = ["commit", "-m", "${DEFAULT_GIT_COMMIT_MSG}"]
+
+[tasks.git-push]
+command = "git"
+args = ["push"]
+
+[tasks.dev]
+dependencies = [
+    "install-cargo-tarpaulin",
+    "install-cargo-release",
+    "build"
+]
 
 [tasks.fmt-commit]
-script = [
-    "cargo fmt",
-    "git add .",
-    'git commit -m "style: reformat code with cargo fmt"',
-    "git push"
+env = { DEFAULT_GIT_COMMIT_MSG = "style: reformat code with cargo fmt" }
+dependencies = [
+    "fmt",
+    "git-add-all",
+    "git-commit-env",
+    "git-push"
 ]
 
 [tasks.lint]
