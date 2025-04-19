@@ -12,19 +12,20 @@ mod success {
 
         #[test]
         fn it_outputs_template_with_one_pos_arg() {
-            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cmd.arg("rust");
+            cli_tool.arg("rust");
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let output =
-                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-            let expected =
+            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let expected_output =
                 fs::read_to_string("tests/expected/rust_template.txt")
                     .expect(error_messages::FILE_READ_TO_STRING_FAILURE);
-            let actual = String::from_utf8_lossy(&output.stdout);
 
-            assert!(output.status.success());
-            assert_eq!(actual, expected);
+            assert!(result.status.success());
+            assert_eq!(actual_output, expected_output);
         }
 
         #[test]
