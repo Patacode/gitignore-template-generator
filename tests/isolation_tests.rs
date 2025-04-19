@@ -25,8 +25,10 @@ mod unhappy {
         let actual = String::from_utf8_lossy(&output.stderr);
 
         mock.assert();
+
         assert!(!output.status.success());
         assert_eq!(output.status.code(), Some(3));
+
         assert_eq!(actual, expected);
     }
 }
