@@ -62,22 +62,23 @@ mod success {
 
         #[test]
         fn it_outputs_version_infos_with_version_option() {
-            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cmd.arg("-V");
+            cli_tool.arg("-V");
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let output =
-                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-            let pattern =
+            let expected_output_pattern =
                 r"^gitignore-template-generator [0-9]+\.[0-9]+\.[0-9]+\n$";
-            let re = Regex::new(pattern).unwrap();
-            let actual = String::from_utf8_lossy(&output.stdout);
+            let expected_output_pattern =
+                Regex::new(expected_output_pattern).unwrap();
+            let actual_output = String::from_utf8_lossy(&result.stdout);
 
-            assert!(output.status.success());
+            assert!(result.status.success());
             assert!(
-                re.is_match(&actual),
-                "String did not match pattern: {}",
-                pattern
+                expected_output_pattern.is_match(&actual_output),
+                "Actual output <{actual_output}> did not match expected pattern <{expected_output_pattern}>",
             );
         }
 
