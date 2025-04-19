@@ -22,7 +22,7 @@ mod success {
         ) {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cli_tool.args(&parse_pos_args(pos_args));
+            cli_tool.args(parse_pos_args(pos_args));
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
