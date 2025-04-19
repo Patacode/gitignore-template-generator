@@ -14,3 +14,7 @@ pub mod exit_status {
 pub mod template_generator {
     pub const URI: &str = "/developers/gitignore/api";
 }
+
+pub mod path {
+    pub const TEST_RESOURCES: &str = "tests/resources";
+}
