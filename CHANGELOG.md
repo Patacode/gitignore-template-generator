@@ -9,6 +9,8 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+## [0.3.4] - 2025-04-19 <a id="0.3.4"></a>
+
 ### Added
 
 - helper module for integration and isolation tests
