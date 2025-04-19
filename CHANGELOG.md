@@ -9,6 +9,8 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+## [0.3.3] - 2025-04-19 <a id="0.3.3"></a>
+
 ### Changed
 
 - structure of Makefile.toml
