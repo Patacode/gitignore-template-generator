@@ -2,7 +2,10 @@ use std::process::exit;
 
 use clap::{CommandFactory, Parser};
 
-use crate::config::{Args, ArgsParser};
+use crate::{
+    config::{Args, ArgsParser},
+    constant,
+};
 
 pub struct DefaultArgsParser;
 
@@ -15,7 +18,10 @@ impl ArgsParser for DefaultArgsParser {
             if let Some(author) = cmd.get_author() {
                 println!("{author}");
             } else {
-                println!("Author information not available.");
+                println!(
+                    "{}",
+                    constant::error_messages::AUTHOR_INFOS_NOT_AVAILABLE
+                );
             }
 
             exit(0);
