@@ -1,4 +1,4 @@
-use std::{borrow::Cow, fs, process::Output};
+use std::{borrow::Cow, fs};
 
 use gitignore_template_generator::constant;
 use regex::Regex;
