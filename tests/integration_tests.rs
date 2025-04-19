@@ -1,5 +1,6 @@
 use std::fs;
 
+use gitignore_template_generator::constant::error_messages;
 use regex::Regex;
 use test_bin::get_test_bin;
 
@@ -15,7 +16,8 @@ mod success {
 
             cmd.arg("rust");
 
-            let output = cmd.output().expect("Failed to execute command");
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/rust_template.txt")
                     .expect("Failed to read expected output file");
@@ -31,7 +33,8 @@ mod success {
 
             cmd.args(["rust", "python"]);
 
-            let output = cmd.output().expect("Failed to execute command");
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/rust_python_template.txt")
                     .expect("Failed to read expected output file");
@@ -51,7 +54,8 @@ mod success {
 
             cmd.arg("-V");
 
-            let output = cmd.output().expect("Failed to execute command");
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let pattern =
                 r"^gitignore-template-generator [0-9]+\.[0-9]+\.[0-9]+\n$";
             let re = Regex::new(pattern).unwrap();
@@ -71,7 +75,8 @@ mod success {
 
             cmd.arg("-a");
 
-            let output = cmd.output().expect("Failed to execute command");
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected = "Patacode <pata.codegineer@gmail.com>\n";
             let actual = String::from_utf8_lossy(&output.stdout);
 
@@ -85,7 +90,8 @@ mod success {
 
             cmd.arg("-h");
 
-            let output = cmd.output().expect("Failed to execute command");
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/help_message.txt")
                     .expect("Failed to read expected output file");
@@ -109,7 +115,8 @@ mod failure {
         fn it_outputs_error_and_fails_when_no_pos_args_provided() {
             let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            let output = cmd.output().expect("Failed to execute command");
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/no_pos_args_error.txt")
                     .expect("Failed to read expected output file");
@@ -126,7 +133,8 @@ mod failure {
 
             cmd.args(["rust", "python,java"]);
 
-            let output = cmd.output().expect("Failed to execute command");
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 fs::read_to_string("tests/expected/comma_pos_args_error.txt")
                     .expect("Failed to read expected output file");
@@ -143,7 +151,8 @@ mod failure {
 
             cmd.args(["foo"]);
 
-            let output = cmd.output().expect("Failed to execute command");
+            let output =
+                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
             let expected =
                 "An error occurred during the API call: http status: 404\n";
             let actual = String::from_utf8_lossy(&output.stderr);

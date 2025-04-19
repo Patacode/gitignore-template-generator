@@ -1,7 +1,9 @@
+use gitignore_template_generator::constant::error_messages;
 use mockito::Server;
 use test_bin::get_test_bin;
 
 mod unhappy {
+
     use super::*;
 
     #[test]
@@ -20,7 +22,7 @@ mod unhappy {
 
         cmd.arg("rust").args(["--server-url", &base_url]);
 
-        let output = cmd.output().expect("Failed to execute command");
+        let output = cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
         let expected = "An error occurred during body parsing\n";
         let actual = String::from_utf8_lossy(&output.stderr);
 
