@@ -91,17 +91,17 @@ mod success {
 
         #[test]
         fn it_outputs_author_infos_with_author_option() {
-            let mut cmd = get_test_bin(env!("CARGO_PKG_NAME"));
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cmd.arg("-a");
+            cli_tool.arg("-a");
+            let result =
+                cli_tool.output().expect(error_messages::CMD_EXECUTION_FAILURE);
 
-            let output =
-                cmd.output().expect(error_messages::CMD_EXECUTION_FAILURE);
-            let expected = "Patacode <pata.codegineer@gmail.com>\n";
-            let actual = String::from_utf8_lossy(&output.stdout);
+            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let expected_output = "Patacode <pata.codegineer@gmail.com>\n";
 
-            assert!(output.status.success());
-            assert_eq!(actual, expected);
+            assert!(result.status.success());
+            assert_eq!(actual_output, expected_output);
         }
 
         #[test]
