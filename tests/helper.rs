@@ -1,7 +1,6 @@
 use std::{borrow::Cow, fs};
 
 use gitignore_template_generator::constant;
-use regex::Regex;
 
 pub fn load_expectation_file_as_string(expectation_file_name: &str) -> String {
     let expectation_file_path = format!(
