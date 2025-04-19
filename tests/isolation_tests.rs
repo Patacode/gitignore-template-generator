@@ -16,10 +16,10 @@ mod failure {
 
             let mut mock_server = Server::new();
             let mock_server_base_url = mock_server.url();
-            let template_generator_uri =
+            let template_generator_service_uri =
                 format!("{}/rust", template_generator::URI);
             let template_generator_mock = mock_server
-                .mock("GET", template_generator_uri.as_str())
+                .mock("GET", template_generator_service_uri.as_str())
                 .with_status(200)
                 .with_body(vec![0, 159, 146, 150]) // invalid utf-8 sequence
                 .create();
