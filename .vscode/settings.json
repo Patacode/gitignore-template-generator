@@ -32,6 +32,7 @@
     "changelog",
     "vscode",
     "Makefile",
-    "cliff"
+    "cliff",
+    "make"
   ]
 }
