@@ -17,10 +17,9 @@ pub mod error_messages {
 
 pub mod help_messages {
     pub const TEMPLATE_NAMES: &str =
-        "A non-empty list of existing gitignore template names";
+        "A non-empty list of gitignore template names";
     pub const AUTHOR: &str = "Print author";
-    pub const SERVER_URL: &str =
-        "The url of the server hosting gitignore template generator service";
+    pub const SERVER_URL: &str = "The gitignore template generator service url";
     pub const HELP: &str = "Print help";
     pub const VERSION: &str = "Print version";
 }
