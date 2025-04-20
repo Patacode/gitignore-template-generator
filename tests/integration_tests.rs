@@ -1,5 +1,5 @@
 use crate::helper::*;
-use gitignore_template_generator::constant::{self, error_messages};
+use gitignore_template_generator::constant;
 use rstest::*;
 use test_bin::get_test_bin;
 
@@ -23,7 +23,7 @@ mod success {
             cli_tool.args(parse_pos_args(pos_args));
             let result = cli_tool
                 .output()
-                .expect(error_messages::CMD_EXECUTION_FAILURE);
+                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stdout);
             let expected_output =
@@ -44,7 +44,7 @@ mod success {
             cli_tool.arg(format!("-{}", constant::cli_options::VERSION.short));
             let result = cli_tool
                 .output()
-                .expect(error_messages::CMD_EXECUTION_FAILURE);
+                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stdout);
             let expected_output = format!(
@@ -64,7 +64,7 @@ mod success {
             cli_tool.arg(format!("-{}", constant::cli_options::AUTHOR.short));
             let result = cli_tool
                 .output()
-                .expect(error_messages::CMD_EXECUTION_FAILURE);
+                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stdout);
             let expected_output = format!("{}\n", env!("CARGO_PKG_AUTHORS"));
@@ -80,7 +80,7 @@ mod success {
             cli_tool.arg(format!("-{}", constant::cli_options::HELP.short));
             let result = cli_tool
                 .output()
-                .expect(error_messages::CMD_EXECUTION_FAILURE);
+                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stdout);
             let expected_output = get_help_message();
@@ -110,7 +110,7 @@ mod failure {
             cli_tools.args(parse_pos_args(pos_args));
             let result = cli_tools
                 .output()
-                .expect(error_messages::CMD_EXECUTION_FAILURE);
+                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stderr);
             let expected_output =
