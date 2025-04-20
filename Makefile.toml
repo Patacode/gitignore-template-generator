@@ -61,6 +61,18 @@ args = ["commit", "-m", "chore(changelog): update file"]
 command = "git"
 args = ["push"]
 
+[tasks.git-cliff]
+command = "git"
+args = [
+    "cliff",
+    "--unreleased",
+    "-o",
+    "CHANGELOG_SNAPSHOT.md",
+    "--verbose",
+    "--workdir",
+    ".",
+]
+
 
 # front tasks
 [tasks.dev]
