@@ -21,6 +21,8 @@ pub mod help_messages {
     pub const AUTHOR: &str = "Print author";
     pub const SERVER_URL: &str =
         "The url of the server hosting gitignore template generator service";
+    pub const HELP: &str = "Print help";
+    pub const VERSION: &str = "Print version";
 }
 
 pub mod cli_options {
@@ -33,6 +35,14 @@ pub mod cli_options {
     pub const SERVER_URL: CliOptionName = CliOptionName {
         short: 's',
         long: "server-url",
+    };
+    pub const HELP: CliOptionName = CliOptionName {
+        short: 'h',
+        long: "help",
+    };
+    pub const VERSION: CliOptionName = CliOptionName {
+        short: 'V',
+        long: "version",
     };
 }
 

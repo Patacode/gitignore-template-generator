@@ -83,10 +83,7 @@ mod success {
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stdout);
-            let expected_output =
-                load_expectation_file_as_string("help_message")
-                    .replace("{version}", env!("CARGO_PKG_VERSION"))
-                    .replace("{author}", env!("CARGO_PKG_AUTHORS"));
+            let expected_output = get_help_message();
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
