@@ -1,4 +1,8 @@
 # cargo
+[tasks.install-git-cliff]
+command = "cargo"
+args = ["install", "git-cliff"]
+
 [tasks.install-cargo-tarpaulin]
 command = "cargo"
 args = ["install", "cargo-tarpaulin"]
@@ -61,6 +65,7 @@ args = ["push"]
 # front tasks
 [tasks.dev]
 run_task = [
+    { name = "install-git-cliff", fork = true },
     { name = "install-cargo-release", fork = true },
     { name = "install-cargo-tarpaulin", fork = true },
     { name = "build" }
