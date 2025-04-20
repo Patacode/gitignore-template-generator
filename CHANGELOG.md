@@ -9,13 +9,7 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-### Added
-
-- config for conventional commit vscode extension
-
-### Changed
-
-- Makefile.toml further enhanced
+@Content
 
 ## [0.3.6] - 2025-04-20 <a id="0.3.6"></a>
 
