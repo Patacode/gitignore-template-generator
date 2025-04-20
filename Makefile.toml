@@ -74,6 +74,15 @@ args = [
 ]
 
 
+# miscellaneous
+[tasks.bump-changelog]
+script = [
+    "sed '/./,$!d' CHANGELOG_SNAPSHOT.md | tac | sed '/./,$!d' | tac > tmp && mv tmp CHANGELOG_SNAPSHOT.md",
+    "sed -i -e '/@Content/{r CHANGELOG_SNAPSHOT.md' -e 'd}' CHANGELOG.md",
+    "rm CHANGELOG_SNAPSHOT.md",
+]
+
+
 # front tasks
 [tasks.dev]
 run_task = [
@@ -90,4 +99,7 @@ dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
 run_task = { name = ["test", "lint", "fmt-check"], parallel = true }
 
 [tasks.changelog]
+dependencies = ["git-cliff", "bump-changelog"]
+
+[tasks.changelog-commit]
 dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
