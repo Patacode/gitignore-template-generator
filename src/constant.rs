@@ -20,7 +20,7 @@ pub mod help_messages {
         "A non-empty list of existing gitignore template names";
     pub const AUTHOR: &str = "Print author";
     pub const SERVER_URL: &str =
-        "The url to the server hosting gitignore template generator service";
+        "The url of the server hosting gitignore template generator service";
 }
 
 pub mod cli_options {

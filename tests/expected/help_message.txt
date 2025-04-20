@@ -7,7 +7,7 @@ Arguments:
 
 Options:
   -a, --author                   Print author
-  -s, --server-url <SERVER_URL>  The url to the server hosting gitignore template generator service [default: https://www.toptal.com]
+  -s, --server-url <SERVER_URL>  The url of the server hosting gitignore template generator service [default: https://www.toptal.com]
   -h, --help                     Print help
   -V, --version                  Print version
 
