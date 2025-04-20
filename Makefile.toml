@@ -64,7 +64,11 @@ args = ["push"]
 
 # front tasks
 [tasks.dev]
-dependencies = ["install-cargo-tarpaulin", "install-cargo-release", "build"]
+run_task = [
+    { name = "install-cargo-release", fork = true },
+    { name = "install-cargo-tarpaulin", fork = true },
+    { name = "build" }
+]
 
 [tasks.fmt-commit]
 dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
