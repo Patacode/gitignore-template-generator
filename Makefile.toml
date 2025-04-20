@@ -80,7 +80,7 @@ run_task = [
     { name = "install-git-cliff", fork = true },
     { name = "install-cargo-release", fork = true },
     { name = "install-cargo-tarpaulin", fork = true },
-    { name = "build" }
+    { name = "build" },
 ]
 
 [tasks.fmt-commit]
