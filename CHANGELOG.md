@@ -9,7 +9,31 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### ⚡ Performance
+
+- Run pkg installations in dev task in parallel
+
+### 🏗️ Build
+
+- Remove git-commit task to avoid concurrency issues
+- *(make)* Install git-cliff as part of dev task
+- *(make)* Add git-cliff task to Makefile to generate changelog file
+- *(make)* Add new tasks to bump generated changelog in CHANGELOG.md
+- *(cargo)* Add @Content token in CHANGELOG.md when pre-release hooks
+
+### ⚙️ Miscellaneous Tasks
+
+- *(vscode)* Add changelog scope to allowed list
+- *(vscode)* Add vscode scope to allowed list
+- *(Makefile)* Update commit message bound to git-commit-changelog task
+- *(vscode)* Add Makefile scope in allowed list
+- *(vscode)* Add new words in allowed list
+- *(cliff)* Add basic config file for git-cliff
+- *(vscode)* Add 'cliff' scope in allowed scope list
+- *(vscode)* Add make scope in allowed list
+- *(cliff)* Skip style code format commit and remove header, footer and version in body from generated changelog
+- *(vscode)* Add new task to generate changelog
+- *(vscode)* Add cargo scope in allowed list
 
 ## [0.3.6] - 2025-04-20 <a id="0.3.6"></a>
 
