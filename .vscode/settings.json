@@ -31,6 +31,7 @@
   "conventionalCommits.scopes": [
     "changelog",
     "vscode",
-    "Makefile"
+    "Makefile",
+    "cliff"
   ]
 }
