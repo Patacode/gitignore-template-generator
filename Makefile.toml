@@ -51,7 +51,7 @@ args = ["commit", "-m", "style: reformat code with cargo fmt"]
 
 [tasks.git-commit-changelog]
 command = "git"
-args = ["commit", "-m", "chore: update changelog"]
+args = ["commit", "-m", "chore(changelog): update file"]
 
 [tasks.git-push]
 command = "git"
