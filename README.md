@@ -20,17 +20,18 @@ Available options:
 
 ```
 $ gitignore-template-generator --help
-Usage: gitignore-template-generator [OPTIONS] <TEMPLATE_NAMES>...
+Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 
 Generate templates for .gitignore files
 
 Arguments:
-  <TEMPLATE_NAMES>...  A non-empty list of existing gitignore template names
+  [TEMPLATE_NAMES]...  A non-empty list of existing gitignore template names
 
 Options:
-  -a, --author   Print author
-  -h, --help     Print help
-  -V, --version  Print version
+  -a, --author                   Print author
+  -s, --server-url <SERVER_URL>  The url of the server hosting gitignore template generator service [default: https://www.toptal.com]
+  -h, --help                     Print help
+  -V, --version                  Print version
 
 Version: 0.3.4
 Author: Patacode <pata.codegineer@gmail.com>
