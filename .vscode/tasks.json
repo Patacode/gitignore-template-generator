@@ -40,9 +40,15 @@
             "problemMatcher": []
         },
         {
-            "label": "Update changelog",
+            "label": "Generate changelog",
             "type": "shell",
             "command": "cargo make changelog",
+            "problemMatcher": []
+        },
+        {
+            "label": "Update changelog",
+            "type": "shell",
+            "command": "cargo make changelog-commit",
             "problemMatcher": []
         }
     ]
