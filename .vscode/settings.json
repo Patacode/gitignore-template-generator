@@ -25,6 +25,7 @@
     80
   ],
   "conventionalCommits.scopes": [
-    "changelog"
+    "changelog",
+    "vscode"
   ]
 }
