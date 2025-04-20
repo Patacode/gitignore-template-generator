@@ -41,7 +41,7 @@ mod success {
         fn it_outputs_version_infos_with_version_option() {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cli_tool.arg("-V");
+            cli_tool.arg(format!("-{}", constant::cli_options::VERSION.short));
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
@@ -61,7 +61,7 @@ mod success {
         fn it_outputs_author_infos_with_author_option() {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cli_tool.arg("-a");
+            cli_tool.arg(format!("-{}", constant::cli_options::AUTHOR.short));
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
@@ -77,7 +77,7 @@ mod success {
         fn it_outputs_help_infos_with_help_option() {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cli_tool.arg("-h");
+            cli_tool.arg(format!("-{}", constant::cli_options::HELP.short));
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
