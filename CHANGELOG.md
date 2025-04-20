@@ -12,7 +12,8 @@ and this project adheres to
 ### Changed
 
 - help message of pos args and server url options
-- refactor of integration tests to use cli option name constants
+- refactor of integration tests to use cli option name constants and to refer
+to error message constants through parent module
 
 ## [0.3.5] - 2025-04-20 <a id="0.3.5"></a>
 
