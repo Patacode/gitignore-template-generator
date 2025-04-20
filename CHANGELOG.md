@@ -12,6 +12,7 @@ and this project adheres to
 ### Changed
 
 - help message of pos args and server url options
+- refactor of integration tests to use cli option name constants
 
 ## [0.3.5] - 2025-04-20 <a id="0.3.5"></a>
 
