@@ -9,10 +9,6 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-### Added
-
-- automation to propose commit messages based on staged files 
-
 ### Changed
 
 - Makefile.toml further enhanced
