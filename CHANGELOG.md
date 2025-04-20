@@ -9,6 +9,8 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+## [0.3.5] - 2025-04-20 <a id="0.3.5"></a>
+
 ### Added
 
 - struct to wrap cli args parsing logic
