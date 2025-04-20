@@ -45,17 +45,13 @@ args = ["add", "."]
 command = "git"
 args = ["add", "CHANGELOG.md"]
 
-[tasks.git-commit]
-command = "git"
-args = ["commit", "-m", "${COMMIT_MSG}"]
-
 [tasks.git-commit-fmt]
-env = { "COMMIT_MSG" = "style: reformat code with cargo fmt" }
-run_task = "git-commit"
+command = "git"
+args = ["commit", "-m", "style: reformat code with cargo fmt"]
 
 [tasks.git-commit-changelog]
-env = { "COMMIT_MSG" = "chore: update changelog" }
-run_task = "git-commit"
+command = "git"
+args = ["commit", "-m", "chore: update changelog"]
 
 [tasks.git-push]
 command = "git"
