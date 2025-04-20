@@ -33,6 +33,7 @@
     "vscode",
     "Makefile",
     "cliff",
-    "make"
+    "make",
+    "cargo"
   ]
 }
