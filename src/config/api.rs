@@ -1,8 +1,11 @@
+use std::ffi::OsString;
+
 use clap::Parser;
 
 pub use crate::config::impls::DefaultArgsParser;
 use crate::{
     constant,
+    http_client::ProgramError,
     validator::{CliArgsValidator, DefaultCliArgsValidator},
 };
 
@@ -47,4 +50,47 @@ pub struct Args {
 
 pub trait ArgsParser {
     fn parse() -> Args;
+    fn try_parse(
+        args: impl IntoIterator<Item = OsString>,
+    ) -> Result<Args, ProgramError>;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    mod default_args_parser {
+        use super::*;
+
+        mod parse {
+            use super::*;
+
+            mod success {
+                use super::*;
+
+                #[test]
+                fn it_parses_version_cli_option() {
+                    let cli_args =
+                        vec![OsString::from("test"), OsString::from("-V")];
+
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    let actual_output =
+                        &parsed_args.as_ref().err().unwrap().message;
+                    let expected_output = format!(
+                        "{} {}\n",
+                        env!("CARGO_PKG_NAME"),
+                        env!("CARGO_PKG_VERSION")
+                    );
+
+                    let actual_exit_status =
+                        &parsed_args.as_ref().err().unwrap().exit_status;
+                    let expected_exit_status = 0;
+
+                    assert_eq!(actual_output, &expected_output);
+                    assert_eq!(actual_exit_status, &expected_exit_status);
+                }
+            }
+        }
+    }
 }
