@@ -141,7 +141,8 @@ mod tests {
                     let expected_result = Args {
                         template_names: make_string_vec(cli_options),
                         show_author: false,
-                        server_url: constant::template_generator::BASE_URL.to_string(),
+                        server_url: constant::template_generator::BASE_URL
+                            .to_string(),
                     };
                     let expected_result = Some(&expected_result);
 
