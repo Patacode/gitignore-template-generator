@@ -1,4 +1,4 @@
-use std::{borrow::Cow, fs};
+use std::{borrow::Cow, ffi::OsString, fs};
 
 use crate::constant;
 
@@ -23,6 +23,13 @@ pub fn parse_bytes(bytes: &[u8]) -> Cow<str> {
 
 pub fn parse_pos_args(pos_args: &str) -> Vec<&str> {
     pos_args.split_whitespace().collect()
+}
+
+pub fn parse_cli_args(pos_args: &str) -> Vec<OsString> {
+    format!("{} {pos_args}", env!("CARGO_PKG_NAME"))
+        .split_whitespace()
+        .map(OsString::from)
+        .collect()
 }
 
 pub fn get_help_message() -> String {
