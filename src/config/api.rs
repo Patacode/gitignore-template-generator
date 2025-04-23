@@ -9,7 +9,7 @@ use crate::{
     validator::{CliArgsValidator, DefaultCliArgsValidator},
 };
 
-#[derive(Parser, Debug)]
+#[derive(Parser, Debug, PartialEq)]
 #[command(version, author, long_about = None)]
 #[command(about = constant::parser_infos::ABOUT)]
 #[command(help_template = "\
@@ -127,6 +127,48 @@ mod tests {
 
                     assert!(actual_error.is_some());
                     assert_eq!(actual_error, expected_error);
+                }
+
+                #[rstest]
+                #[case("rust")]
+                #[case("rust python node")]
+                fn it_parses_pos_args_cli_option(#[case] cli_options: &str) {
+                    let cli_args = parse_cli_args(cli_options);
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    println!("{:?}", parsed_args);
+                    let actual_result = parsed_args.as_ref().ok();
+                    let expected_result = Args {
+                        template_names: make_string_vec(cli_options),
+                        show_author: false,
+                        server_url: constant::template_generator::BASE_URL.to_string(),
+                    };
+                    let expected_result = Some(&expected_result);
+
+                    assert!(actual_result.is_some());
+                    assert_eq!(actual_result, expected_result);
+                }
+
+                #[rstest]
+                #[case("rust -s https://test.com")]
+                #[case("rust --server-url https://test.com")]
+                fn it_parses_pos_args_with_server_url_cli_option(
+                    #[case] cli_args: &str,
+                ) {
+                    let cli_args = parse_cli_args(cli_args);
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    println!("{:?}", parsed_args);
+                    let actual_result = parsed_args.as_ref().ok();
+                    let expected_result = Args {
+                        template_names: make_string_vec("rust"),
+                        show_author: false,
+                        server_url: "https://test.com".to_string(),
+                    };
+                    let expected_result = Some(&expected_result);
+
+                    assert!(actual_result.is_some());
+                    assert_eq!(actual_result, expected_result);
                 }
             }
         }
