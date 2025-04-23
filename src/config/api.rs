@@ -9,7 +9,7 @@ use crate::{
     validator::{CliArgsValidator, DefaultCliArgsValidator},
 };
 
-#[derive(Parser, Debug, PartialEq)]
+#[derive(Parser, Debug, PartialEq, Default)]
 #[command(version, author, long_about = None)]
 #[command(about = constant::parser_infos::ABOUT)]
 #[command(help_template = "\
@@ -22,13 +22,40 @@ use crate::{
 Version: {version}
 Author: {author}
 ")]
+#[command(disable_help_flag = true, disable_version_flag = true)]
 pub struct Args {
     #[arg(
-        required_unless_present = "author",
+        required_unless_present_any = vec!["author", "version", "help"],
         value_parser = DefaultCliArgsValidator::has_no_commas,
         help = constant::help_messages::TEMPLATE_NAMES
     )]
     pub template_names: Vec<String>,
+
+    #[arg(
+        short = constant::cli_options::SERVER_URL.short,
+        long = constant::cli_options::SERVER_URL.long,
+        help = constant::help_messages::SERVER_URL,
+        default_value = constant::template_generator::BASE_URL
+    )]
+    pub server_url: String,
+
+    #[arg(
+        id = "help",
+        short = constant::cli_options::HELP.short,
+        long = constant::cli_options::HELP.long,
+        action = clap::ArgAction::SetTrue,
+        help = constant::help_messages::HELP
+    )]
+    pub show_help: bool,
+
+    #[arg(
+        id = "version",
+        short = constant::cli_options::VERSION.short,
+        long = constant::cli_options::VERSION.long,
+        action = clap::ArgAction::SetTrue,
+        help = constant::help_messages::VERSION
+    )]
+    pub show_version: bool,
 
     #[arg(
         id = "author",
@@ -38,14 +65,18 @@ pub struct Args {
         help = constant::help_messages::AUTHOR
     )]
     pub show_author: bool,
+}
 
-    #[arg(
-        short = constant::cli_options::SERVER_URL.short,
-        long = constant::cli_options::SERVER_URL.long,
-        help = constant::help_messages::SERVER_URL,
-        default_value = constant::template_generator::BASE_URL
-    )]
-    pub server_url: String,
+impl Args {
+    pub fn with_template_names(mut self, template_names: Vec<String>) -> Self {
+        self.template_names = template_names;
+        self
+    }
+
+    pub fn with_server_url(mut self, server_url: &str) -> Self {
+        self.server_url = server_url.to_string();
+        self
+    }
 }
 
 pub trait ArgsParser {
@@ -69,11 +100,17 @@ mod tests {
             use super::*;
 
             mod success {
+                use crate::http_client::ErrorKind;
+
                 use super::*;
 
                 #[rstest]
                 #[case("-V")]
                 #[case("--version")]
+                #[case("-V rust")]
+                #[case("rust -V")]
+                #[case("rust -s foo -V")]
+                #[case("-aV")]
                 fn it_parses_version_cli_option(#[case] cli_args: &str) {
                     let cli_args = parse_cli_args(cli_args);
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
@@ -81,11 +118,13 @@ mod tests {
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramError {
                         message: format!(
-                            "{} {}\n",
+                            "{} {}",
                             env!("CARGO_PKG_NAME"),
                             env!("CARGO_PKG_VERSION")
                         ),
                         exit_status: 0,
+                        styled_message: None,
+                        error_kind: Some(ErrorKind::VersionInfos),
                     };
                     let expected_error = Some(&expected_error);
 
@@ -96,6 +135,10 @@ mod tests {
                 #[rstest]
                 #[case("-h")]
                 #[case("--help")]
+                #[case("-h rust")]
+                #[case("rust -h")]
+                #[case("rust -s foo -h")]
+                #[case("-aVh")]
                 fn it_parses_help_cli_option(#[case] cli_args: &str) {
                     let cli_args = parse_cli_args(cli_args);
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
@@ -104,6 +147,8 @@ mod tests {
                     let expected_error = ProgramError {
                         message: get_help_message(),
                         exit_status: 0,
+                        styled_message: Some(get_ansi_help_message()),
+                        error_kind: Some(ErrorKind::HelpInfos),
                     };
                     let expected_error = Some(&expected_error);
 
@@ -114,7 +159,12 @@ mod tests {
                 #[rstest]
                 #[case("-a")]
                 #[case("--author")]
-                fn it_parses_author_cli_option(#[case] cli_args: &str) {
+                #[case("-a rust")]
+                #[case("rust -a")]
+                #[case("rust -s foo -a")]
+                fn it_parses_author_cli_option_preemptively(
+                    #[case] cli_args: &str,
+                ) {
                     let cli_args = parse_cli_args(cli_args);
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
@@ -122,6 +172,8 @@ mod tests {
                     let expected_error = ProgramError {
                         message: env!("CARGO_PKG_AUTHORS").to_string(),
                         exit_status: 0,
+                        styled_message: None,
+                        error_kind: Some(ErrorKind::AuthorInfos),
                     };
                     let expected_error = Some(&expected_error);
 
@@ -132,18 +184,18 @@ mod tests {
                 #[rstest]
                 #[case("rust")]
                 #[case("rust python node")]
-                fn it_parses_pos_args_cli_option(#[case] cli_options: &str) {
+                fn it_parses_pos_args_without_server_url_cli_option(
+                    #[case] cli_options: &str,
+                ) {
                     let cli_args = parse_cli_args(cli_options);
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
-                    println!("{:?}", parsed_args);
                     let actual_result = parsed_args.as_ref().ok();
-                    let expected_result = Args {
-                        template_names: make_string_vec(cli_options),
-                        show_author: false,
-                        server_url: constant::template_generator::BASE_URL
-                            .to_string(),
-                    };
+                    let expected_result = Args::default()
+                        .with_template_names(make_string_vec(cli_options))
+                        .with_server_url(
+                            constant::template_generator::BASE_URL,
+                        );
                     let expected_result = Some(&expected_result);
 
                     assert!(actual_result.is_some());
@@ -159,17 +211,111 @@ mod tests {
                     let cli_args = parse_cli_args(cli_args);
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
-                    println!("{:?}", parsed_args);
                     let actual_result = parsed_args.as_ref().ok();
-                    let expected_result = Args {
-                        template_names: make_string_vec("rust"),
-                        show_author: false,
-                        server_url: "https://test.com".to_string(),
-                    };
+                    let expected_result = Args::default()
+                        .with_template_names(make_string_vec("rust"))
+                        .with_server_url("https://test.com");
                     let expected_result = Some(&expected_result);
 
                     assert!(actual_result.is_some());
                     assert_eq!(actual_result, expected_result);
+                }
+            }
+
+            mod failure {
+                use crate::http_client::ErrorKind;
+
+                use super::*;
+
+                #[test]
+                fn it_fails_parsing_when_no_pos_args_given() {
+                    let cli_args = parse_cli_args("");
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramError {
+                        message: load_expectation_file_as_string(
+                            "no_pos_args_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_no_pos_args_error",
+                        )),
+                        error_kind: Some(ErrorKind::Other),
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
+                fn it_fails_parsing_when_commas_in_pos_args() {
+                    let cli_args = parse_cli_args("python,java");
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramError {
+                        message: load_expectation_file_as_string(
+                            "comma_pos_args_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_comma_pos_args_error",
+                        )),
+                        error_kind: Some(ErrorKind::Other),
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
+                fn it_fails_parsing_when_server_url_but_no_pos_args() {
+                    let cli_args = parse_cli_args("-s https://test.com");
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramError {
+                        message: load_expectation_file_as_string(
+                            "server_url_no_pos_args_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_server_url_no_pos_args_error",
+                        )),
+                        error_kind: Some(ErrorKind::Other),
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
+                fn it_fails_parsing_when_inexistent_cli_option() {
+                    let cli_args = parse_cli_args("-x");
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramError {
+                        message: load_expectation_file_as_string(
+                            "unexpected_argument_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_unexpected_argument_error",
+                        )),
+                        error_kind: Some(ErrorKind::Other),
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
                 }
             }
         }

@@ -9,7 +9,8 @@ pub struct CliOptionName {
 
 pub fn load_expectation_file_as_string(expectation_file_name: &str) -> String {
     let expectation_file_path = format!(
-        "{}/{expectation_file_name}.txt",
+        "{}/{}/{expectation_file_name}.txt",
+        env!("CARGO_MANIFEST_DIR"),
         constant::path::TEST_EXPECTATIONS
     );
 
@@ -37,7 +38,15 @@ pub fn make_string_vec(values: &str) -> Vec<String> {
 }
 
 pub fn get_help_message() -> String {
-    load_expectation_file_as_string("help_message")
+    get_help_message_for("help_message")
+}
+
+pub fn get_ansi_help_message() -> String {
+    get_help_message_for("ansi_help_message")
+}
+
+pub fn get_help_message_for(template_name: &str) -> String {
+    load_expectation_file_as_string(template_name)
         .replace("{pkg_name}", env!("CARGO_PKG_NAME"))
         .replace("{about}", constant::parser_infos::ABOUT)
         .replace(

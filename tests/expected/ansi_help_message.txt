@@ -1,0 +1,15 @@
+[1m[4mUsage:[0m [1m{pkg_name}[0m [OPTIONS] [TEMPLATE_NAMES]...
+
+{about}
+
+[1m[4mArguments:[0m
+  [TEMPLATE_NAMES]...  {template_names_desc}
+
+[1m[4mOptions:[0m
+  [1m-{server_url_short}[0m, [1m--{server_url_long}[0m <SERVER_URL>  {server_url_desc} [default: {server_url_default}]
+  [1m-{help_short}[0m, [1m--{help_long}[0m                     {help_desc}
+  [1m-{version_short}[0m, [1m--{version_long}[0m                  {version_desc}
+  [1m-{author_short}[0m, [1m--{author_long}[0m                   {author_desc}
+
+Version: {version}
+Author: {author}

@@ -4,6 +4,16 @@ pub use crate::http_client::impls::{MockClient, UreqClient};
 pub struct ProgramError {
     pub message: String,
     pub exit_status: i32,
+    pub styled_message: Option<String>,
+    pub error_kind: Option<ErrorKind>,
+}
+
+#[derive(Clone, PartialEq, Debug)]
+pub enum ErrorKind {
+    VersionInfos,
+    HelpInfos,
+    AuthorInfos,
+    Other,
 }
 
 pub trait HttpClient {
@@ -98,6 +108,8 @@ mod tests {
                                     constant::error_messages::HTTP_400,
                                 ),
                             exit_status: constant::exit_status::GENERIC,
+                            styled_message: None,
+                            error_kind: None,
                         });
 
                     mock.assert();
@@ -127,6 +139,8 @@ mod tests {
                             ),
                             exit_status:
                                 constant::exit_status::BODY_PARSING_ISSUE,
+                            styled_message: None,
+                            error_kind: None,
                         });
 
                     mock.assert();
@@ -166,6 +180,8 @@ mod tests {
                         response: Err(ProgramError {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,
+                            styled_message: None,
+                            error_kind: None,
                         }),
                     };
 
@@ -174,6 +190,8 @@ mod tests {
                         Err(ProgramError {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,
+                            styled_message: None,
+                            error_kind: None,
                         });
 
                     assert_eq!(actual, expected);

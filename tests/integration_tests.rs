@@ -81,7 +81,7 @@ mod success {
                 .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stdout);
-            let expected_output = get_help_message();
+            let expected_output = get_ansi_help_message() + "\n";
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
@@ -96,8 +96,8 @@ mod failure {
         use super::*;
 
         #[rstest]
-        #[case("", "no_pos_args_error")]
-        #[case("rust python,java", "comma_pos_args_error")]
+        #[case("", "ansi_no_pos_args_error")]
+        #[case("rust python,java", "ansi_comma_pos_args_error")]
         #[case("foo", "template_not_found_error")]
         fn it_outputs_error_and_fails_when_invalid_pos_args(
             #[case] pos_args: &str,
@@ -112,7 +112,7 @@ mod failure {
 
             let actual_output = parse_bytes(&result.stderr);
             let expected_output =
-                load_expectation_file_as_string(expectation_file_name);
+                load_expectation_file_as_string(expectation_file_name) + "\n";
 
             let actual_status_code = result.status.code();
             let expected_status_code = Some(constant::exit_status::GENERIC);

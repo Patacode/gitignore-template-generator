@@ -13,6 +13,8 @@ pub mod error_messages {
     pub const HTTP_400: &str = "http status: 400";
     pub const AUTHOR_INFOS_NOT_AVAILABLE: &str =
         "Author information not available.";
+    pub const VERSION_INFOS_NOT_AVAILABLE: &str =
+        "Version information not available.";
 }
 
 pub mod help_messages {

@@ -24,12 +24,16 @@ impl HttpClient for UreqClient {
                         constant::error_messages::BODY_PARSING_ISSUE,
                     ),
                     exit_status: constant::exit_status::BODY_PARSING_ISSUE,
+                    styled_message: None,
+                    error_kind: None,
                 }),
             },
             Err(error) => Err(ProgramError {
                 message: constant::error_messages::API_CALL_FAILURE
                     .replace("{error}", &error.to_string()),
                 exit_status: constant::exit_status::GENERIC,
+                styled_message: None,
+                error_kind: None,
             }),
         }
     }

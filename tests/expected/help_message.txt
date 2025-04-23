@@ -6,10 +6,10 @@ Arguments:
   [TEMPLATE_NAMES]...  {template_names_desc}
 
 Options:
-  -{author_short}, --{author_long}                   {author_desc}
   -{server_url_short}, --{server_url_long} <SERVER_URL>  {server_url_desc} [default: {server_url_default}]
   -{help_short}, --{help_long}                     {help_desc}
   -{version_short}, --{version_long}                  {version_desc}
+  -{author_short}, --{author_long}                   {author_desc}
 
 Version: {version}
 Author: {author}

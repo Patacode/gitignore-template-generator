@@ -54,6 +54,8 @@ mod tests {
                         response: Err(ProgramError {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
+                            styled_message: None,
+                            error_kind: None,
                         }),
                     };
 
@@ -65,6 +67,8 @@ mod tests {
                         Err(ProgramError {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
+                            styled_message: None,
+                            error_kind: None,
                         });
 
                     assert_eq!(actual, expected);

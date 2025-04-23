@@ -21,6 +21,7 @@
     "rustc",
     "RUSTFLAGS",
     "striptags",
+    "thon",
     "topo",
     "toptal",
     "ureq"
