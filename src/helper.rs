@@ -32,6 +32,10 @@ pub fn parse_cli_args(pos_args: &str) -> Vec<OsString> {
         .collect()
 }
 
+pub fn make_string_vec(values: &str) -> Vec<String> {
+    values.split_whitespace().map(String::from).collect()
+}
+
 pub fn get_help_message() -> String {
     load_expectation_file_as_string("help_message")
         .replace("{pkg_name}", env!("CARGO_PKG_NAME"))
