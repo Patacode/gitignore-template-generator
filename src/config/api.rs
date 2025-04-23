@@ -80,7 +80,7 @@ impl Args {
 }
 
 pub trait ArgsParser {
-    fn parse() -> Args;
+    fn parse(args: impl IntoIterator<Item = OsString>) -> Args;
     fn try_parse(
         args: impl IntoIterator<Item = OsString>,
     ) -> Result<Args, ProgramError>;

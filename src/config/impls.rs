@@ -56,48 +56,35 @@ impl DefaultArgsParser {
             None
         }
     }
+
+    fn print_error_message(error: &ProgramError, message: &str) {
+        if let Some(kind) = &error.error_kind {
+            match kind {
+                ErrorKind::VersionInfos
+                | ErrorKind::HelpInfos
+                | ErrorKind::AuthorInfos => println!("{message}"),
+                ErrorKind::Other => eprintln!("{message}"),
+            }
+        } else {
+            eprintln!("{message}");
+        }
+    }
 }
 
 impl ArgsParser for DefaultArgsParser {
-    fn parse() -> Args {
-        let args = Args::parse();
+    fn parse(args: impl IntoIterator<Item = OsString>) -> Args {
+        match DefaultArgsParser::try_parse(args) {
+            Ok(parsed_args) => parsed_args,
+            Err(error) => {
+                if let Some(value) = &error.styled_message {
+                    Self::print_error_message(&error, value);
+                } else {
+                    Self::print_error_message(&error, &error.message);
+                }
 
-        if args.show_version {
-            let cmd = Args::command();
-            if let Some(version) = cmd.get_version() {
-                println!("{} {version}", env!("CARGO_PKG_NAME"));
-            } else {
-                println!(
-                    "{}",
-                    constant::error_messages::VERSION_INFOS_NOT_AVAILABLE
-                );
+                exit(error.exit_status);
             }
-
-            exit(constant::exit_status::SUCCESS);
         }
-
-        if args.show_help {
-            let mut cmd = Args::command();
-            let styled_help = cmd.render_help().ansi().to_string();
-            print!("{styled_help}");
-            exit(constant::exit_status::SUCCESS);
-        }
-
-        if args.show_author {
-            let cmd = Args::command();
-            if let Some(author) = cmd.get_author() {
-                println!("{author}");
-            } else {
-                println!(
-                    "{}",
-                    constant::error_messages::AUTHOR_INFOS_NOT_AVAILABLE
-                );
-            }
-
-            exit(constant::exit_status::SUCCESS);
-        }
-
-        args
     }
 
     fn try_parse(
