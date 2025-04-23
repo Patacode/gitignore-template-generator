@@ -34,6 +34,7 @@
     "Makefile",
     "cliff",
     "make",
-    "cargo"
+    "cargo",
+    "helper"
   ]
 }
