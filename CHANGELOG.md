@@ -23,7 +23,7 @@ and this project adheres to
 - *(make)* Install git-cliff as part of dev task
 - *(make)* Add git-cliff task to Makefile to generate changelog file
 - *(make)* Add new tasks to bump generated changelog in CHANGELOG.md
-- *(cargo)* Add @Content token in CHANGELOG.md when pre-release hooks
+- *(cargo)* Add special token in CHANGELOG.md when pre-release hooks
 
 ### ⚙️ Miscellaneous Tasks
 
