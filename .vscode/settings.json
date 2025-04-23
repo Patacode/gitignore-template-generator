@@ -35,6 +35,7 @@
     "cliff",
     "make",
     "cargo",
-    "helper"
+    "helper",
+    "config"
   ]
 }
