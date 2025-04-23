@@ -57,7 +57,10 @@ pub trait ArgsParser {
 
 #[cfg(test)]
 mod tests {
+    use rstest::*;
+
     use super::*;
+    use crate::helper::*;
 
     mod default_args_parser {
         use super::*;
@@ -68,27 +71,62 @@ mod tests {
             mod success {
                 use super::*;
 
-                #[test]
-                fn it_parses_version_cli_option() {
-                    let cli_args =
-                        vec![OsString::from("test"), OsString::from("-V")];
-
+                #[rstest]
+                #[case("-V")]
+                #[case("--version")]
+                fn it_parses_version_cli_option(#[case] cli_args: &str) {
+                    let cli_args = parse_cli_args(cli_args);
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
-                    let actual_output =
-                        &parsed_args.as_ref().err().unwrap().message;
-                    let expected_output = format!(
-                        "{} {}\n",
-                        env!("CARGO_PKG_NAME"),
-                        env!("CARGO_PKG_VERSION")
-                    );
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramError {
+                        message: format!(
+                            "{} {}\n",
+                            env!("CARGO_PKG_NAME"),
+                            env!("CARGO_PKG_VERSION")
+                        ),
+                        exit_status: 0,
+                    };
+                    let expected_error = Some(&expected_error);
 
-                    let actual_exit_status =
-                        &parsed_args.as_ref().err().unwrap().exit_status;
-                    let expected_exit_status = 0;
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
 
-                    assert_eq!(actual_output, &expected_output);
-                    assert_eq!(actual_exit_status, &expected_exit_status);
+                #[rstest]
+                #[case("-h")]
+                #[case("--help")]
+                fn it_parses_help_cli_option(#[case] cli_args: &str) {
+                    let cli_args = parse_cli_args(cli_args);
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramError {
+                        message: get_help_message(),
+                        exit_status: 0,
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[rstest]
+                #[case("-a")]
+                #[case("--author")]
+                fn it_parses_author_cli_option(#[case] cli_args: &str) {
+                    let cli_args = parse_cli_args(cli_args);
+                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramError {
+                        message: env!("CARGO_PKG_AUTHORS").to_string(),
+                        exit_status: 0,
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
                 }
             }
         }
