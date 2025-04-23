@@ -1,9 +1,7 @@
-use crate::helper::*;
+use gitignore_template_generator::helper::*;
 use gitignore_template_generator::constant;
 use rstest::*;
 use test_bin::get_test_bin;
-
-mod helper;
 
 mod success {
     use super::*;
