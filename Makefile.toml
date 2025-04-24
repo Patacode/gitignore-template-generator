@@ -9,7 +9,7 @@ curl -X PUT "https://api.trello.com/1/boards/FZLDdiLN?name=${new_name}&key=${key
 '''
 
 [tasks.release-dryrun]
-run_task = [{ name = "deploy-dryrun-args" }, { name = "bump-trello-version" }]
+run_task = [{ name = ["deploy-dryrun-args", "bump-trello-version"] }]
 
 # cargo
 [tasks.install-git-cliff]
