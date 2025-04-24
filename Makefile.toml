@@ -19,6 +19,15 @@ for card_id in $card_ids; do
 done
 '''
 
+[tasks.release]
+run_task = [
+    { name = [
+        "deploy-args",
+        "bump-trello-version",
+        "archive-trello-cards",
+    ] },
+]
+
 [tasks.release-dryrun]
 run_task = [
     { name = [
@@ -56,6 +65,11 @@ args = ["clippy", "--all-targets", "--all-features", "--release"]
 [tasks.deploy]
 command = "cargo"
 args = ["release", "${BUMP_LEVEL}", "--execute", "--no-confirm", "--no-verify"]
+
+[tasks.deploy-args]
+command = "cargo"
+args = ["release", "${@}", "--execute", "--no-confirm", "--no-verify"]
+
 
 [tasks.deploy-dryrun]
 command = "cargo"
