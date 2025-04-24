@@ -28,9 +28,10 @@
             "problemMatcher": []
         },
         {
-            "label": "Deploy patch dryrun",
+            "label": "Deploy dryrun",
             "type": "shell",
-            "command": "cargo make deploy-patch-dryrun",
+            "command": "cargo",
+            "args": ["make", "release-dryrun", "${input:bumpType}"],
             "problemMatcher": []
         },
         {
