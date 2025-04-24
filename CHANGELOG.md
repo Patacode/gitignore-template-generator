@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.3.8] - 2025-04-24 <a id="0.3.8"></a>
+
 ### 🚀 Features
 
 - Create new method on ArgsParser to parse cli args and return result
