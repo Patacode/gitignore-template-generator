@@ -51,5 +51,14 @@
             "command": "cargo make changelog-commit",
             "problemMatcher": []
         }
+    ],
+    "inputs": [
+        {
+            "id": "bumpType",
+            "type": "pickString",
+            "description": "Choose bump type",
+            "options": ["patch", "minor", "major"],
+            "default": "patch"
+          }
     ]
 }
