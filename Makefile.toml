@@ -5,7 +5,8 @@ new_version=$(cat .version)
 new_name="gitignore-template-generator+${new_version}"
 key=$(cat "$TRELLO_API_KEY")
 token=$(cat "$TRELLO_API_TOKEN")
-curl -X PUT "https://api.trello.com/1/boards/FZLDdiLN?name=${new_name}&key=${key}&token=${token}"
+curl -o /dev/null -X PUT "https://api.trello.com/1/boards/FZLDdiLN?name=${new_name}&key=${key}&token=${token}"
+echo "Trello board version bumped to ${new_version}"
 '''
 
 [tasks.archive-trello-cards]
