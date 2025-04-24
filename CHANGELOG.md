@@ -9,7 +9,32 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- Create new method on ArgsParser to parse cli args and return result
+- Add new function to parse cli args in unit tests
+- Add new function to create vector of String
+
+### 🐛 Bug Fixes
+
+- Add missing newline before changelog content token in pre-release hooks
+
+### 🚜 Refactor
+
+- Replace helper module used by integration tests with the one of lib crate
+- Implement custom logic for help and version options
+- Move base error handling to parse method as before
+
+### 🧪 Testing
+
+- Add unit tests for all basic cli options (ie version, help, author)
+- Add new test cases on other available cli options (ie pos args, server url)
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove commit scope indicator in auto-generated changelogs
+- Add new helper scope in allowed scope list
+- Add new config scope to allowed scope list
 
 ## [0.3.7] - 2025-04-20 <a id="0.3.7"></a>
 
