@@ -35,9 +35,10 @@
             "problemMatcher": []
         },
         {
-            "label": "Deploy patch",
+            "label": "Deploy",
             "type": "shell",
-            "command": "cargo make deploy-patch",
+            "command": "cargo",
+            "args": ["make", "release", "${input:bumpType}"],
             "problemMatcher": []
         },
         {
