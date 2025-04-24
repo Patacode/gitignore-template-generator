@@ -8,8 +8,25 @@ token=$(cat "$TRELLO_API_TOKEN")
 curl -X PUT "https://api.trello.com/1/boards/FZLDdiLN?name=${new_name}&key=${key}&token=${token}"
 '''
 
+[tasks.archive-trello-cards]
+script = '''
+key=$(cat "$TRELLO_API_KEY")
+token=$(cat "$TRELLO_API_TOKEN")
+card_ids=$(curl -s "https://api.trello.com/1/lists/68027d1040324003560f3169/cards?key=${key}&token=${token}" | jq -r '.[].id')
+for card_id in $card_ids; do
+  curl -o /dev/null -s -X PUT "https://api.trello.com/1/cards/${card_id}?idList=68027e5026b59f970b733488&key=${key}&token=${token}"
+  echo "Moved card ${card_id} to History column"
+done
+'''
+
 [tasks.release-dryrun]
-run_task = [{ name = ["deploy-dryrun-args", "bump-trello-version"] }]
+run_task = [
+    { name = [
+        "deploy-dryrun-args",
+        "bump-trello-version",
+        "archive-trello-cards",
+    ] },
+]
 
 # cargo
 [tasks.install-git-cliff]
