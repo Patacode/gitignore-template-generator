@@ -9,7 +9,17 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🏗️ Build
+
+- Add tasks to deploy and bump new version on trello
+- Update version in .version file in pre release replacement hooks
+- Add task to archive all Done trello cards in History on release
+- Add task to deploy package with bump type give as cli arg
+
+### ⚙️ Miscellaneous Tasks
+
+- Add task input to select bump type
+- Add new hidden file to store package version
 
 ## [0.3.8] - 2025-04-24 <a id="0.3.8"></a>
 
