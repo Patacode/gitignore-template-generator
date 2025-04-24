@@ -1,3 +1,16 @@
+# sandbox
+[tasks.bump-trello-version]
+script = '''
+new_version=$(cat .version)
+new_name="gitignore-template-generator+${new_version}"
+key=$(cat "$TRELLO_API_KEY")
+token=$(cat "$TRELLO_API_TOKEN")
+curl -X PUT "https://api.trello.com/1/boards/FZLDdiLN?name=${new_name}&key=${key}&token=${token}"
+'''
+
+[tasks.release-dryrun]
+run_task = [{ name = "deploy-dryrun-args" }, { name = "bump-trello-version" }]
+
 # cargo
 [tasks.install-git-cliff]
 command = "cargo"
@@ -30,6 +43,10 @@ args = ["release", "${BUMP_LEVEL}", "--execute", "--no-confirm", "--no-verify"]
 [tasks.deploy-dryrun]
 command = "cargo"
 args = ["release", "${BUMP_LEVEL}", "--no-confirm", "--no-verify"]
+
+[tasks.deploy-dryrun-args]
+command = "cargo"
+args = ["release", "${@}", "--no-confirm", "--no-verify"]
 
 [tasks.deploy-patch]
 env = { "BUMP_LEVEL" = "patch" }
