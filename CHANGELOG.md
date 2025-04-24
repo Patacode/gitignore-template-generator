@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.3.9] - 2025-04-24 <a id="0.3.9"></a>
+
 ### 🏗️ Build
 
 - Add tasks to deploy and bump new version on trello
