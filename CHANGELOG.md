@@ -11,6 +11,10 @@ and this project adheres to
 
 @Content
 
+## [0.3.12] - 2025-04-27 <a id="0.3.12"></a>
+
+@Content
+
 ## [0.3.11] - 2025-04-27 <a id="0.3.11"></a>
 
 ### 🚜 Refactor
