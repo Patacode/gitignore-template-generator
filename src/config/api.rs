@@ -4,8 +4,7 @@ use clap::Parser;
 
 pub use crate::config::impls::DefaultArgsParser;
 use crate::{
-    constant,
-    http_client::ProgramError,
+    ProgramError, constant,
     validator::{CliArgsValidator, DefaultCliArgsValidator},
 };
 
@@ -100,7 +99,7 @@ mod tests {
             use super::*;
 
             mod success {
-                use crate::http_client::ErrorKind;
+                use crate::ErrorKind;
 
                 use super::*;
 
@@ -223,7 +222,7 @@ mod tests {
             }
 
             mod failure {
-                use crate::http_client::ErrorKind;
+                use crate::ErrorKind;
 
                 use super::*;
 

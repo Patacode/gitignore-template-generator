@@ -1,20 +1,5 @@
+use crate::ProgramError;
 pub use crate::http_client::impls::{MockClient, UreqClient};
-
-#[derive(Clone, PartialEq, Debug)]
-pub struct ProgramError {
-    pub message: String,
-    pub exit_status: i32,
-    pub styled_message: Option<String>,
-    pub error_kind: Option<ErrorKind>,
-}
-
-#[derive(Clone, PartialEq, Debug)]
-pub enum ErrorKind {
-    VersionInfos,
-    HelpInfos,
-    AuthorInfos,
-    Other,
-}
 
 pub trait HttpClient {
     fn get(&self, url: &str) -> Result<String, ProgramError>;

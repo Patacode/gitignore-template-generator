@@ -1,5 +1,21 @@
 pub use crate::core::impls::GitignoreTemplateGenerator;
-use crate::http_client::{HttpClient, ProgramError};
+use crate::http_client::HttpClient;
+
+#[derive(Clone, PartialEq, Debug)]
+pub struct ProgramError {
+    pub message: String,
+    pub exit_status: i32,
+    pub styled_message: Option<String>,
+    pub error_kind: Option<ErrorKind>,
+}
+
+#[derive(Clone, PartialEq, Debug)]
+pub enum ErrorKind {
+    VersionInfos,
+    HelpInfos,
+    AuthorInfos,
+    Other,
+}
 
 pub trait TemplateGenerator {
     fn generate_from_api(

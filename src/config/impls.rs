@@ -3,9 +3,9 @@ use std::{ffi::OsString, process::exit};
 use clap::{CommandFactory, Parser};
 
 use crate::{
+    ErrorKind, ProgramError,
     config::{Args, ArgsParser},
     constant,
-    http_client::{ErrorKind, ProgramError},
 };
 
 pub struct DefaultArgsParser;

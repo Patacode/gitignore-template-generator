@@ -1,7 +1,4 @@
-use crate::{
-    constant,
-    http_client::api::{HttpClient, ProgramError},
-};
+use crate::{ProgramError, constant, http_client::api::HttpClient};
 
 #[derive(Default)]
 pub struct UreqClient {

@@ -1,9 +1,6 @@
-use crate::{
-    constant,
-    http_client::{HttpClient, ProgramError},
-};
+use crate::{constant, http_client::HttpClient};
 
-use super::TemplateGenerator;
+use super::{ProgramError, TemplateGenerator};
 
 pub struct GitignoreTemplateGenerator;
 
