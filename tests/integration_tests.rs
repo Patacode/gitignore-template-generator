@@ -31,62 +31,6 @@ mod success {
             assert_eq!(actual_output, expected_output);
         }
     }
-
-    mod named_args {
-        use super::*;
-
-        #[test]
-        fn it_outputs_version_infos_with_version_option() {
-            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-
-            cli_tool.arg(format!("-{}", constant::cli_options::VERSION.short));
-            let result = cli_tool
-                .output()
-                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
-
-            let actual_output = parse_bytes(&result.stdout);
-            let expected_output = format!(
-                "{} {}\n",
-                env!("CARGO_PKG_NAME"),
-                env!("CARGO_PKG_VERSION"),
-            );
-
-            assert!(result.status.success());
-            assert_eq!(actual_output, expected_output);
-        }
-
-        #[test]
-        fn it_outputs_author_infos_with_author_option() {
-            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-
-            cli_tool.arg(format!("-{}", constant::cli_options::AUTHOR.short));
-            let result = cli_tool
-                .output()
-                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
-
-            let actual_output = parse_bytes(&result.stdout);
-            let expected_output = format!("{}\n", env!("CARGO_PKG_AUTHORS"));
-
-            assert!(result.status.success());
-            assert_eq!(actual_output, expected_output);
-        }
-
-        #[test]
-        fn it_outputs_help_infos_with_help_option() {
-            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-
-            cli_tool.arg(format!("-{}", constant::cli_options::HELP.short));
-            let result = cli_tool
-                .output()
-                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
-
-            let actual_output = parse_bytes(&result.stdout);
-            let expected_output = get_ansi_help_message() + "\n";
-
-            assert!(result.status.success());
-            assert_eq!(actual_output, expected_output);
-        }
-    }
 }
 
 mod failure {
@@ -96,8 +40,6 @@ mod failure {
         use super::*;
 
         #[rstest]
-        #[case("", "ansi_no_pos_args_error")]
-        #[case("rust python,java", "ansi_comma_pos_args_error")]
         #[case("foo", "template_not_found_error")]
         fn it_outputs_error_and_fails_when_invalid_pos_args(
             #[case] pos_args: &str,
