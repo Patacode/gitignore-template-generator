@@ -1,14 +1,28 @@
 use crate::{ExitKind, ProgramExit, constant, http_client::api::HttpClient};
 
+/// Http client implementation relying on [`ureq`].
 #[derive(Default)]
 pub struct UreqClient {
+    /// The base url of the HTTP server to reach.
+    /// 
+    /// Used as base url when calling [`UreqClient::get`] method.
     pub server_url: String,
 }
+
+/// Http client implementation to mock a response.
 pub struct MockClient {
+    /// The mocked response to be returned when calling [`MockClient::get`]
+    /// method.
     pub response: Result<String, ProgramExit>,
 }
 
 impl HttpClient for UreqClient {
+    /// Make a GET HTTP call using a [`ureq`] client.
+    /// 
+    /// The server base url (i.e. https://localhost:8080) should be provided
+    /// as part of [`UreqClient::server_url] field.
+    /// 
+    /// See [`HttpClient::get`] for more infos.
     fn get(&self, url: &str) -> Result<String, ProgramExit> {
         let full_url = format!("{}{url}", self.server_url);
         let result = ureq::get(full_url).call();
@@ -37,6 +51,10 @@ impl HttpClient for UreqClient {
 }
 
 impl HttpClient for MockClient {
+    /// Returns the result linked to this instance.
+    /// 
+    /// The given `_url` will not be used, simply a clone of linked
+    /// result will be returned.
     fn get(&self, _url: &str) -> Result<String, ProgramExit> {
         self.response.clone()
     }
