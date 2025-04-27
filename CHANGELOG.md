@@ -9,7 +9,17 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚜 Refactor
+
+- Move ProgramError struct and ErrorKind enum to core module
+- Replace &str to string slice &[String] for template names param
+- Use static dispatch instead of dynamic dispatch for http_client param
+- Change type of error_kind field from Option<ErrorKind> to ErrorKind
+- Extract ArgsParser trait and underlying implementation to new parser module
+
+### ⚙️ Miscellaneous Tasks
+
+- Add changelog for previous version
 
 ## [0.3.10] - 2025-04-27 <a id="0.3.10"></a>
 
