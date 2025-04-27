@@ -55,6 +55,7 @@ pub trait TemplateGenerator {
     /// [`ProgramExit`] on error (e.g. 4xx, network issues...).
     fn generate_from_api(
         http_client: &impl HttpClient,
+        endpoint_uri: &str,
         template_names: &[String],
     ) -> Result<String, ProgramExit>;
 }
@@ -73,6 +74,8 @@ mod tests {
 
             mod success {
 
+                use crate::constant;
+
                 use super::*;
 
                 #[test]
@@ -85,6 +88,7 @@ mod tests {
 
                     let actual = GitignoreTemplateGenerator::generate_from_api(
                         &http_client,
+                        constant::template_generator::URI,
                         &template_names,
                     );
                     let expected: Result<String, ProgramExit> =
@@ -114,6 +118,7 @@ mod tests {
 
                     let actual = GitignoreTemplateGenerator::generate_from_api(
                         &http_client,
+                        constant::template_generator::URI,
                         &template_names,
                     );
                     let expected: Result<String, ProgramExit> =

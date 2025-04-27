@@ -58,6 +58,11 @@ pub mod help_messages {
     /// Help message bound to [`crate::parser::Args::show_version`]
     /// field (i.e. version option).
     pub const VERSION: &str = "Print version";
+
+    /// Help message bound to [`crate::parser::Args::endpoint_uri`]
+    /// field (i.e. endpoint uri option).
+    pub const ENDPOINT_URI: &str =
+        "The gitignore template generator service endpoint uri";
 }
 
 pub mod cli_options {
@@ -95,6 +100,14 @@ pub mod cli_options {
     pub const VERSION: CliOptionName = CliOptionName {
         short: 'V',
         long: "version",
+    };
+
+    /// Short and long specifier for endpoint uri option.
+    ///
+    /// **Value**: `-e --endpoint-uri`
+    pub const ENDPOINT_URI: CliOptionName = CliOptionName {
+        short: 'e',
+        long: "endpoint-uri",
     };
 }
 

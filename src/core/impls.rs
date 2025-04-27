@@ -1,4 +1,4 @@
-use crate::{constant, http_client::HttpClient};
+use crate::http_client::HttpClient;
 
 use super::{ProgramExit, TemplateGenerator};
 
@@ -15,11 +15,11 @@ impl TemplateGenerator for GitignoreTemplateGenerator {
     /// See [`TemplateGenerator::generate_from_api`] for more infos.
     fn generate_from_api(
         http_client: &impl HttpClient,
+        endpoint_uri: &str,
         template_names: &[String],
     ) -> Result<String, ProgramExit> {
-        let uri = constant::template_generator::URI;
         let path_param = template_names.join(",");
-        let full_uri = format!("{uri}/{path_param}");
+        let full_uri = format!("{endpoint_uri}/{path_param}");
         http_client.get(&full_uri)
     }
 }

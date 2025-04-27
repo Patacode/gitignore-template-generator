@@ -11,11 +11,13 @@ fn main() {
     let parsed_cli_args = DefaultArgsParser::parse(cli_args);
 
     let server_url = parsed_cli_args.server_url;
+    let endpoint_uri = parsed_cli_args.endpoint_uri;
     let template_names = parsed_cli_args.template_names;
 
     let http_client = UreqClient { server_url };
     let generated_template = GitignoreTemplateGenerator::generate_from_api(
         &http_client,
+        &endpoint_uri,
         &template_names,
     );
 

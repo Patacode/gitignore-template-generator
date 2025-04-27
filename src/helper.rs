@@ -87,4 +87,16 @@ pub fn get_help_message_for(template_name: &str) -> String {
             "{server_url_default}",
             constant::template_generator::BASE_URL,
         )
+        .replace(
+            "{endpoint_uri_short}",
+            constant::cli_options::ENDPOINT_URI
+                .short
+                .to_string()
+                .as_str(),
+        )
+        .replace(
+            "{endpoint_uri_long}",
+            constant::cli_options::ENDPOINT_URI.long,
+        )
+        .replace("{endpoint_uri_default}", constant::template_generator::URI)
 }

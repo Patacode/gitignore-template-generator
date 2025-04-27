@@ -6,10 +6,11 @@
   [TEMPLATE_NAMES]...  {template_names_desc}
 
 [1m[4mOptions:[0m
-  [1m-{server_url_short}[0m, [1m--{server_url_long}[0m <SERVER_URL>  {server_url_desc} [default: {server_url_default}]
-  [1m-{help_short}[0m, [1m--{help_long}[0m                     {help_desc}
-  [1m-{version_short}[0m, [1m--{version_long}[0m                  {version_desc}
-  [1m-{author_short}[0m, [1m--{author_long}[0m                   {author_desc}
+  [1m-{server_url_short}[0m, [1m--{server_url_long}[0m <SERVER_URL>      {server_url_desc} [default: {server_url_default}]
+  [1m-{endpoint_uri_short}[0m, [1m--{endpoint_uri_long}[0m <ENDPOINT_URI>  The gitignore template generator service endpoint uri [default: {endpoint_uri_default}]
+  [1m-{help_short}[0m, [1m--{help_long}[0m                         {help_desc}
+  [1m-{version_short}[0m, [1m--{version_long}[0m                      {version_desc}
+  [1m-{author_short}[0m, [1m--{author_long}[0m                       {author_desc}
 
 Version: {version}
 Author: {author}
