@@ -11,8 +11,8 @@ pub trait TemplateGenerator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::http_client::MockClient;
     use crate::helper::make_string_vec;
+    use crate::http_client::MockClient;
 
     mod gitignore_template_generator {
         use super::*;
