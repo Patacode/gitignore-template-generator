@@ -2,8 +2,8 @@ use std::process::exit;
 
 use gitignore_template_generator::{
     GitignoreTemplateGenerator, TemplateGenerator,
-    config::{ArgsParser, DefaultArgsParser},
     http_client::UreqClient,
+    parser::{ArgsParser, DefaultArgsParser},
 };
 
 fn main() {
