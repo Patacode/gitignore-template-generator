@@ -76,7 +76,7 @@ impl ArgsParser for DefaultArgsParser {
     /// * Will exit using [`ProgramExit::exit_status`] if any
     ///     [`ProgramExit`] received.
     /// * Will print to stderr on error, to stdout on early exit (i.e. version,
-    /// author, help options)
+    ///     author, help options)
     ///
     /// See [`ArgsParser::parse`] for more infos.
     fn parse(args: impl IntoIterator<Item = OsString>) -> Args {
