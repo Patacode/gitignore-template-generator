@@ -143,5 +143,8 @@ pub mod path {
 }
 
 pub mod regex {
+    //! Constants for regexes.
+
+    /// Regex for version specifier.
     pub const SEMVER_VERSION: &str = r"[0-9]+\.[0-9]+\.[0-9]+";
 }
