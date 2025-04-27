@@ -28,10 +28,10 @@ Arguments:
   [TEMPLATE_NAMES]...  A non-empty list of gitignore template names
 
 Options:
-  -a, --author                   Print author
   -s, --server-url <SERVER_URL>  The gitignore template generator service url [default: https://www.toptal.com]
   -h, --help                     Print help
   -V, --version                  Print version
+  -a, --author                   Print author
 
 Version: 0.3.11
 Author: Patacode <pata.codegineer@gmail.com>
