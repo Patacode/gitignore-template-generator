@@ -1,5 +1,3 @@
-//! Components used to parse cli args.
-
 use clap::Parser;
 
 use crate::{
