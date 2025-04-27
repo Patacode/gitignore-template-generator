@@ -1,4 +1,4 @@
-//! Components used to configure cli args parsing
+//! Components used to configure cli args parsing.
 
 use clap::Parser;
 
