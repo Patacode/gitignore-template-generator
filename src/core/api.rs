@@ -22,7 +22,7 @@ pub struct ProgramExit {
     pub styled_message: Option<String>,
 
     /// The kind of program exit.
-    pub error_kind: ErrorKind,
+    pub kind: ErrorKind,
 }
 
 /// Enum for kind of program exit.
@@ -113,7 +113,7 @@ mod tests {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: ErrorKind::Other,
+                            kind: ErrorKind::Other,
                         }),
                     };
 
@@ -126,7 +126,7 @@ mod tests {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: ErrorKind::Other,
+                            kind: ErrorKind::Other,
                         });
 
                     assert_eq!(actual, expected);

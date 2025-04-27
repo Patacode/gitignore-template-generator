@@ -96,7 +96,7 @@ mod tests {
                                 ),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: ErrorKind::Other,
+                            kind: ErrorKind::Other,
                         });
 
                     mock.assert();
@@ -127,7 +127,7 @@ mod tests {
                             exit_status:
                                 constant::exit_status::BODY_PARSING_ISSUE,
                             styled_message: None,
-                            error_kind: ErrorKind::Other,
+                            kind: ErrorKind::Other,
                         });
 
                     mock.assert();
@@ -170,7 +170,7 @@ mod tests {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: ErrorKind::Other,
+                            kind: ErrorKind::Other,
                         }),
                     };
 
@@ -180,7 +180,7 @@ mod tests {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: ErrorKind::Other,
+                            kind: ErrorKind::Other,
                         });
 
                     assert_eq!(actual, expected);
