@@ -39,7 +39,7 @@ pub mod help_messages {
     //! Constants for help messages to be displayed.
 
     /// Help message bound to [`crate::config::Args::template_names`]
-    /// field (i.e. positional args). 
+    /// field (i.e. positional args).
     pub const TEMPLATE_NAMES: &str =
         "A non-empty list of gitignore template names";
 
@@ -66,7 +66,7 @@ pub mod cli_options {
     use crate::helper::CliOptionName;
 
     /// Short and long specifier for author option.
-    /// 
+    ///
     /// **Value**: `-a --author`
     pub const AUTHOR: CliOptionName = CliOptionName {
         short: 'a',
@@ -74,7 +74,7 @@ pub mod cli_options {
     };
 
     /// Short and long specifier for server url option.
-    /// 
+    ///
     /// **Value**: `-s --server-url`
     pub const SERVER_URL: CliOptionName = CliOptionName {
         short: 's',
@@ -82,7 +82,7 @@ pub mod cli_options {
     };
 
     /// Short and long specifier for help option.
-    /// 
+    ///
     /// **Value**: `-h --help`
     pub const HELP: CliOptionName = CliOptionName {
         short: 'h',
@@ -90,7 +90,7 @@ pub mod cli_options {
     };
 
     /// Short and long specifier for version option.
-    /// 
+    ///
     /// **Value**: `-V --version`
     pub const VERSION: CliOptionName = CliOptionName {
         short: 'V',
@@ -99,7 +99,7 @@ pub mod cli_options {
 }
 
 pub mod parser_infos {
-    //! Constants for general parser infos. 
+    //! Constants for general parser infos.
 
     /// About text to be displayed when requesting help.
     pub const ABOUT: &str = "Generate templates for .gitignore files";
@@ -125,7 +125,7 @@ pub mod template_generator {
     pub const BASE_URL: &str = "https://www.toptal.com";
 
     /// Template generator service URI.
-    /// 
+    ///
     /// Used in conjunction with [`BASE_URL`] to build full URL and make
     /// API call.
     pub const URI: &str = "/developers/gitignore/api";

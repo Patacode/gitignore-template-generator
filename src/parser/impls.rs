@@ -2,9 +2,9 @@ use std::{ffi::OsString, process::exit};
 
 use clap::{CommandFactory, Parser};
 
-use crate::{ErrorKind, ProgramError, config::Args, constant};
+use crate::{ErrorKind, ProgramError, constant};
 
-use super::ArgsParser;
+use super::{Args, ArgsParser};
 
 pub struct DefaultArgsParser;
 
