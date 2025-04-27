@@ -1,6 +1,18 @@
 pub use crate::validator::impls::DefaultCliArgsValidator;
 
+/// Cli args validator trait to validate cli args.
 pub trait CliArgsValidator {
+
+    /// Checks if given value contains commas or not.
+    /// 
+    /// # Arguments
+    /// 
+    /// `value` - The value to be checked
+    /// 
+    /// # Returns
+    /// 
+    /// A result containing the provided value if not commas found, or
+    /// an error containing proper error message.
     fn has_no_commas(value: &str) -> Result<String, String>;
 }
 
