@@ -21,7 +21,7 @@ impl DefaultArgsParser {
                 styled_message: Some(
                     rendered_help.ansi().to_string().trim_end().to_string(),
                 ),
-                error_kind: Some(ErrorKind::HelpInfos),
+                error_kind: ErrorKind::HelpInfos,
             })
         } else if args.show_version {
             let cmd = Args::command();
@@ -37,7 +37,7 @@ impl DefaultArgsParser {
                 message,
                 exit_status: constant::exit_status::SUCCESS,
                 styled_message: None,
-                error_kind: Some(ErrorKind::VersionInfos),
+                error_kind: ErrorKind::VersionInfos,
             })
         } else if args.show_author {
             let cmd = Args::command();
@@ -50,7 +50,7 @@ impl DefaultArgsParser {
                 message,
                 exit_status: constant::exit_status::SUCCESS,
                 styled_message: None,
-                error_kind: Some(ErrorKind::AuthorInfos),
+                error_kind: ErrorKind::AuthorInfos,
             })
         } else {
             None
@@ -58,15 +58,11 @@ impl DefaultArgsParser {
     }
 
     fn print_error_message(error: &ProgramError, message: &str) {
-        if let Some(kind) = &error.error_kind {
-            match kind {
-                ErrorKind::VersionInfos
-                | ErrorKind::HelpInfos
-                | ErrorKind::AuthorInfos => println!("{message}"),
-                ErrorKind::Other => eprintln!("{message}"),
-            }
-        } else {
-            eprintln!("{message}");
+        match error.error_kind {
+            ErrorKind::VersionInfos
+            | ErrorKind::HelpInfos
+            | ErrorKind::AuthorInfos => println!("{message}"),
+            ErrorKind::Other => eprintln!("{message}"),
         }
     }
 }
@@ -105,7 +101,7 @@ impl ArgsParser for DefaultArgsParser {
                     "{}\nFor more information, try '\u{1b}[1m--help\u{1b}[0m'.",
                     error.render().ansi()
                 )),
-                error_kind: Some(ErrorKind::Other),
+                error_kind: ErrorKind::Other,
             }),
         }
     }

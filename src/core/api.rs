@@ -6,7 +6,7 @@ pub struct ProgramError {
     pub message: String,
     pub exit_status: i32,
     pub styled_message: Option<String>,
-    pub error_kind: Option<ErrorKind>,
+    pub error_kind: ErrorKind,
 }
 
 #[derive(Clone, PartialEq, Debug)]
@@ -73,7 +73,7 @@ mod tests {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: None,
+                            error_kind: ErrorKind::Other,
                         }),
                     };
 
@@ -86,7 +86,7 @@ mod tests {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: None,
+                            error_kind: ErrorKind::Other,
                         });
 
                     assert_eq!(actual, expected);

@@ -1,4 +1,4 @@
-use crate::{ProgramError, constant, http_client::api::HttpClient};
+use crate::{ErrorKind, ProgramError, constant, http_client::api::HttpClient};
 
 #[derive(Default)]
 pub struct UreqClient {
@@ -22,7 +22,7 @@ impl HttpClient for UreqClient {
                     ),
                     exit_status: constant::exit_status::BODY_PARSING_ISSUE,
                     styled_message: None,
-                    error_kind: None,
+                    error_kind: ErrorKind::Other,
                 }),
             },
             Err(error) => Err(ProgramError {
@@ -30,7 +30,7 @@ impl HttpClient for UreqClient {
                     .replace("{error}", &error.to_string()),
                 exit_status: constant::exit_status::GENERIC,
                 styled_message: None,
-                error_kind: None,
+                error_kind: ErrorKind::Other,
             }),
         }
     }

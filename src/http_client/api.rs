@@ -67,6 +67,8 @@ mod tests {
             }
 
             mod failure {
+                use crate::ErrorKind;
+
                 use super::*;
 
                 #[test]
@@ -94,7 +96,7 @@ mod tests {
                                 ),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: None,
+                            error_kind: ErrorKind::Other,
                         });
 
                     mock.assert();
@@ -125,7 +127,7 @@ mod tests {
                             exit_status:
                                 constant::exit_status::BODY_PARSING_ISSUE,
                             styled_message: None,
-                            error_kind: None,
+                            error_kind: ErrorKind::Other,
                         });
 
                     mock.assert();
@@ -142,6 +144,8 @@ mod tests {
             use super::*;
 
             mod success {
+                use crate::ErrorKind;
+
                 use super::*;
 
                 #[test]
@@ -166,7 +170,7 @@ mod tests {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: None,
+                            error_kind: ErrorKind::Other,
                         }),
                     };
 
@@ -176,7 +180,7 @@ mod tests {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            error_kind: None,
+                            error_kind: ErrorKind::Other,
                         });
 
                     assert_eq!(actual, expected);

@@ -123,7 +123,7 @@ mod tests {
                         ),
                         exit_status: 0,
                         styled_message: None,
-                        error_kind: Some(ErrorKind::VersionInfos),
+                        error_kind: ErrorKind::VersionInfos,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -147,7 +147,7 @@ mod tests {
                         message: get_help_message(),
                         exit_status: 0,
                         styled_message: Some(get_ansi_help_message()),
-                        error_kind: Some(ErrorKind::HelpInfos),
+                        error_kind: ErrorKind::HelpInfos,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -172,7 +172,7 @@ mod tests {
                         message: env!("CARGO_PKG_AUTHORS").to_string(),
                         exit_status: 0,
                         styled_message: None,
-                        error_kind: Some(ErrorKind::AuthorInfos),
+                        error_kind: ErrorKind::AuthorInfos,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -241,7 +241,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_no_pos_args_error",
                         )),
-                        error_kind: Some(ErrorKind::Other),
+                        error_kind: ErrorKind::Other,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -264,7 +264,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_comma_pos_args_error",
                         )),
-                        error_kind: Some(ErrorKind::Other),
+                        error_kind: ErrorKind::Other,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -287,7 +287,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_server_url_no_pos_args_error",
                         )),
-                        error_kind: Some(ErrorKind::Other),
+                        error_kind: ErrorKind::Other,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -309,7 +309,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_unexpected_argument_error",
                         )),
-                        error_kind: Some(ErrorKind::Other),
+                        error_kind: ErrorKind::Other,
                     };
                     let expected_error = Some(&expected_error);
 
