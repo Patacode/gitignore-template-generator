@@ -65,20 +65,37 @@ pub mod help_messages {
 }
 
 pub mod cli_options {
+    //! Constants for short and long cli options specifier.
+
     use crate::helper::CliOptionName;
 
+    /// Short and long specifier for author option.
+    /// 
+    /// **Value**: `-a --author`
     pub const AUTHOR: CliOptionName = CliOptionName {
         short: 'a',
         long: "author",
     };
+
+    /// Short and long specifier for server url option.
+    /// 
+    /// **Value**: `-s --server-url`
     pub const SERVER_URL: CliOptionName = CliOptionName {
         short: 's',
         long: "server-url",
     };
+
+    /// Short and long specifier for help option.
+    /// 
+    /// **Value**: `-h --help`
     pub const HELP: CliOptionName = CliOptionName {
         short: 'h',
         long: "help",
     };
+
+    /// Short and long specifier for version option.
+    /// 
+    /// **Value**: `-V --version`
     pub const VERSION: CliOptionName = CliOptionName {
         short: 'V',
         long: "version",
