@@ -40,11 +40,27 @@ pub mod error_messages {
 }
 
 pub mod help_messages {
+    //! Constants for help messages to be displayed.
+
+    /// Help message bound to [`crate::config::Args::template_names`]
+    /// field (i.e. positional args). 
     pub const TEMPLATE_NAMES: &str =
         "A non-empty list of gitignore template names";
+
+    /// Help message bound to [`crate::config::Args::show_author`]
+    /// field (i.e. author option).
     pub const AUTHOR: &str = "Print author";
+
+    /// Help message bound to [`crate::config::Args::server_url`]
+    /// field (i.e. server url option).
     pub const SERVER_URL: &str = "The gitignore template generator service url";
+
+    /// Help message bound to [`crate::config::Args::show_help`]
+    /// field (i.e. help option).
     pub const HELP: &str = "Print help";
+
+    /// Help message bound to [`crate::config::Args::show_version`]
+    /// field (i.e. version option).
     pub const VERSION: &str = "Print version";
 }
 
