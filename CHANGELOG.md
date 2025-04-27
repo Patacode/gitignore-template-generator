@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.3.11] - 2025-04-27 <a id="0.3.11"></a>
+
 ### 🚜 Refactor
 
 - Move ProgramError struct and ErrorKind enum to core module
