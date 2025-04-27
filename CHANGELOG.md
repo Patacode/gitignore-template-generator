@@ -9,7 +9,14 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- Add new cli option endpoint-uri to set custom template generator service
+endpoint uri
+
+### 🚜 Refactor
+
+- Remove unnecessary comments
 
 ## [0.3.12] - 2025-04-27 <a id="0.3.12"></a>
 
