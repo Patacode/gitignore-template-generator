@@ -37,6 +37,9 @@ Version: 0.3.11
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
+The cli tool binds to any template generator service able to return templates
+over HTTP. It defaults to `https://www.toptal.com//developers/gitignore/api`.
+
 Examples:
 
 *Generate a gitignore template for simple rust projects and store it in a file
