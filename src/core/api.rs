@@ -20,7 +20,7 @@ pub enum ErrorKind {
 pub trait TemplateGenerator {
     fn generate_from_api(
         http_client: &dyn HttpClient,
-        template_names: &Vec<String>,
+        template_names: &[String],
     ) -> Result<String, ProgramError>;
 }
 
