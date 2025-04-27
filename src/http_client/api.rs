@@ -1,5 +1,3 @@
-//! Define components used to make HTTP calls.
-
 use crate::ProgramExit;
 pub use crate::http_client::impls::{MockClient, UreqClient};
 
