@@ -13,7 +13,17 @@ and this project adheres to
 
 ## [0.3.10] - 2025-04-27 <a id="0.3.10"></a>
 
-@Content
+### 🐛 Bug Fixes
+
+- Remove trello dumping in dryrun release task
+
+### 🚜 Refactor
+
+- Remove integration tests already covered by unit tests
+
+### ⚙️ Miscellaneous Tasks
+
+- Update deploy task to now release with given bump level input
 
 ## [0.3.9] - 2025-04-24 <a id="0.3.9"></a>
 
