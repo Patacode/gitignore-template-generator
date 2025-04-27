@@ -6,7 +6,7 @@ pub struct GitignoreTemplateGenerator;
 
 impl TemplateGenerator for GitignoreTemplateGenerator {
     fn generate_from_api(
-        http_client: &dyn HttpClient,
+        http_client: &impl HttpClient,
         template_names: &[String],
     ) -> Result<String, ProgramError> {
         let uri = constant::template_generator::URI;
