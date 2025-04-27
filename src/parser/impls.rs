@@ -69,7 +69,7 @@ impl DefaultArgsParser {
 
 impl ArgsParser for DefaultArgsParser {
     /// Parses given cli args and perform basic error handling.
-    /// 
+    ///
     /// * If the underlying [`ProgramExit`] contains a
     ///     [`ProgramExit::styled_message`], it will be printed instead of
     ///     [`ProgramExit::message`].
@@ -77,7 +77,7 @@ impl ArgsParser for DefaultArgsParser {
     ///     [`ProgramExit`] received.
     /// * Will print to stderr on error, to stdout on early exit (i.e. version,
     /// author, help options)
-    /// 
+    ///
     /// See [`ArgsParser::parse`] for more infos.
     fn parse(args: impl IntoIterator<Item = OsString>) -> Args {
         match DefaultArgsParser::try_parse(args) {
