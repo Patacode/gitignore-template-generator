@@ -134,8 +134,42 @@ impl Args {
     }
 }
 
+/// Cli args parser trait to parse CLI args and return them in an [`Args`]. 
 pub trait ArgsParser {
+
+    /// Parses given cli args and return them as an [`Args`] instance.
+    /// 
+    /// * First CLI args should be the binary name
+    /// * Rely on [`ArgsParser::try_parse`] method but additionally wrap
+    ///     error handling logic
+    /// 
+    /// # Arguments
+    /// 
+    /// * `args` - The CLI args to be parsed. Typically retrieved from
+    ///     [`std::env::args_os`].
+    /// 
+    /// # Returns
+    /// 
+    /// An owned instance of [`Args`] containing parsing result of given args.
     fn parse(args: impl IntoIterator<Item = OsString>) -> Args;
+
+    /// Parses given cli args and return them as an [`Args`] instance if no
+    /// error or early exit occurred.
+    /// 
+    /// * First CLI args should be the binary name
+    /// * Version, author and help options are considered as early program
+    ///     exit
+    /// 
+    /// # Arguments
+    /// 
+    ///  * `args` - The CLI args to be parsed. Typically retrieved from
+    ///     [`std::env::args_os`].
+    ///
+    /// # Returns
+    /// 
+    /// A result containing an owned instance of [`Args`] if successful parsing,
+    /// or a [`ProgramExit`] if any error or early exit occurred (e.g. version/
+    /// author/help infos printing, invalid cli args...)
     fn try_parse(
         args: impl IntoIterator<Item = OsString>,
     ) -> Result<Args, ProgramExit>;
