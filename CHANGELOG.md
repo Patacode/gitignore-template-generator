@@ -13,7 +13,24 @@ and this project adheres to
 
 ## [0.3.12] - 2025-04-27 <a id="0.3.12"></a>
 
-@Content
+### 🚜 Refactor
+
+- Remove unused regex module
+- Remove unused REGEX_NO_MATCH error message constant
+- Remove config module and replace it with parser module entirely
+- Rename ProgramError struct to ProgramExit
+- Rename error_kind field to kind
+- Rename ErrorKind enum to ExitKind
+- Rename 'Other' ExitKind enum field to Error
+
+### 📚 Documentation
+
+- Add doc for all modules
+
+### ⚙️ Miscellaneous Tasks
+
+- Update help output in README to match current one
+- Improve usage section in README
 
 ## [0.3.11] - 2025-04-27 <a id="0.3.11"></a>
 
