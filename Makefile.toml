@@ -30,13 +30,7 @@ run_task = [
 ]
 
 [tasks.release-dryrun]
-run_task = [
-    { name = [
-        "deploy-dryrun-args",
-        "bump-trello-version",
-        "archive-trello-cards",
-    ] },
-]
+run_task = [{ name = ["deploy-dryrun-args"] }]
 
 # cargo
 [tasks.install-git-cliff]
