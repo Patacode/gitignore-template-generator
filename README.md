@@ -19,7 +19,6 @@ cargo install gitignore-template-generator
 Available options:
 
 ```
-$ gitignore-template-generator --help
 Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 
 Generate templates for .gitignore files
@@ -28,10 +27,11 @@ Arguments:
   [TEMPLATE_NAMES]...  A non-empty list of gitignore template names
 
 Options:
-  -s, --server-url <SERVER_URL>  The gitignore template generator service url [default: https://www.toptal.com]
-  -h, --help                     Print help
-  -V, --version                  Print version
-  -a, --author                   Print author
+  -s, --server-url <SERVER_URL>      The gitignore template generator service url [default: https://www.toptal.com]
+  -e, --endpoint-uri <ENDPOINT_URI>  The gitignore template generator service endpoint uri [default: /developers/gitignore/api]
+  -h, --help                         Print help
+  -V, --version                      Print version
+  -a, --author                       Print author
 
 Version: 0.3.12
 Author: Patacode <pata.codegineer@gmail.com>
