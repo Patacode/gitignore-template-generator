@@ -2,7 +2,7 @@ use std::{ffi::OsString, process::exit};
 
 use clap::{CommandFactory, Parser};
 
-use crate::{ErrorKind, ProgramExit, constant};
+use crate::{ExitKind, ProgramExit, constant};
 
 use super::{Args, ArgsParser};
 
@@ -19,7 +19,7 @@ impl DefaultArgsParser {
                 styled_message: Some(
                     rendered_help.ansi().to_string().trim_end().to_string(),
                 ),
-                kind: ErrorKind::HelpInfos,
+                kind: ExitKind::HelpInfos,
             })
         } else if args.show_version {
             let cmd = Args::command();
@@ -35,7 +35,7 @@ impl DefaultArgsParser {
                 message,
                 exit_status: constant::exit_status::SUCCESS,
                 styled_message: None,
-                kind: ErrorKind::VersionInfos,
+                kind: ExitKind::VersionInfos,
             })
         } else if args.show_author {
             let cmd = Args::command();
@@ -48,7 +48,7 @@ impl DefaultArgsParser {
                 message,
                 exit_status: constant::exit_status::SUCCESS,
                 styled_message: None,
-                kind: ErrorKind::AuthorInfos,
+                kind: ExitKind::AuthorInfos,
             })
         } else {
             None
@@ -57,10 +57,10 @@ impl DefaultArgsParser {
 
     fn print_error_message(error: &ProgramExit, message: &str) {
         match error.kind {
-            ErrorKind::VersionInfos
-            | ErrorKind::HelpInfos
-            | ErrorKind::AuthorInfos => println!("{message}"),
-            ErrorKind::Other => eprintln!("{message}"),
+            ExitKind::VersionInfos
+            | ExitKind::HelpInfos
+            | ExitKind::AuthorInfos => println!("{message}"),
+            ExitKind::Other => eprintln!("{message}"),
         }
     }
 }
@@ -99,7 +99,7 @@ impl ArgsParser for DefaultArgsParser {
                     "{}\nFor more information, try '\u{1b}[1m--help\u{1b}[0m'.",
                     error.render().ansi()
                 )),
-                kind: ErrorKind::Other,
+                kind: ExitKind::Other,
             }),
         }
     }

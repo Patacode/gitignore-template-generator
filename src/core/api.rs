@@ -22,12 +22,12 @@ pub struct ProgramExit {
     pub styled_message: Option<String>,
 
     /// The kind of program exit.
-    pub kind: ErrorKind,
+    pub kind: ExitKind,
 }
 
 /// Enum for kind of program exit.
 #[derive(Clone, PartialEq, Debug)]
-pub enum ErrorKind {
+pub enum ExitKind {
     /// Early program exit to print version infos.
     VersionInfos,
 
@@ -113,7 +113,7 @@ mod tests {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            kind: ErrorKind::Other,
+                            kind: ExitKind::Other,
                         }),
                     };
 
@@ -126,7 +126,7 @@ mod tests {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            kind: ErrorKind::Other,
+                            kind: ExitKind::Other,
                         });
 
                     assert_eq!(actual, expected);

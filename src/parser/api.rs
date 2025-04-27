@@ -153,7 +153,7 @@ mod tests {
             use super::*;
 
             mod success {
-                use crate::{ErrorKind, constant};
+                use crate::{ExitKind, constant};
 
                 use super::*;
 
@@ -177,7 +177,7 @@ mod tests {
                         ),
                         exit_status: 0,
                         styled_message: None,
-                        kind: ErrorKind::VersionInfos,
+                        kind: ExitKind::VersionInfos,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -201,7 +201,7 @@ mod tests {
                         message: get_help_message(),
                         exit_status: 0,
                         styled_message: Some(get_ansi_help_message()),
-                        kind: ErrorKind::HelpInfos,
+                        kind: ExitKind::HelpInfos,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -226,7 +226,7 @@ mod tests {
                         message: env!("CARGO_PKG_AUTHORS").to_string(),
                         exit_status: 0,
                         styled_message: None,
-                        kind: ErrorKind::AuthorInfos,
+                        kind: ExitKind::AuthorInfos,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -276,7 +276,7 @@ mod tests {
             }
 
             mod failure {
-                use crate::{ErrorKind, constant};
+                use crate::{ExitKind, constant};
 
                 use super::*;
 
@@ -295,7 +295,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_no_pos_args_error",
                         )),
-                        kind: ErrorKind::Other,
+                        kind: ExitKind::Other,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -318,7 +318,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_comma_pos_args_error",
                         )),
-                        kind: ErrorKind::Other,
+                        kind: ExitKind::Other,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -341,7 +341,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_server_url_no_pos_args_error",
                         )),
-                        kind: ErrorKind::Other,
+                        kind: ExitKind::Other,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -363,7 +363,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_unexpected_argument_error",
                         )),
-                        kind: ErrorKind::Other,
+                        kind: ExitKind::Other,
                     };
                     let expected_error = Some(&expected_error);
 
