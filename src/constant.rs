@@ -15,10 +15,6 @@ pub mod error_messages {
     pub const FILE_READ_TO_STRING_FAILURE: &str =
         "Failed to read expected output file";
 
-    /// Actual result does not match expected regex.
-    pub const REGEX_NO_MATCH: &str =
-        "Actual output <{actual}> did not match expected pattern <{expected}>";
-
     /// Commas found in cli positional args.
     pub const COMMAS_NOT_ALLOWED: &str =
         "Commas are not allowed in template names";
