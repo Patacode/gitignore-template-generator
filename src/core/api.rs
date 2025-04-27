@@ -1,5 +1,5 @@
 //! Define components used to wrap core logic.
-//! 
+//!
 //! As per crate definition, core logic is defined as generating
 //! gitignore templates via a template generator API over HTTP. So you will
 //! find methods to respond to that need.
@@ -7,19 +7,18 @@
 pub use crate::core::impls::GitignoreTemplateGenerator;
 use crate::http_client::HttpClient;
 
-/// DTO struct representing an early or abrupt program exit. 
+/// DTO struct representing an early or abrupt program exit.
 #[derive(Clone, PartialEq, Debug)]
-pub struct ProgramError {
-
+pub struct ProgramExit {
     /// The message linked to the program exit.
     pub message: String,
 
-    /// The exit status code to be returned by the script. 
+    /// The exit status code to be returned by the script.
     pub exit_status: i32,
 
     /// The ANSI-styled message linked to the program exit.
-    /// 
-    /// Same as [`ProgramError::message`] but styled.
+    ///
+    /// Same as [`ProgramExit::message`] but styled.
     pub styled_message: Option<String>,
 
     /// The kind of program exit.
@@ -29,7 +28,6 @@ pub struct ProgramError {
 /// Enum for kind of program exit.
 #[derive(Clone, PartialEq, Debug)]
 pub enum ErrorKind {
-
     /// Early program exit to print version infos.
     VersionInfos,
 
@@ -44,27 +42,26 @@ pub enum ErrorKind {
 }
 
 /// Template generator trait to generate a template via an API call made
-/// over HTTP. 
+/// over HTTP.
 pub trait TemplateGenerator {
-
     /// Generates a string template matching given template names.
-    /// 
+    ///
     /// The template is generated via a GET API call made over HTTP using
     /// the given http client.
-    /// 
+    ///
     /// # Arguments
     /// * `http_client` - The http client to be used to make the API call.
     /// * `template_names` - The template names to be used to generated the
     ///     actual template
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// A result containing the generated template on success, or a
-    /// [`ProgramError`] on error (e.g. 4xx, network issues...).
+    /// [`ProgramExit`] on error (e.g. 4xx, network issues...).
     fn generate_from_api(
         http_client: &impl HttpClient,
         template_names: &[String],
-    ) -> Result<String, ProgramError>;
+    ) -> Result<String, ProgramExit>;
 }
 
 #[cfg(test)]
@@ -95,7 +92,7 @@ mod tests {
                         &http_client,
                         &template_names,
                     );
-                    let expected: Result<String, ProgramError> =
+                    let expected: Result<String, ProgramExit> =
                         Ok(String::from(generated_template));
 
                     assert_eq!(actual, expected);
@@ -112,7 +109,7 @@ mod tests {
                     let template_names = make_string_vec("rust pyth");
                     let error_message = "all bad";
                     let http_client = MockClient {
-                        response: Err(ProgramError {
+                        response: Err(ProgramExit {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
@@ -124,8 +121,8 @@ mod tests {
                         &http_client,
                         &template_names,
                     );
-                    let expected: Result<String, ProgramError> =
-                        Err(ProgramError {
+                    let expected: Result<String, ProgramExit> =
+                        Err(ProgramExit {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,

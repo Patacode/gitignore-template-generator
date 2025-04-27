@@ -2,18 +2,18 @@ use std::{ffi::OsString, process::exit};
 
 use clap::{CommandFactory, Parser};
 
-use crate::{ErrorKind, ProgramError, constant};
+use crate::{ErrorKind, ProgramExit, constant};
 
 use super::{Args, ArgsParser};
 
 pub struct DefaultArgsParser;
 
 impl DefaultArgsParser {
-    fn parse_global_options(args: &Args) -> Option<ProgramError> {
+    fn parse_global_options(args: &Args) -> Option<ProgramExit> {
         if args.show_help {
             let mut cmd = Args::command();
             let rendered_help = cmd.render_help();
-            Some(ProgramError {
+            Some(ProgramExit {
                 message: rendered_help.to_string().trim_end().to_string(),
                 exit_status: constant::exit_status::SUCCESS,
                 styled_message: Some(
@@ -31,7 +31,7 @@ impl DefaultArgsParser {
                     .to_string(),
             };
 
-            Some(ProgramError {
+            Some(ProgramExit {
                 message,
                 exit_status: constant::exit_status::SUCCESS,
                 styled_message: None,
@@ -44,7 +44,7 @@ impl DefaultArgsParser {
                 None => constant::error_messages::AUTHOR_INFOS_NOT_AVAILABLE,
             });
 
-            Some(ProgramError {
+            Some(ProgramExit {
                 message,
                 exit_status: constant::exit_status::SUCCESS,
                 styled_message: None,
@@ -55,7 +55,7 @@ impl DefaultArgsParser {
         }
     }
 
-    fn print_error_message(error: &ProgramError, message: &str) {
+    fn print_error_message(error: &ProgramExit, message: &str) {
         match error.error_kind {
             ErrorKind::VersionInfos
             | ErrorKind::HelpInfos
@@ -83,13 +83,13 @@ impl ArgsParser for DefaultArgsParser {
 
     fn try_parse(
         args: impl IntoIterator<Item = OsString>,
-    ) -> Result<Args, ProgramError> {
+    ) -> Result<Args, ProgramExit> {
         match Args::try_parse_from(args) {
             Ok(parsed_args) => match Self::parse_global_options(&parsed_args) {
                 Some(error) => Err(error),
                 None => Ok(parsed_args),
             },
-            Err(error) => Err(ProgramError {
+            Err(error) => Err(ProgramExit {
                 message: format!(
                     "{}\nFor more information, try '--help'.",
                     error.render()

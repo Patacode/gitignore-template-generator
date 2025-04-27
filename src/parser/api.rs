@@ -7,7 +7,7 @@ use crate::{
 
 use std::ffi::OsString;
 
-use crate::ProgramError;
+use crate::ProgramExit;
 pub use crate::parser::impls::DefaultArgsParser;
 
 /// Struct to parse and gather cli args parsing result.
@@ -136,7 +136,7 @@ pub trait ArgsParser {
     fn parse(args: impl IntoIterator<Item = OsString>) -> Args;
     fn try_parse(
         args: impl IntoIterator<Item = OsString>,
-    ) -> Result<Args, ProgramError>;
+    ) -> Result<Args, ProgramExit>;
 }
 
 #[cfg(test)]
@@ -169,7 +169,7 @@ mod tests {
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramError {
+                    let expected_error = ProgramExit {
                         message: format!(
                             "{} {}",
                             env!("CARGO_PKG_NAME"),
@@ -197,7 +197,7 @@ mod tests {
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramError {
+                    let expected_error = ProgramExit {
                         message: get_help_message(),
                         exit_status: 0,
                         styled_message: Some(get_ansi_help_message()),
@@ -222,7 +222,7 @@ mod tests {
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramError {
+                    let expected_error = ProgramExit {
                         message: env!("CARGO_PKG_AUTHORS").to_string(),
                         exit_status: 0,
                         styled_message: None,
@@ -286,7 +286,7 @@ mod tests {
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramError {
+                    let expected_error = ProgramExit {
                         message: load_expectation_file_as_string(
                             "no_pos_args_error",
                         ),
@@ -309,7 +309,7 @@ mod tests {
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramError {
+                    let expected_error = ProgramExit {
                         message: load_expectation_file_as_string(
                             "comma_pos_args_error",
                         ),
@@ -332,7 +332,7 @@ mod tests {
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramError {
+                    let expected_error = ProgramExit {
                         message: load_expectation_file_as_string(
                             "server_url_no_pos_args_error",
                         ),
@@ -355,7 +355,7 @@ mod tests {
                     let parsed_args = DefaultArgsParser::try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramError {
+                    let expected_error = ProgramExit {
                         message: load_expectation_file_as_string(
                             "unexpected_argument_error",
                         ),

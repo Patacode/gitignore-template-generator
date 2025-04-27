@@ -1,8 +1,8 @@
-use crate::ProgramError;
+use crate::ProgramExit;
 pub use crate::http_client::impls::{MockClient, UreqClient};
 
 pub trait HttpClient {
-    fn get(&self, url: &str) -> Result<String, ProgramError>;
+    fn get(&self, url: &str) -> Result<String, ProgramExit>;
 }
 
 #[cfg(test)]
@@ -36,7 +36,7 @@ mod tests {
 
                     let actual =
                         http_client.get(&format!("{server_url}{mock_uri}"));
-                    let expected: Result<String, ProgramError> =
+                    let expected: Result<String, ProgramExit> =
                         Ok(String::from(mock_body));
 
                     mock.assert();
@@ -58,7 +58,7 @@ mod tests {
                     let http_client = UreqClient { server_url };
 
                     let actual = http_client.get(mock_uri);
-                    let expected: Result<String, ProgramError> =
+                    let expected: Result<String, ProgramExit> =
                         Ok(String::from(mock_body));
 
                     mock.assert();
@@ -87,8 +87,8 @@ mod tests {
 
                     let actual =
                         http_client.get(&format!("{server_url}{mock_uri}"));
-                    let expected: Result<String, ProgramError> =
-                        Err(ProgramError {
+                    let expected: Result<String, ProgramExit> =
+                        Err(ProgramExit {
                             message: constant::error_messages::API_CALL_FAILURE
                                 .replace(
                                     "{error}",
@@ -119,8 +119,8 @@ mod tests {
 
                     let actual =
                         http_client.get(&format!("{server_url}{mock_uri}"));
-                    let expected: Result<String, ProgramError> =
-                        Err(ProgramError {
+                    let expected: Result<String, ProgramExit> =
+                        Err(ProgramExit {
                             message: String::from(
                                 constant::error_messages::BODY_PARSING_ISSUE,
                             ),
@@ -156,7 +156,7 @@ mod tests {
                     };
 
                     let actual = http_client.get("/api/rust");
-                    let expected: Result<String, ProgramError> =
+                    let expected: Result<String, ProgramExit> =
                         Ok(String::from(result_content));
 
                     assert_eq!(actual, expected);
@@ -166,7 +166,7 @@ mod tests {
                 fn it_returns_error_mocked_response() {
                     let result_content = "error response";
                     let http_client = MockClient {
-                        response: Err(ProgramError {
+                        response: Err(ProgramExit {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
@@ -175,8 +175,8 @@ mod tests {
                     };
 
                     let actual = http_client.get("/api/rust");
-                    let expected: Result<String, ProgramError> =
-                        Err(ProgramError {
+                    let expected: Result<String, ProgramExit> =
+                        Err(ProgramExit {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
