@@ -1,4 +1,4 @@
-//! Modules used to define globally-shared constants.
+//! Define globally-shared constants.
 
 pub mod error_messages {
     //! Constants for error messages to be displayed.
