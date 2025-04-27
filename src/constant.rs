@@ -1,18 +1,40 @@
+//! Modules used to define globally-shared constants.
+
 pub mod error_messages {
+    //! Constants for error messages to be displayed.
+
+    /// An error occurred during [`std::process::Command::output`].
     pub const CMD_EXECUTION_FAILURE: &str = "Failed to execute command";
+
+    /// An error occurred during HTTP body parsing.
     pub const BODY_PARSING_ISSUE: &str =
         "An error occurred during body parsing";
+
+    /// An error occurred while reading a file and converting it to a String
+    /// instance.
     pub const FILE_READ_TO_STRING_FAILURE: &str =
         "Failed to read expected output file";
+
+    /// Actual result does not match expected regex.
     pub const REGEX_NO_MATCH: &str =
         "Actual output <{actual}> did not match expected pattern <{expected}>";
+
+    /// Commas found in cli positional args.
     pub const COMMAS_NOT_ALLOWED: &str =
         "Commas are not allowed in template names";
+
+    /// An error occurred during an api call.
     pub const API_CALL_FAILURE: &str =
         "An error occurred during the API call: {error}";
+
+    /// A HTTP error 400 occurred during api call.
     pub const HTTP_400: &str = "http status: 400";
+
+    /// User requested author infos but none is available.
     pub const AUTHOR_INFOS_NOT_AVAILABLE: &str =
         "Author information not available.";
+
+    /// User requested version infos but none is available.
     pub const VERSION_INFOS_NOT_AVAILABLE: &str =
         "Version information not available.";
 }
