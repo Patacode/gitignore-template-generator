@@ -44,6 +44,7 @@ pub trait TemplateGenerator {
     /// the given http client.
     ///
     /// # Arguments
+    ///
     /// * `http_client` - The http client to be used to make the API call.
     /// * `template_names` - The template names to be used to generated the
     ///     actual template

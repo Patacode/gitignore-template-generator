@@ -104,6 +104,7 @@ impl Args {
     /// It needs to be called on struct instance and effectively mutates it.
     ///
     /// # Arguments
+    /// 
     /// * `template_names` - The new value to be assigned to `template_names`
     ///     field.
     ///
@@ -120,6 +121,7 @@ impl Args {
     /// It needs to be called on struct instance and effectively mutates it.
     ///
     /// # Arguments
+    /// 
     /// * `server_url` - The new value to be assigned to `server_url`
     ///     field.
     ///
