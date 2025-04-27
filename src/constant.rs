@@ -136,6 +136,9 @@ pub mod template_generator {
 }
 
 pub mod path {
+    //! Constants for file or directory path
+
+    /// Path to directory containing test output expectations.
     pub const TEST_EXPECTATIONS: &str = "tests/expected";
 }
 
