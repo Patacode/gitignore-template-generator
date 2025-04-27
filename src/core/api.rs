@@ -38,7 +38,7 @@ pub enum ExitKind {
     AuthorInfos,
 
     /// Abrupt program exit due to runtime error.
-    Other,
+    Error,
 }
 
 /// Template generator trait to generate a template via an API call made
@@ -113,7 +113,7 @@ mod tests {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            kind: ExitKind::Other,
+                            kind: ExitKind::Error,
                         }),
                     };
 
@@ -126,7 +126,7 @@ mod tests {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
-                            kind: ExitKind::Other,
+                            kind: ExitKind::Error,
                         });
 
                     assert_eq!(actual, expected);

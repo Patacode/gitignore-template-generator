@@ -60,7 +60,7 @@ impl DefaultArgsParser {
             ExitKind::VersionInfos
             | ExitKind::HelpInfos
             | ExitKind::AuthorInfos => println!("{message}"),
-            ExitKind::Other => eprintln!("{message}"),
+            ExitKind::Error => eprintln!("{message}"),
         }
     }
 }
@@ -99,7 +99,7 @@ impl ArgsParser for DefaultArgsParser {
                     "{}\nFor more information, try '\u{1b}[1m--help\u{1b}[0m'.",
                     error.render().ansi()
                 )),
-                kind: ExitKind::Other,
+                kind: ExitKind::Error,
             }),
         }
     }

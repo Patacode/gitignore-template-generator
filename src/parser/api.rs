@@ -295,7 +295,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_no_pos_args_error",
                         )),
-                        kind: ExitKind::Other,
+                        kind: ExitKind::Error,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -318,7 +318,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_comma_pos_args_error",
                         )),
-                        kind: ExitKind::Other,
+                        kind: ExitKind::Error,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -341,7 +341,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_server_url_no_pos_args_error",
                         )),
-                        kind: ExitKind::Other,
+                        kind: ExitKind::Error,
                     };
                     let expected_error = Some(&expected_error);
 
@@ -363,7 +363,7 @@ mod tests {
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_unexpected_argument_error",
                         )),
-                        kind: ExitKind::Other,
+                        kind: ExitKind::Error,
                     };
                     let expected_error = Some(&expected_error);
 
