@@ -20,7 +20,7 @@ mod tests {
     mod default_args_parser {
         use super::*;
 
-        mod parse {
+        mod try_parse {
             use super::*;
 
             mod success {
