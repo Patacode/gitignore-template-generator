@@ -123,7 +123,15 @@ pub mod exit_status {
 }
 
 pub mod template_generator {
+    //! Constants for template generator service.
+
+    /// Template generator service base URL.
     pub const BASE_URL: &str = "https://www.toptal.com";
+
+    /// Template generator service URI.
+    /// 
+    /// Used in conjunction with [`BASE_URL`] to build full URL and make
+    /// API call.
     pub const URI: &str = "/developers/gitignore/api";
 }
 
