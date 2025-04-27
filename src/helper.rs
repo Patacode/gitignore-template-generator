@@ -1,3 +1,7 @@
+//! Define components to help in other modules.
+//! 
+//! Generic place to put helper code.
+
 use std::{borrow::Cow, ffi::OsString, fs};
 
 use crate::constant;
