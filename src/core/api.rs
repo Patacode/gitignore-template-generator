@@ -4,7 +4,7 @@ use crate::http_client::{HttpClient, ProgramError};
 pub trait TemplateGenerator {
     fn generate_from_api(
         http_client: &dyn HttpClient,
-        template_names: &str,
+        template_names: &Vec<String>,
     ) -> Result<String, ProgramError>;
 }
 
@@ -12,6 +12,7 @@ pub trait TemplateGenerator {
 mod tests {
     use super::*;
     use crate::http_client::MockClient;
+    use crate::helper::make_string_vec;
 
     mod gitignore_template_generator {
         use super::*;
@@ -20,11 +21,12 @@ mod tests {
             use super::*;
 
             mod success {
+
                 use super::*;
 
                 #[test]
                 fn it_generates_template_using_provided_client() {
-                    let template_names = "rust,python";
+                    let template_names = make_string_vec("rust python");
                     let generated_template = "all good";
                     let http_client = MockClient {
                         response: Ok(String::from(generated_template)),
@@ -32,7 +34,7 @@ mod tests {
 
                     let actual = GitignoreTemplateGenerator::generate_from_api(
                         &http_client,
-                        template_names,
+                        &template_names,
                     );
                     let expected: Result<String, ProgramError> =
                         Ok(String::from(generated_template));
@@ -48,7 +50,7 @@ mod tests {
 
                 #[test]
                 fn it_propagates_error_from_client_if_any() {
-                    let template_names = "rust,pyth";
+                    let template_names = make_string_vec("rust pyth");
                     let error_message = "all bad";
                     let http_client = MockClient {
                         response: Err(ProgramError {
@@ -61,7 +63,7 @@ mod tests {
 
                     let actual = GitignoreTemplateGenerator::generate_from_api(
                         &http_client,
-                        template_names,
+                        &template_names,
                     );
                     let expected: Result<String, ProgramError> =
                         Err(ProgramError {
