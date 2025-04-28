@@ -15,7 +15,7 @@ impl ClapArg for TemplateNamesClapArg {
             .id("TEMPLATE_NAMES")
             .help(constant::help_messages::TEMPLATE_NAMES)
             .required_unless_present_any(["AUTHOR", "VERSION", "HELP"])
-            .value_parser(DefaultCliArgsValidator::has_no_commas)
+            .value_parser(DefaultCliArgsValidator::has_valid_template_name)
             .num_args(1..)
     }
 }

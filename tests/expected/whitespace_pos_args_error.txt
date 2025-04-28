@@ -1,0 +1,3 @@
+error: invalid value 'r ' for '[TEMPLATE_NAMES]...': Whitespace characters are not allowed in template names
+
+For more information, try '--help'.

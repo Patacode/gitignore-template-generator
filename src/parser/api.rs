@@ -369,6 +369,58 @@ mod tests {
                 }
 
                 #[test]
+                fn it_fails_parsing_when_whitespaces_in_pos_args() {
+                    let cli_args = vec![
+                        OsString::from(env!("CARGO_PKG_NAME")),
+                        OsString::from("r ")
+                    ];
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramExit {
+                        message: load_expectation_file_as_string(
+                            "whitespace_pos_args_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_whitespace_pos_args_error",
+                        )),
+                        kind: ExitKind::Error,
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
+                fn it_fails_parsing_when_commas_and_whitespaces_in_pos_args() {
+                    let cli_args = vec![
+                        OsString::from(env!("CARGO_PKG_NAME")),
+                        OsString::from("r ,")
+                    ];
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramExit {
+                        message: load_expectation_file_as_string(
+                            "comma_whitespace_pos_args_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_comma_whitespace_pos_args_error",
+                        )),
+                        kind: ExitKind::Error,
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
                 fn it_fails_parsing_when_server_url_but_no_pos_args() {
                     let cli_args = parse_cli_args("-s https://test.com");
                     let parsed_args = ClapArgsParser::new().try_parse(cli_args);
