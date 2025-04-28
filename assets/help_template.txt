@@ -1,0 +1,8 @@
+{before-help}
+{usage-heading} {usage}
+
+{about-with-newline}
+{all-args}{after-help}
+
+Version: {version}
+Author: {author}

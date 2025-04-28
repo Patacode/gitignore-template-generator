@@ -1,92 +1,40 @@
 use std::{ffi::OsString, process::exit};
 
-use clap::{Arg, ArgAction, Command};
+use clap::Command;
 
-use crate::{
-    ExitKind, ProgramExit, constant,
-    validator::{CliArgsValidator, DefaultCliArgsValidator},
+use crate::{ExitKind, ProgramExit, constant};
+
+use super::{
+    Args, ArgsParser,
+    command::{
+        AuthorClapArg, ClapArg, EndpointUriClapArg, HelpClapArg,
+        ServerUrlClapArg, TemplateNamesClapArg, VersionClapArg,
+    },
 };
-
-use super::{Args, ArgsParser};
 
 /// Default implementation of args parser that parses CLI args using
 /// [`clap`].
 pub struct ClapArgsParser {
-    pub cli_parser: Command,
+    cli_parser: Command,
 }
 
 #[allow(clippy::new_without_default)]
 impl ClapArgsParser {
     pub fn new() -> Self {
-        let command = Command::new(env!("CARGO_PKG_NAME")) // Replace with your binary name
-            .version(env!("CARGO_PKG_VERSION"))
-            .author(env!("CARGO_PKG_AUTHORS"))
-            .about(constant::parser_infos::ABOUT)
-            .help_template(
-                "\
-{before-help}
-{usage-heading} {usage}
-
-{about-with-newline}
-{all-args}{after-help}
-
-Version: {version}
-Author: {author}
-",
-            )
-            .disable_help_flag(true)
-            .disable_version_flag(true)
-            .arg(
-                Arg::new("template_names")
-                    .id("TEMPLATE_NAMES")
-                    .help(constant::help_messages::TEMPLATE_NAMES)
-                    .required_unless_present_any(["AUTHOR", "VERSION", "HELP"])
-                    .value_parser(DefaultCliArgsValidator::has_no_commas)
-                    .num_args(1..),
-            )
-            .arg(
-                Arg::new("server_url")
-                    .id("SERVER_URL")
-                    .short(constant::cli_options::SERVER_URL.short)
-                    .long(constant::cli_options::SERVER_URL.long)
-                    .help(constant::help_messages::SERVER_URL)
-                    .default_value(constant::template_generator::BASE_URL),
-            )
-            .arg(
-                Arg::new("endpoint_uri")
-                    .id("ENDPOINT_URI")
-                    .short(constant::cli_options::ENDPOINT_URI.short)
-                    .long(constant::cli_options::ENDPOINT_URI.long)
-                    .help(constant::help_messages::ENDPOINT_URI)
-                    .default_value(constant::template_generator::URI),
-            )
-            .arg(
-                Arg::new("help")
-                    .id("HELP")
-                    .short(constant::cli_options::HELP.short)
-                    .long(constant::cli_options::HELP.long)
-                    .help(constant::help_messages::HELP)
-                    .action(ArgAction::SetTrue),
-            )
-            .arg(
-                Arg::new("version")
-                    .id("VERSION")
-                    .short(constant::cli_options::VERSION.short)
-                    .long(constant::cli_options::VERSION.long)
-                    .help(constant::help_messages::VERSION)
-                    .action(ArgAction::SetTrue),
-            )
-            .arg(
-                Arg::new("author")
-                    .id("AUTHOR")
-                    .short(constant::cli_options::AUTHOR.short)
-                    .long(constant::cli_options::AUTHOR.long)
-                    .help(constant::help_messages::AUTHOR)
-                    .action(ArgAction::SetTrue),
-            );
-
         Self {
-            cli_parser: command,
+            cli_parser: Command::new(env!("CARGO_PKG_NAME"))
+                .version(env!("CARGO_PKG_VERSION"))
+                .author(env!("CARGO_PKG_AUTHORS"))
+                .about(constant::parser_infos::ABOUT)
+                .help_template(include_str!("../../assets/help_template.txt"))
+                .disable_help_flag(true)
+                .disable_version_flag(true)
+                .arg(TemplateNamesClapArg::build())
+                .arg(ServerUrlClapArg::build())
+                .arg(EndpointUriClapArg::build())
+                .arg(HelpClapArg::build())
+                .arg(VersionClapArg::build())
+                .arg(AuthorClapArg::build()),
         }
     }
 
