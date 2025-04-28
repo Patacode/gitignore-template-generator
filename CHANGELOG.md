@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.4.1] - 2025-04-28 <a id="0.4.1"></a>
+
 ### 🚜 Refactor
 
 - Move parser definition and creation logic to 'constructor'
