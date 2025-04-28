@@ -9,7 +9,9 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🏗️ Build
+
+- [make] - Add task to rename trello cards with version specifier (*Trigger on release, before archiving cards*)
 
 ## [0.4.5] - 2025-04-28 <a id="0.4.5"></a>
 
