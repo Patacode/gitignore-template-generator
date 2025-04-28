@@ -36,6 +36,16 @@ pub mod error_messages {
     /// User requested version infos but none is available.
     pub const VERSION_INFOS_NOT_AVAILABLE: &str =
         "Version information not available.";
+
+    /// `White_Space` found in cli positional args.
+    ///
+    /// `White_Space` is specified in the
+    /// [Unicode Character Database][ucd] [`PropList.txt`].
+    ///
+    /// [ucd]: https://www.unicode.org/reports/tr44/
+    /// [`PropList.txt`]: https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt
+    pub const WHITESPACES_NOT_ALLOWED: &str =
+        "Whitespace characters are not allowed in template names";
 }
 
 pub mod help_messages {

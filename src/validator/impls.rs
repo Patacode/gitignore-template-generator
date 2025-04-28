@@ -13,10 +13,26 @@ impl CliArgsValidator for DefaultCliArgsValidator {
     /// Returns [`constant::error_messages::COMMAS_NOT_ALLOWED`] if any commas
     /// found.
     ///
-    /// See [`CliArgsValidator`] for more infos.
+    /// See [`CliArgsValidator::has_no_commas`] for more infos.
     fn has_no_commas(value: &str) -> Result<String, String> {
         if value.contains(',') {
             Err(String::from(constant::error_messages::COMMAS_NOT_ALLOWED))
+        } else {
+            Ok(value.to_string())
+        }
+    }
+
+    /// Checks if given value contains whitespaces.
+    ///
+    /// Returns [`constant::error_messages::WHITESPACES_NOT_ALLOWED`] if any commas
+    /// found.
+    ///
+    /// See [`CliArgsValidator::has_no_whitespaces`] for more infos.
+    fn has_no_whitespaces(value: &str) -> Result<String, String> {
+        if value.chars().any(|c| c.is_whitespace()) {
+            Err(String::from(
+                constant::error_messages::WHITESPACES_NOT_ALLOWED,
+            ))
         } else {
             Ok(value.to_string())
         }
