@@ -9,7 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🏗️ Build
+
+- [cliff] - Include commit scope and body if present in generated changelog
+- [cliff] - Remove release tag commits from generated changelog
 
 ## [0.4.2] - 2025-04-28 <a id="0.4.2"></a>
 
