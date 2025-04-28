@@ -9,7 +9,26 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- [http_client] - Add global timeout of 5s when making get http call (*To prevent long waiting time*)
+
+### 🚜 Refactor
+
+- [http_client] - Add 'Http' before 'Client' in UreqClient and MockClient (*To align on same naming convention everywhere*)
+
+### 🧪 Testing
+
+- Add integration test on server not found error (*Might occur when DNS lookup fails with provided server url*)
+- Add isolation tests to cover new cases (*One to test server url and endpoint uri in successful cases and one to test an undefined endpoint uri*)
+
+### 🏗️ Build
+
+- [make] - Add task to build doc
+
+### ⚙️ Miscellaneous Tasks
+
+- [vscode] - Add task to trigger doc make task
 
 ## [0.4.3] - 2025-04-28 <a id="0.4.3"></a>
 
