@@ -9,7 +9,14 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- [validator] - Add new validator method to check for whitespaces
+- Shorten help text of endpoint uri cli option (*To be more concise*)
+
+### 🚜 Refactor
+
+- [validator] - Remove needless borrow
 
 ## [0.4.4] - 2025-04-28 <a id="0.4.4"></a>
 
