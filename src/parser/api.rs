@@ -372,7 +372,7 @@ mod tests {
                 fn it_fails_parsing_when_whitespaces_in_pos_args() {
                     let cli_args = vec![
                         OsString::from(env!("CARGO_PKG_NAME")),
-                        OsString::from("r ")
+                        OsString::from("r "),
                     ];
                     let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
@@ -398,7 +398,7 @@ mod tests {
                 fn it_fails_parsing_when_commas_and_whitespaces_in_pos_args() {
                     let cli_args = vec![
                         OsString::from(env!("CARGO_PKG_NAME")),
-                        OsString::from("r ,")
+                        OsString::from("r ,"),
                     ];
                     let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
