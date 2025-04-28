@@ -20,9 +20,26 @@ for card_id in $card_ids; do
 done
 '''
 
+[tasks.rename-trello-cards]
+script = '''
+old_version=$(cat .version)
+key=$(cat "$TRELLO_API_KEY")
+token=$(cat "$TRELLO_API_TOKEN")
+curl -s "https://api.trello.com/1/lists/68027d1040324003560f3169/cards?key=${key}&token=${token}" | jq -c '.[] | {id, name}' |
+while read -r card; do
+  card_name=$(echo "${card}" | jq -r '.name')
+  card_id=$(echo "${card}" | jq -r '.id')
+  parsed_card_name=$(echo "$card_name" | tr -s '[:space:]' '+')
+  new_name="${old_version}+-+${parsed_card_name}"
+  curl -o /dev/null -s -X PUT "https://api.trello.com/1/cards/${card_id}?name=${new_name}&idList=68027e5026b59f970b733488&key=${key}&token=${token}"
+  echo "Renamed card ${card_id} with version specifier"
+done
+'''
+
 [tasks.release]
 run_task = [
     { name = [
+        "rename-trello-cards",
         "deploy-args",
         "bump-trello-version",
         "archive-trello-cards",
