@@ -9,7 +9,19 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚜 Refactor
+
+- Move parser definition and creation logic to 'constructor'
+- Rename DefaultArgsParser to ClapArgsParser
+- Split cli arg definitions in separate modules
+
+### 📚 Documentation
+
+- Improve doc of Args struct fields and ArgsParser trait
+
+### ⚙️ Miscellaneous Tasks
+
+- Correct typo in usage section
 
 ## [0.4.0] - 2025-04-27 <a id="0.4.0"></a>
 
