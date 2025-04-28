@@ -1,10 +1,3 @@
-use clap::Parser;
-
-use crate::{
-    constant,
-    validator::{CliArgsValidator, DefaultCliArgsValidator},
-};
-
 use std::ffi::OsString;
 
 use crate::ProgramExit;
@@ -15,30 +8,12 @@ pub use crate::parser::impls::DefaultArgsParser;
 /// It should not be used directly to parse cli args, but should be
 /// used along [`crate::parser::ArgsParser`], which wraps all the complex
 /// parsing logic.
-#[derive(Parser, Debug, PartialEq, Default)]
-#[command(version, author, long_about = None)]
-#[command(about = constant::parser_infos::ABOUT)]
-#[command(help_template = "\
-{before-help}
-{usage-heading} {usage}
-
-{about-with-newline}
-{all-args}{after-help}
-
-Version: {version}
-Author: {author}
-")]
-#[command(disable_help_flag = true, disable_version_flag = true)]
+#[derive(Debug, PartialEq, Default)]
 pub struct Args {
     /// A non-empty list of gitignore template names.
     ///
     /// Represented by the provided positional arguments, and required
     /// unless any of `author`, `version` or `help` options are given.
-    #[arg(
-        required_unless_present_any = vec!["author", "version", "help"],
-        value_parser = DefaultCliArgsValidator::has_no_commas,
-        help = constant::help_messages::TEMPLATE_NAMES
-    )]
     pub template_names: Vec<String>,
 
     /// The gitignore template generator service url.
@@ -47,12 +22,6 @@ pub struct Args {
     /// [`constant::cli_options::SERVER_URL`] that takes a string value, and
     /// falling back to [`constant::template_generator::BASE_URL`] if not
     /// provided in cli args.
-    #[arg(
-        short = constant::cli_options::SERVER_URL.short,
-        long = constant::cli_options::SERVER_URL.long,
-        help = constant::help_messages::SERVER_URL,
-        default_value = constant::template_generator::BASE_URL
-    )]
     pub server_url: String,
 
     /// The gitignore template generator service endpoint uri.
@@ -61,12 +30,6 @@ pub struct Args {
     /// [`constant::cli_options::ENDPOINT_URI`] that takes a string value, and
     /// falling back to [`constant::template_generator::URI`] if not
     /// provided in cli args.
-    #[arg(
-        short = constant::cli_options::ENDPOINT_URI.short,
-        long = constant::cli_options::ENDPOINT_URI.long,
-        help = constant::help_messages::ENDPOINT_URI,
-        default_value = constant::template_generator::URI
-    )]
     pub endpoint_uri: String,
 
     /// The boolean indicator of whether to display help infos or not.
@@ -74,13 +37,6 @@ pub struct Args {
     /// Optional value represented by the cli option
     /// [`constant::cli_options::HELP`], and falling back to `false` if
     /// not provided in cli args.
-    #[arg(
-        id = "help",
-        short = constant::cli_options::HELP.short,
-        long = constant::cli_options::HELP.long,
-        action = clap::ArgAction::SetTrue,
-        help = constant::help_messages::HELP
-    )]
     pub show_help: bool,
 
     /// The boolean indicator of whether to display version infos or not.
@@ -88,13 +44,6 @@ pub struct Args {
     /// Optional value represented by the cli option
     /// [`constant::cli_options::VERSION`], and falling back to `false` if
     /// not provided in cli args.
-    #[arg(
-        id = "version",
-        short = constant::cli_options::VERSION.short,
-        long = constant::cli_options::VERSION.long,
-        action = clap::ArgAction::SetTrue,
-        help = constant::help_messages::VERSION
-    )]
     pub show_version: bool,
 
     /// The boolean indicator of whether to display author infos or not.
@@ -102,13 +51,6 @@ pub struct Args {
     /// Optional value represented by the cli option
     /// [`constant::cli_options::AUTHOR`], and falling back to `false` if
     /// not provided in cli args.
-    #[arg(
-        id = "author",
-        short = constant::cli_options::AUTHOR.short,
-        long = constant::cli_options::AUTHOR.long,
-        action = clap::ArgAction::SetTrue,
-        help = constant::help_messages::AUTHOR
-    )]
     pub show_author: bool,
 }
 
@@ -181,7 +123,7 @@ pub trait ArgsParser {
     /// # Returns
     ///
     /// An owned instance of [`Args`] containing parsing result of given args.
-    fn parse(args: impl IntoIterator<Item = OsString>) -> Args;
+    fn parse(&self, args: impl IntoIterator<Item = OsString>) -> Args;
 
     /// Parses given cli args and return them as an [`Args`] instance if no
     /// error or early exit occurred.
@@ -201,6 +143,7 @@ pub trait ArgsParser {
     /// or a [`ProgramExit`] if any error or early exit occurred (e.g. version/
     /// author/help infos printing, invalid cli args...)
     fn try_parse(
+        &self,
         args: impl IntoIterator<Item = OsString>,
     ) -> Result<Args, ProgramExit>;
 }
@@ -233,7 +176,8 @@ mod tests {
                 #[case("-aV")]
                 fn it_parses_version_cli_option(#[case] cli_args: &str) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -262,7 +206,8 @@ mod tests {
                 #[case("-aVh")]
                 fn it_parses_help_cli_option(#[case] cli_args: &str) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -288,7 +233,8 @@ mod tests {
                     #[case] cli_args: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -310,7 +256,8 @@ mod tests {
                     #[case] cli_options: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_options);
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_result = parsed_args.as_ref().ok();
                     let expected_result = Args::default()
@@ -319,6 +266,7 @@ mod tests {
                         .with_endpoint_uri(constant::template_generator::URI);
                     let expected_result = Some(&expected_result);
 
+                    println!("{:?}", parsed_args);
                     assert!(actual_result.is_some());
                     assert_eq!(actual_result, expected_result);
                 }
@@ -330,7 +278,8 @@ mod tests {
                     #[case] cli_args: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_result = parsed_args.as_ref().ok();
                     let expected_result = Args::default()
@@ -350,7 +299,8 @@ mod tests {
                     #[case] cli_args: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_result = parsed_args.as_ref().ok();
                     let expected_result = Args::default()
@@ -372,7 +322,8 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_no_pos_args_given() {
                     let cli_args = parse_cli_args("");
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -395,7 +346,8 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_commas_in_pos_args() {
                     let cli_args = parse_cli_args("python,java");
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -418,7 +370,8 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_server_url_but_no_pos_args() {
                     let cli_args = parse_cli_args("-s https://test.com");
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -441,7 +394,8 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_endpoint_uri_but_no_pos_args() {
                     let cli_args = parse_cli_args("-e /test/api");
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -464,7 +418,8 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_inexistent_cli_option() {
                     let cli_args = parse_cli_args("-x");
-                    let parsed_args = DefaultArgsParser::try_parse(cli_args);
+                    let parsed_args =
+                        DefaultArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {

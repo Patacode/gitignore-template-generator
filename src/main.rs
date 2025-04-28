@@ -8,7 +8,8 @@ use gitignore_template_generator::{
 
 fn main() {
     let cli_args = std::env::args_os();
-    let parsed_cli_args = DefaultArgsParser::parse(cli_args);
+    let cli_args_parser = DefaultArgsParser::new();
+    let parsed_cli_args = cli_args_parser.parse(cli_args);
 
     let server_url = parsed_cli_args.server_url;
     let endpoint_uri = parsed_cli_args.endpoint_uri;

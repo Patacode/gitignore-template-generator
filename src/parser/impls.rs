@@ -1,20 +1,98 @@
 use std::{ffi::OsString, process::exit};
 
-use clap::{CommandFactory, Parser};
+use clap::{Arg, ArgAction, Command};
 
-use crate::{ExitKind, ProgramExit, constant};
+use crate::{
+    ExitKind, ProgramExit, constant,
+    validator::{CliArgsValidator, DefaultCliArgsValidator},
+};
 
 use super::{Args, ArgsParser};
 
 /// Default implementation of args parser that parses CLI args using
 /// [`clap`].
-pub struct DefaultArgsParser;
+pub struct DefaultArgsParser {
+    pub cli_parser: Command,
+}
 
+#[allow(clippy::new_without_default)]
 impl DefaultArgsParser {
-    fn parse_global_options(args: &Args) -> Option<ProgramExit> {
+    pub fn new() -> Self {
+        let command = Command::new(env!("CARGO_PKG_NAME")) // Replace with your binary name
+            .version(env!("CARGO_PKG_VERSION"))
+            .author(env!("CARGO_PKG_AUTHORS"))
+            .about(constant::parser_infos::ABOUT)
+            .help_template(
+                "\
+{before-help}
+{usage-heading} {usage}
+
+{about-with-newline}
+{all-args}{after-help}
+
+Version: {version}
+Author: {author}
+",
+            )
+            .disable_help_flag(true)
+            .disable_version_flag(true)
+            .arg(
+                Arg::new("template_names")
+                    .id("TEMPLATE_NAMES")
+                    .help(constant::help_messages::TEMPLATE_NAMES)
+                    .required_unless_present_any(["AUTHOR", "VERSION", "HELP"])
+                    .value_parser(DefaultCliArgsValidator::has_no_commas)
+                    .num_args(1..),
+            )
+            .arg(
+                Arg::new("server_url")
+                    .id("SERVER_URL")
+                    .short(constant::cli_options::SERVER_URL.short)
+                    .long(constant::cli_options::SERVER_URL.long)
+                    .help(constant::help_messages::SERVER_URL)
+                    .default_value(constant::template_generator::BASE_URL),
+            )
+            .arg(
+                Arg::new("endpoint_uri")
+                    .id("ENDPOINT_URI")
+                    .short(constant::cli_options::ENDPOINT_URI.short)
+                    .long(constant::cli_options::ENDPOINT_URI.long)
+                    .help(constant::help_messages::ENDPOINT_URI)
+                    .default_value(constant::template_generator::URI),
+            )
+            .arg(
+                Arg::new("help")
+                    .id("HELP")
+                    .short(constant::cli_options::HELP.short)
+                    .long(constant::cli_options::HELP.long)
+                    .help(constant::help_messages::HELP)
+                    .action(ArgAction::SetTrue),
+            )
+            .arg(
+                Arg::new("version")
+                    .id("VERSION")
+                    .short(constant::cli_options::VERSION.short)
+                    .long(constant::cli_options::VERSION.long)
+                    .help(constant::help_messages::VERSION)
+                    .action(ArgAction::SetTrue),
+            )
+            .arg(
+                Arg::new("author")
+                    .id("AUTHOR")
+                    .short(constant::cli_options::AUTHOR.short)
+                    .long(constant::cli_options::AUTHOR.long)
+                    .help(constant::help_messages::AUTHOR)
+                    .action(ArgAction::SetTrue),
+            );
+
+        Self {
+            cli_parser: command,
+        }
+    }
+
+    fn parse_global_options(&self, args: &Args) -> Option<ProgramExit> {
         if args.show_help {
-            let mut cmd = Args::command();
-            let rendered_help = cmd.render_help();
+            let rendered_help = self.cli_parser.clone().render_help();
             Some(ProgramExit {
                 message: rendered_help.to_string().trim_end().to_string(),
                 exit_status: constant::exit_status::SUCCESS,
@@ -24,8 +102,7 @@ impl DefaultArgsParser {
                 kind: ExitKind::HelpInfos,
             })
         } else if args.show_version {
-            let cmd = Args::command();
-            let message = match cmd.get_version() {
+            let message = match self.cli_parser.get_version() {
                 Some(version) => {
                     format!("{} {version}", env!("CARGO_PKG_NAME"))
                 }
@@ -40,8 +117,7 @@ impl DefaultArgsParser {
                 kind: ExitKind::VersionInfos,
             })
         } else if args.show_author {
-            let cmd = Args::command();
-            let message = String::from(match cmd.get_author() {
+            let message = String::from(match self.cli_parser.get_author() {
                 Some(author) => author,
                 None => constant::error_messages::AUTHOR_INFOS_NOT_AVAILABLE,
             });
@@ -79,8 +155,8 @@ impl ArgsParser for DefaultArgsParser {
     ///     author, help options)
     ///
     /// See [`ArgsParser::parse`] for more infos.
-    fn parse(args: impl IntoIterator<Item = OsString>) -> Args {
-        match DefaultArgsParser::try_parse(args) {
+    fn parse(&self, args: impl IntoIterator<Item = OsString>) -> Args {
+        match self.try_parse(args) {
             Ok(parsed_args) => parsed_args,
             Err(error) => {
                 if let Some(value) = &error.styled_message {
@@ -95,13 +171,37 @@ impl ArgsParser for DefaultArgsParser {
     }
 
     fn try_parse(
+        &self,
         args: impl IntoIterator<Item = OsString>,
     ) -> Result<Args, ProgramExit> {
-        match Args::try_parse_from(args) {
-            Ok(parsed_args) => match Self::parse_global_options(&parsed_args) {
-                Some(error) => Err(error),
-                None => Ok(parsed_args),
-            },
+        match self.cli_parser.clone().try_get_matches_from(args) {
+            Ok(parsing_result) => {
+                let parsed_args = Args {
+                    template_names: parsing_result
+                        .get_many::<String>("TEMPLATE_NAMES")
+                        .map(|vals| vals.cloned().collect())
+                        .unwrap_or_default(),
+
+                    server_url: parsing_result
+                        .get_one::<String>("SERVER_URL")
+                        .unwrap()
+                        .to_string(),
+
+                    endpoint_uri: parsing_result
+                        .get_one::<String>("ENDPOINT_URI")
+                        .unwrap()
+                        .to_string(),
+
+                    show_help: parsing_result.get_flag("HELP"),
+                    show_version: parsing_result.get_flag("VERSION"),
+                    show_author: parsing_result.get_flag("AUTHOR"),
+                };
+
+                match self.parse_global_options(&parsed_args) {
+                    Some(error) => Err(error),
+                    None => Ok(parsed_args),
+                }
+            }
             Err(error) => Err(ProgramExit {
                 message: format!(
                     "{}\nFor more information, try '--help'.",
