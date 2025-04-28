@@ -1,3 +1,7 @@
+use std::time::Duration;
+
+use ureq::Agent;
+
 use crate::{ExitKind, ProgramExit, constant, http_client::api::HttpClient};
 
 /// Http client implementation relying on [`ureq`].
@@ -25,7 +29,11 @@ impl HttpClient for UreqClient {
     /// See [`HttpClient::get`] for more infos.
     fn get(&self, url: &str) -> Result<String, ProgramExit> {
         let full_url = format!("{}{url}", self.server_url);
-        let result = ureq::get(full_url).call();
+        let agent: Agent = Agent::config_builder()
+            .timeout_global(Some(Duration::from_secs(5)))
+            .build().into();
+
+        let result = agent.get(full_url).call();
 
         match result {
             Ok(mut response) => match response.body_mut().read_to_string() {
