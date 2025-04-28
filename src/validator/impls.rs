@@ -46,7 +46,7 @@ impl CliArgsValidator for DefaultCliArgsValidator {
                     Err(whitespaces_error) => Err(whitespaces_error),
                 }
             }
-            Err(commas_error) => match Self::has_no_whitespaces(&value) {
+            Err(commas_error) => match Self::has_no_whitespaces(value) {
                 Ok(_) => Err(commas_error),
                 Err(whitespaces_error) => {
                     Err(format!("{} + {}", commas_error, whitespaces_error))
