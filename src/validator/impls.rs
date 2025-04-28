@@ -24,8 +24,8 @@ impl CliArgsValidator for DefaultCliArgsValidator {
 
     /// Checks if given value contains whitespaces.
     ///
-    /// Returns [`constant::error_messages::WHITESPACES_NOT_ALLOWED`] if any commas
-    /// found.
+    /// Returns [`constant::error_messages::WHITESPACES_NOT_ALLOWED`] if any
+    /// whitespaces found.
     ///
     /// See [`CliArgsValidator::has_no_whitespaces`] for more infos.
     fn has_no_whitespaces(value: &str) -> Result<String, String> {
@@ -35,6 +35,23 @@ impl CliArgsValidator for DefaultCliArgsValidator {
             ))
         } else {
             Ok(value.to_string())
+        }
+    }
+
+    fn has_valid_template_name(value: &str) -> Result<String, String> {
+        match Self::has_no_commas(value) {
+            Ok(no_commas_value) => {
+                match Self::has_no_whitespaces(&no_commas_value) {
+                    Ok(clean_value) => Ok(clean_value),
+                    Err(whitespaces_error) => Err(whitespaces_error),
+                }
+            }
+            Err(commas_error) => match Self::has_no_whitespaces(&value) {
+                Ok(_) => Err(commas_error),
+                Err(whitespaces_error) => {
+                    Err(format!("{} + {}", commas_error, whitespaces_error))
+                }
+            },
         }
     }
 }
