@@ -1,6 +1,6 @@
 use std::{ffi::OsString, process::exit};
 
-use clap::Command;
+use clap::{ArgMatches, Command};
 
 use crate::{ExitKind, ProgramExit, constant};
 
@@ -70,6 +70,29 @@ impl ClapArgsParser {
         }
     }
 
+    fn map_arg_matches_to_struct(arg_matches: &ArgMatches) -> Args {
+        Args {
+            template_names: arg_matches
+                .get_many::<String>("TEMPLATE_NAMES")
+                .map(|vals| vals.cloned().collect())
+                .unwrap_or_default(),
+
+            server_url: arg_matches
+                .get_one::<String>("SERVER_URL")
+                .unwrap()
+                .to_string(),
+
+            endpoint_uri: arg_matches
+                .get_one::<String>("ENDPOINT_URI")
+                .unwrap()
+                .to_string(),
+
+            show_help: arg_matches.get_flag("HELP"),
+            show_version: arg_matches.get_flag("VERSION"),
+            show_author: arg_matches.get_flag("AUTHOR"),
+        }
+    }
+
     fn print_error_message(error: &ProgramExit, message: &str) {
         match error.kind {
             ExitKind::VersionInfos
@@ -113,27 +136,8 @@ impl ArgsParser for ClapArgsParser {
     ) -> Result<Args, ProgramExit> {
         match self.cli_parser.clone().try_get_matches_from(args) {
             Ok(parsing_result) => {
-                let parsed_args = Args {
-                    template_names: parsing_result
-                        .get_many::<String>("TEMPLATE_NAMES")
-                        .map(|vals| vals.cloned().collect())
-                        .unwrap_or_default(),
-
-                    server_url: parsing_result
-                        .get_one::<String>("SERVER_URL")
-                        .unwrap()
-                        .to_string(),
-
-                    endpoint_uri: parsing_result
-                        .get_one::<String>("ENDPOINT_URI")
-                        .unwrap()
-                        .to_string(),
-
-                    show_help: parsing_result.get_flag("HELP"),
-                    show_version: parsing_result.get_flag("VERSION"),
-                    show_author: parsing_result.get_flag("AUTHOR"),
-                };
-
+                let parsed_args =
+                    Self::map_arg_matches_to_struct(&parsing_result);
                 match self.parse_global_options(&parsed_args) {
                     Some(error) => Err(error),
                     None => Ok(parsed_args),
