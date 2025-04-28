@@ -31,7 +31,8 @@ impl HttpClient for UreqClient {
         let full_url = format!("{}{url}", self.server_url);
         let agent: Agent = Agent::config_builder()
             .timeout_global(Some(Duration::from_secs(5)))
-            .build().into();
+            .build()
+            .into();
 
         let result = agent.get(full_url).call();
 
