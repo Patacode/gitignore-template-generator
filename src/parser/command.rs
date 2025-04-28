@@ -1,3 +1,5 @@
+//! Define components to build cli args
+
 use clap::Arg;
 
 mod author;
