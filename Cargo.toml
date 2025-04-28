@@ -14,7 +14,14 @@ categories = [
   "config",
   "development-tools",
 ]
-include = ["src/**", "Cargo.toml", "README.md", "LICENSE-**", "CHANGELOG.md"]
+include = [
+  "src/**",
+  "Cargo.toml",
+  "README.md",
+  "LICENSE-**",
+  "CHANGELOG.md",
+  "assets/**",
+]
 
 [dependencies]
 ureq = "3.0.10"
