@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.4.4] - 2025-04-28 <a id="0.4.4"></a>
+
 ### 🚀 Features
 
 - [http_client] - Add global timeout of 5s when making get http call (*To prevent long waiting time*)
