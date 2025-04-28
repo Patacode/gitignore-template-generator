@@ -11,12 +11,12 @@ use super::{Args, ArgsParser};
 
 /// Default implementation of args parser that parses CLI args using
 /// [`clap`].
-pub struct DefaultArgsParser {
+pub struct ClapArgsParser {
     pub cli_parser: Command,
 }
 
 #[allow(clippy::new_without_default)]
-impl DefaultArgsParser {
+impl ClapArgsParser {
     pub fn new() -> Self {
         let command = Command::new(env!("CARGO_PKG_NAME")) // Replace with your binary name
             .version(env!("CARGO_PKG_VERSION"))
@@ -143,7 +143,7 @@ Author: {author}
     }
 }
 
-impl ArgsParser for DefaultArgsParser {
+impl ArgsParser for ClapArgsParser {
     /// Parses given cli args and perform basic error handling.
     ///
     /// * If the underlying [`ProgramExit`] contains a

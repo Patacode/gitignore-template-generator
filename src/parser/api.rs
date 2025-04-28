@@ -1,7 +1,7 @@
 use std::ffi::OsString;
 
 use crate::ProgramExit;
-pub use crate::parser::impls::DefaultArgsParser;
+pub use crate::parser::impls::ClapArgsParser;
 
 /// Struct to gather cli args parsing result.
 ///
@@ -177,8 +177,7 @@ mod tests {
                 #[case("-aV")]
                 fn it_parses_version_cli_option(#[case] cli_args: &str) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -207,8 +206,7 @@ mod tests {
                 #[case("-aVh")]
                 fn it_parses_help_cli_option(#[case] cli_args: &str) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -234,8 +232,7 @@ mod tests {
                     #[case] cli_args: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -257,8 +254,7 @@ mod tests {
                     #[case] cli_options: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_options);
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_result = parsed_args.as_ref().ok();
                     let expected_result = Args::default()
@@ -279,8 +275,7 @@ mod tests {
                     #[case] cli_args: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_result = parsed_args.as_ref().ok();
                     let expected_result = Args::default()
@@ -300,8 +295,7 @@ mod tests {
                     #[case] cli_args: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_args);
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_result = parsed_args.as_ref().ok();
                     let expected_result = Args::default()
@@ -323,8 +317,7 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_no_pos_args_given() {
                     let cli_args = parse_cli_args("");
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -347,8 +340,7 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_commas_in_pos_args() {
                     let cli_args = parse_cli_args("python,java");
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -371,8 +363,7 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_server_url_but_no_pos_args() {
                     let cli_args = parse_cli_args("-s https://test.com");
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -395,8 +386,7 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_endpoint_uri_but_no_pos_args() {
                     let cli_args = parse_cli_args("-e /test/api");
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
@@ -419,8 +409,7 @@ mod tests {
                 #[test]
                 fn it_fails_parsing_when_inexistent_cli_option() {
                     let cli_args = parse_cli_args("-x");
-                    let parsed_args =
-                        DefaultArgsParser::new().try_parse(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {

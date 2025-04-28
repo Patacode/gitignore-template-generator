@@ -3,12 +3,12 @@ use std::process::exit;
 use gitignore_template_generator::{
     GitignoreTemplateGenerator, TemplateGenerator,
     http_client::UreqClient,
-    parser::{ArgsParser, DefaultArgsParser},
+    parser::{ArgsParser, ClapArgsParser},
 };
 
 fn main() {
     let cli_args = std::env::args_os();
-    let cli_args_parser = DefaultArgsParser::new();
+    let cli_args_parser = ClapArgsParser::new();
     let parsed_cli_args = cli_args_parser.parse(cli_args);
 
     let server_url = parsed_cli_args.server_url;
