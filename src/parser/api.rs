@@ -11,45 +11,50 @@ pub use crate::parser::impls::ClapArgsParser;
 pub struct Args {
     /// A non-empty list of gitignore template names.
     ///
-    /// Represented by the provided positional arguments, and required
-    /// unless any of `author`, `version` or `help` options are given.
+    /// * Represented by the provided positional arguments, and required
+    ///     unless any of `author`, `version` or `help` options are given.
+    /// * This field does not allow commas in any of its field.
     pub template_names: Vec<String>,
 
     /// The gitignore template generator service url.
     ///
-    /// Optional value represented by the cli option
-    /// [`crate::constant::cli_options::SERVER_URL`] that takes a string value,
-    /// and falling back to [`crate::constant::template_generator::BASE_URL`]
-    /// if not provided in cli args.
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::SERVER_URL`] that takes a string
+    ///     value, and falling back to
+    ///     [`crate::constant::template_generator::BASE_URL`] if not provided
+    ///     in cli args.
     pub server_url: String,
 
     /// The gitignore template generator service endpoint uri.
     ///
-    /// Optional value represented by the cli option
-    /// [`crate::constant::cli_options::ENDPOINT_URI`] that takes a string
-    /// value, and falling back to [`crate::constant::template_generator::URI`]
-    /// if not provided in cli args.
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::ENDPOINT_URI`] that takes a string
+    ///     value, and falling back to
+    ///     [`crate::constant::template_generator::URI`] if not provided in cli
+    ///     args.
     pub endpoint_uri: String,
 
     /// The boolean indicator of whether to display help infos or not.
     ///
-    /// Optional value represented by the cli option
-    /// [`crate::constant::cli_options::HELP`], and falling back to `false` if
-    /// not provided in cli args.
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::HELP`], and falling back to `false`
+    ///     if not provided in cli args.
+    /// * Has precedence over version and author options if multiple are given
     pub show_help: bool,
 
     /// The boolean indicator of whether to display version infos or not.
     ///
-    /// Optional value represented by the cli option
-    /// [`crate::constant::cli_options::VERSION`], and falling back to `false`
-    /// if not provided in cli args.
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::VERSION`], and falling back to
+    ///     `false` if not provided in cli args.
+    /// * Has precedence over author option if multiple are given
     pub show_version: bool,
 
     /// The boolean indicator of whether to display author infos or not.
     ///
-    /// Optional value represented by the cli option
-    /// [`crate::constant::cli_options::AUTHOR`], and falling back to `false`
-    /// if not provided in cli args.
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::AUTHOR`], and falling back to
+    ///     `false` if not provided in cli args.
     pub show_author: bool,
 }
 
@@ -107,6 +112,9 @@ impl Args {
 }
 
 /// Cli args parser trait to parse CLI args and return them in an [`Args`].
+///
+/// The produced Args instance needs to comply with constraints of each
+/// one of its fields (see fields doc in [`Args`] for more infos).
 pub trait ArgsParser {
     /// Parses given cli args and return them as an [`Args`] instance.
     ///
@@ -131,7 +139,7 @@ pub trait ArgsParser {
     /// * Version, author and help options are considered as early program
     ///     exit
     /// * Returned Args complies with expected constraints (see fields doc
-    ///     in [`Args`])
+    ///     in [`Args`] for more infos)
     ///
     /// # Arguments
     ///
