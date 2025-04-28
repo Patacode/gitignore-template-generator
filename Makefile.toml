@@ -32,6 +32,10 @@ run_task = [
 [tasks.release-dryrun]
 run_task = [{ name = ["deploy-dryrun-args"] }]
 
+[tasks.doc]
+command = "cargo"
+args = ["doc"]
+
 # cargo
 [tasks.install-git-cliff]
 command = "cargo"
