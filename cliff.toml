@@ -13,7 +13,9 @@ body = """
     ### {{ group | striptags | trim | upper_first }}
     {% for commit in commits %}
         - {% if commit.breaking %}[**breaking**] {% endif %}\
-            {{ commit.message | upper_first }}\
+          {% if commit.scope %}{{ [commit.scope] }} - {% endif %}\
+          {{ commit.message | upper_first }}\
+          {% if commit.body %} (*{{ commit.body }}*){% endif %}\
     {% endfor %}
 {% endfor %}\n
 """
