@@ -66,6 +66,10 @@ args = ["install", "cargo-tarpaulin"]
 command = "cargo"
 args = ["install", "cargo-release"]
 
+[tasks.install-cargo-sort]
+command = "cargo"
+args = ["install", "cargo-sort"]
+
 [tasks.fmt]
 command = "cargo"
 args = ["fmt"]
@@ -153,6 +157,7 @@ run_task = [
     { name = "install-git-cliff", fork = true },
     { name = "install-cargo-release", fork = true },
     { name = "install-cargo-tarpaulin", fork = true },
+    { name = "install-cargo-sort", fork = true },
     { name = "build" },
 ]
 
