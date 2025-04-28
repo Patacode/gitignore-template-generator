@@ -52,6 +52,12 @@
             "type": "shell",
             "command": "cargo make changelog-commit",
             "problemMatcher": []
+        },
+        {
+            "label": "Build doc",
+            "type": "shell",
+            "command": "cargo make doc",
+            "problemMatcher": []
         }
     ],
     "inputs": [
