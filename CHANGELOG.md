@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.4.5] - 2025-04-28 <a id="0.4.5"></a>
+
 ### 🚀 Features
 
 - [validator] - Add new validator method to check for whitespaces
