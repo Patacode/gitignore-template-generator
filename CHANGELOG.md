@@ -13,7 +13,9 @@ and this project adheres to
 
 ## [0.4.2] - 2025-04-28 <a id="0.4.2"></a>
 
-@Content
+### 🐛 Bug Fixes
+
+- Include missing assets in package
 
 ## [0.4.1] - 2025-04-28 <a id="0.4.1"></a>
 
