@@ -4,13 +4,7 @@ use clap::Command;
 
 use crate::{ExitKind, ProgramExit, constant};
 
-use super::{
-    Args, ArgsParser,
-    command::{
-        AuthorClapArg, ClapArg, EndpointUriClapArg, HelpClapArg,
-        ServerUrlClapArg, TemplateNamesClapArg, VersionClapArg,
-    },
-};
+use super::{Args, ArgsParser, command::build_clap_args};
 
 /// Default implementation of args parser that parses CLI args using
 /// [`clap`].
@@ -29,12 +23,7 @@ impl ClapArgsParser {
                 .help_template(include_str!("../../assets/help_template.txt"))
                 .disable_help_flag(true)
                 .disable_version_flag(true)
-                .arg(TemplateNamesClapArg::build())
-                .arg(ServerUrlClapArg::build())
-                .arg(EndpointUriClapArg::build())
-                .arg(HelpClapArg::build())
-                .arg(VersionClapArg::build())
-                .arg(AuthorClapArg::build()),
+                .args(build_clap_args()),
         }
     }
 
