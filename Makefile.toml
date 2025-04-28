@@ -30,7 +30,6 @@ while read -r card; do
   card_name=$(echo "${card}" | jq -r '.name')
   card_id=$(echo "${card}" | jq -r '.id')
   url_encoded_card_name=$(jq -rn --arg v "$card_name" '$v|@uri')
-  echo $url_encoded_card_name
   new_name="${old_version}+-+${url_encoded_card_name}"
   curl -o /dev/null -s -X PUT "https://api.trello.com/1/cards/${card_id}?name=${new_name}&idList=68027e5026b59f970b733488&key=${key}&token=${token}"
   echo "Renamed card ${card_id} with version specifier"
