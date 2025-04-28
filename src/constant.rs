@@ -26,6 +26,9 @@ pub mod error_messages {
     /// A HTTP error 400 occurred during api call.
     pub const HTTP_400: &str = "http status: 400";
 
+    /// A HTTP error 404 occurred during api call.
+    pub const HTTP_404: &str = "http status: 404";
+
     /// User requested author infos but none is available.
     pub const AUTHOR_INFOS_NOT_AVAILABLE: &str =
         "Author information not available.";
