@@ -1,5 +1,5 @@
 use crate::ProgramExit;
-pub use crate::http_client::impls::{MockClient, UreqClient};
+pub use crate::http_client::impls::{MockHttpClient, UreqHttpClient};
 
 /// Http client trait to make HTTP calls.
 pub trait HttpClient {
@@ -42,7 +42,7 @@ mod tests {
                         .create();
 
                     let server_url = mock_server.url();
-                    let http_client = UreqClient::default();
+                    let http_client = UreqHttpClient::default();
 
                     let actual =
                         http_client.get(&format!("{server_url}{mock_uri}"));
@@ -65,7 +65,7 @@ mod tests {
                         .create();
 
                     let server_url = mock_server.url();
-                    let http_client = UreqClient { server_url };
+                    let http_client = UreqHttpClient { server_url };
 
                     let actual = http_client.get(mock_uri);
                     let expected: Result<String, ProgramExit> =
@@ -93,7 +93,7 @@ mod tests {
                         .create();
 
                     let server_url = mock_server.url();
-                    let http_client = UreqClient::default();
+                    let http_client = UreqHttpClient::default();
 
                     let actual =
                         http_client.get(&format!("{server_url}{mock_uri}"));
@@ -125,7 +125,7 @@ mod tests {
                         .create();
 
                     let server_url = mock_server.url();
-                    let http_client = UreqClient::default();
+                    let http_client = UreqHttpClient::default();
 
                     let actual =
                         http_client.get(&format!("{server_url}{mock_uri}"));
@@ -161,7 +161,7 @@ mod tests {
                 #[test]
                 fn it_returns_ok_mocked_response() {
                     let result_content = "success response";
-                    let http_client = MockClient {
+                    let http_client = MockHttpClient {
                         response: Ok(String::from(result_content)),
                     };
 
@@ -175,7 +175,7 @@ mod tests {
                 #[test]
                 fn it_returns_error_mocked_response() {
                     let result_content = "error response";
-                    let http_client = MockClient {
+                    let http_client = MockHttpClient {
                         response: Err(ProgramExit {
                             message: String::from(result_content),
                             exit_status: constant::exit_status::GENERIC,

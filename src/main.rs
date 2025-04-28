@@ -2,7 +2,7 @@ use std::process::exit;
 
 use gitignore_template_generator::{
     GitignoreTemplateGenerator, TemplateGenerator,
-    http_client::UreqClient,
+    http_client::UreqHttpClient,
     parser::{ArgsParser, ClapArgsParser},
 };
 
@@ -15,7 +15,7 @@ fn main() {
     let endpoint_uri = parsed_cli_args.endpoint_uri;
     let template_names = parsed_cli_args.template_names;
 
-    let http_client = UreqClient { server_url };
+    let http_client = UreqHttpClient { server_url };
     let generated_template = GitignoreTemplateGenerator::generate_from_api(
         &http_client,
         &endpoint_uri,

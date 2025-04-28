@@ -64,7 +64,7 @@ pub trait TemplateGenerator {
 mod tests {
     use super::*;
     use crate::helper::make_string_vec;
-    use crate::http_client::MockClient;
+    use crate::http_client::MockHttpClient;
 
     mod gitignore_template_generator {
         use super::*;
@@ -82,7 +82,7 @@ mod tests {
                 fn it_generates_template_using_provided_client() {
                     let template_names = make_string_vec("rust python");
                     let generated_template = "all good";
-                    let http_client = MockClient {
+                    let http_client = MockHttpClient {
                         response: Ok(String::from(generated_template)),
                     };
 
@@ -107,7 +107,7 @@ mod tests {
                 fn it_propagates_error_from_client_if_any() {
                     let template_names = make_string_vec("rust pyth");
                     let error_message = "all bad";
-                    let http_client = MockClient {
+                    let http_client = MockHttpClient {
                         response: Err(ProgramExit {
                             message: String::from(error_message),
                             exit_status: constant::exit_status::GENERIC,
