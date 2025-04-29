@@ -1,3 +1,5 @@
 max_width = 80
 newline_style = "Unix"
 edition = "2024"
+group_imports = "StdExternalCrate"
+imports_granularity = "Crate"
