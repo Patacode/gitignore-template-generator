@@ -171,9 +171,8 @@ mod tests {
             use super::*;
 
             mod success {
-                use crate::{ExitKind, constant};
-
                 use super::*;
+                use crate::{ExitKind, constant};
 
                 #[rstest]
                 #[case("-V")]
@@ -318,9 +317,8 @@ mod tests {
             }
 
             mod failure {
-                use crate::{ExitKind, constant};
-
                 use super::*;
+                use crate::{ExitKind, constant};
 
                 #[test]
                 fn it_fails_parsing_when_no_pos_args_given() {

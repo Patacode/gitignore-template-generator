@@ -1,11 +1,10 @@
 use clap::Arg;
 
+use super::ClapArg;
 use crate::{
     constant,
     validator::{CliArgsValidator, DefaultCliArgsValidator},
 };
-
-use super::ClapArg;
 
 pub struct TemplateNamesClapArg;
 

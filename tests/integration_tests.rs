@@ -1,5 +1,4 @@
-use gitignore_template_generator::constant;
-use gitignore_template_generator::helper::*;
+use gitignore_template_generator::{constant, helper::*};
 use rstest::*;
 use test_bin::get_test_bin;
 

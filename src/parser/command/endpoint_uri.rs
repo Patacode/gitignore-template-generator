@@ -1,8 +1,7 @@
 use clap::Arg;
 
-use crate::constant;
-
 use super::ClapArg;
+use crate::constant;
 
 pub struct EndpointUriClapArg;
 

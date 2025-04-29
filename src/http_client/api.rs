@@ -17,9 +17,10 @@ pub trait HttpClient {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::constant;
     use mockito::Server;
+
+    use super::*;
+    use crate::{ExitKind, constant};
 
     mod ureq_client {
         use super::*;
@@ -77,8 +78,6 @@ mod tests {
             }
 
             mod failure {
-                use crate::ExitKind;
-
                 use super::*;
 
                 #[test]
@@ -154,8 +153,6 @@ mod tests {
             use super::*;
 
             mod success {
-                use crate::ExitKind;
-
                 use super::*;
 
                 #[test]

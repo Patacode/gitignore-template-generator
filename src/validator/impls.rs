@@ -1,6 +1,5 @@
-use crate::constant;
-
 use super::api::CliArgsValidator;
+use crate::constant;
 
 /// Default implementation of cli args validator.
 ///

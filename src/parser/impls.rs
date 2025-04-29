@@ -2,9 +2,8 @@ use std::{ffi::OsString, process::exit};
 
 use clap::{ArgMatches, Command};
 
-use crate::{ExitKind, ProgramExit, constant};
-
 use super::{Args, ArgsParser, command::build_clap_args};
+use crate::{ExitKind, ProgramExit, constant};
 
 /// Default implementation of args parser that parses CLI args using
 /// [`clap`].

@@ -1,6 +1,5 @@
-use crate::http_client::HttpClient;
-
 use super::{ProgramExit, TemplateGenerator};
+use crate::http_client::HttpClient;
 
 /// Generator of gitignore templates.
 pub struct GitignoreTemplateGenerator;

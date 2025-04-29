@@ -63,8 +63,9 @@ pub trait TemplateGenerator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helper::make_string_vec;
-    use crate::http_client::MockHttpClient;
+    use crate::{
+        constant, helper::make_string_vec, http_client::MockHttpClient,
+    };
 
     mod gitignore_template_generator {
         use super::*;
@@ -73,9 +74,6 @@ mod tests {
             use super::*;
 
             mod success {
-
-                use crate::constant;
-
                 use super::*;
 
                 #[test]
@@ -99,8 +97,6 @@ mod tests {
             }
 
             mod failure {
-                use crate::constant;
-
                 use super::*;
 
                 #[test]
