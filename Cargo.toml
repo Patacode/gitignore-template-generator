@@ -51,3 +51,7 @@ pre-release-replacements = [
   { file = "CHANGELOG.md", search = "\\[comment\\]: <> \\(@PlannedForNextRelease\\)", replace = "[comment]: <> (@PlannedForNextRelease)\n## [@Unreleased] - @ReleaseDate\n\n@Content\n" },
   { file = ".version", search = "\\d+\\.\\d+\\.\\d+", replace = "{{version}}" },
 ]
+
+[[bench]]
+name = "bin_benchmark"
+harness = false
