@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.4.7] - 2025-04-29 <a id="0.4.7"></a>
+
 ### 🎨 Styling
 
 - [cargo] - Sort dependencies by alphabetic order (*Use cargo-sort for that*)
