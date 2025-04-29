@@ -9,7 +9,16 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🎨 Styling
+
+- [cargo] - Sort dependencies by alphabetic order (*Use cargo-sort for that*)
+- Sort and group imports using new strategies
+
+### 🏗️ Build
+
+- [make] - Remove echoing of url encoded card name in rename-trello-cards task
+- [make] - Include cargo-sort installation in dev task
+- [make] - Enable nightly features in fmt tasks
 
 ## [0.4.6] - 2025-04-28 <a id="0.4.6"></a>
 
