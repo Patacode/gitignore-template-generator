@@ -71,8 +71,9 @@ command = "cargo"
 args = ["install", "cargo-sort"]
 
 [tasks.fmt]
-command = "cargo"
-args = ["fmt"]
+script = """
+cargo +nightly fmt -- --unstable-features
+"""
 
 [tasks.fmt-check]
 command = "cargo"
