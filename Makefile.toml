@@ -76,8 +76,9 @@ cargo +nightly fmt -- --unstable-features
 """
 
 [tasks.fmt-check]
-command = "cargo"
-args = ["fmt", "--check"]
+script = """
+cargo +nightly fmt --check -- --unstable-features
+"""
 
 [tasks.lint]
 command = "cargo"
