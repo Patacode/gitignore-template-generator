@@ -1,4 +1,4 @@
-use super::{ProgramExit, TemplateGenerator};
+use super::{ProgramExit, TemplateGenerator, TemplateLister};
 use crate::http_client::HttpClient;
 
 /// Generator of gitignore templates.
@@ -20,5 +20,14 @@ impl TemplateGenerator for GitignoreTemplateGenerator {
         let path_param = template_names.join(",");
         let full_uri = format!("{endpoint_uri}/{path_param}");
         http_client.get(&full_uri)
+    }
+}
+
+impl TemplateLister for GitignoreTemplateGenerator {
+    fn list_from_api(
+        http_client: &impl HttpClient,
+        endpoint_uri: &str,
+    ) -> Result<String, ProgramExit> {
+        http_client.get(endpoint_uri)
     }
 }

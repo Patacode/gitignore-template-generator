@@ -46,8 +46,9 @@ pub trait TemplateGenerator {
     /// # Arguments
     ///
     /// * `http_client` - The http client to be used to make the API call.
+    /// * `endpoint_uri` - The endpoint URI to generate templates.
     /// * `template_names` - The template names to be used to generated the
-    ///     actual template
+    ///     actual template.
     ///
     /// # Returns
     ///
@@ -57,6 +58,29 @@ pub trait TemplateGenerator {
         http_client: &impl HttpClient,
         endpoint_uri: &str,
         template_names: &[String],
+    ) -> Result<String, ProgramExit>;
+}
+
+/// Template lister trait to list available templates via an API call made
+/// over HTTP.
+pub trait TemplateLister {
+    /// Lists available templates.
+    ///
+    /// The template list is fetched via a GET API call made over HTTP using
+    /// the given http client.
+    ///
+    /// # Arguments
+    ///
+    /// * `http_client` - The http client to be used to make the API call.
+    /// * `endpoint_uri` - The endpoint URI to list templates.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the template list on success, or a
+    /// [`ProgramExit`] on error (e.g. 4xx, network issues...).
+    fn list_from_api(
+        http_client: &impl HttpClient,
+        endpoint_uri: &str,
     ) -> Result<String, ProgramExit>;
 }
 
@@ -116,6 +140,62 @@ mod tests {
                         &http_client,
                         constant::template_generator::URI,
                         &template_names,
+                    );
+                    let expected: Result<String, ProgramExit> =
+                        Err(ProgramExit {
+                            message: String::from(error_message),
+                            exit_status: constant::exit_status::GENERIC,
+                            styled_message: None,
+                            kind: ExitKind::Error,
+                        });
+
+                    assert_eq!(actual, expected);
+                }
+            }
+        }
+    
+        mod list_from_api {
+            use super::*;
+
+            mod success {
+                use super::*;
+
+                #[test]
+                fn it_lists_template_using_provided_client() {
+                    let template_list = "rust\npython";
+                    let http_client = MockHttpClient {
+                        response: Ok(String::from(template_list)),
+                    };
+
+                    let actual = GitignoreTemplateGenerator::list_from_api(
+                        &http_client,
+                        constant::template_lister::URI,
+                    );
+                    let expected: Result<String, ProgramExit> =
+                        Ok(String::from(template_list));
+
+                    assert_eq!(actual, expected);
+                }
+            }
+
+            mod failure {
+                use super::*;
+
+                #[test]
+                fn it_propagates_error_from_client_if_any() {
+                    let error_message = "all bad";
+                    let http_client = MockHttpClient {
+                        response: Err(ProgramExit {
+                            message: String::from(error_message),
+                            exit_status: constant::exit_status::GENERIC,
+                            styled_message: None,
+                            kind: ExitKind::Error,
+                        }),
+                    };
+
+                    let actual = GitignoreTemplateGenerator::list_from_api(
+                        &http_client,
+                        constant::template_lister::URI,
                     );
                     let expected: Result<String, ProgramExit> =
                         Err(ProgramExit {
