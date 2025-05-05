@@ -65,26 +65,30 @@ mod failure {
 
     mod named_args {
         use super::*;
+    
+        mod failure {
+            use super::*;
 
-        #[test]
-        fn it_outputs_error_and_fails_when_server_not_found() {
-            let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
+            #[test]
+            fn it_outputs_error_and_fails_when_server_not_found() {
+                let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cli_tools.args(parse_pos_args("-s http://fjizefhize.com rust"));
-            let result = cli_tools
-                .output()
-                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
+                cli_tools.args(parse_pos_args("-s http://fjizefhize.com rust"));
+                let result = cli_tools
+                    .output()
+                    .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = parse_bytes(&result.stderr);
-            let expected_output =
-                load_expectation_file_as_string("server_not_found_error")
-                    + "\n";
+                let actual_output = parse_bytes(&result.stderr);
+                let expected_output =
+                    load_expectation_file_as_string("server_not_found_error")
+                        + "\n";
 
-            let actual_status_code = result.status.code();
-            let expected_status_code = Some(constant::exit_status::GENERIC);
+                let actual_status_code = result.status.code();
+                let expected_status_code = Some(constant::exit_status::GENERIC);
 
-            assert_eq!(actual_status_code, expected_status_code);
-            assert_eq!(actual_output, expected_output);
+                assert_eq!(actual_status_code, expected_status_code);
+                assert_eq!(actual_output, expected_output);
+            }
         }
     }
 }
