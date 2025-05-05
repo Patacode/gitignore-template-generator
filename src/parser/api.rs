@@ -487,5 +487,26 @@ mod tests {
                 }
             }
         }
+
+        mod parse {
+            use super::*;
+
+            mod success {
+                use super::*;
+
+                #[test]
+                fn it_parses_given_cli_options() {
+                    let cli_args = parse_cli_args("rust python -s test -e foo");
+
+                    let actual_result = ClapArgsParser::new().parse(cli_args);
+                    let expected_result = Args::default()
+                        .with_template_names(make_string_vec("rust python"))
+                        .with_server_url("test")
+                        .with_endpoint_uri("foo");
+
+                    assert_eq!(actual_result, expected_result);
+                }
+            }
+        }
     }
 }
