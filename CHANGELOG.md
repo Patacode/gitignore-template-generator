@@ -9,7 +9,19 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚜 Refactor
+
+- Move unhappy integration test in failure module
+
+### ⚡ Performance
+
+- [benches] - Move mock server creation out of iter function (*So create it only once, at the beginning of benchmark function*)
+
+### 🧪 Testing
+
+- Add benchmarking on binary crate
+- [parser] - Add simple unit test on successful parsing by parse() method
+- Readd previously deleted integration tests (*On version, author and help options + few error cases to ensure proper exit code and output to stdout/stderr*)
 
 ## [0.4.7] - 2025-04-29 <a id="0.4.7"></a>
 
