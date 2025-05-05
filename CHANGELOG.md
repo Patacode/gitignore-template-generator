@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.4.8] - 2025-05-05 <a id="0.4.8"></a>
+
 ### 🚜 Refactor
 
 - Move unhappy integration test in failure module
