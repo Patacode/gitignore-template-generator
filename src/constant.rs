@@ -156,6 +156,19 @@ pub mod template_generator {
     pub const URI: &str = "/developers/gitignore/api";
 }
 
+pub mod template_lister {
+    //! Constants for template lister service.
+
+    /// Template lister service base URL.
+    pub const BASE_URL: &str = "https://www.toptal.com";
+
+    /// Template lister service URI.
+    ///
+    /// Used in conjunction with [`BASE_URL`] to build full URL and make
+    /// API call.
+    pub const URI: &str = "/developers/gitignore/api/list";
+}
+
 pub mod path {
     //! Constants for file or directory path.
 
