@@ -153,7 +153,7 @@ mod tests {
                 }
             }
         }
-    
+
         mod list_from_api {
             use super::*;
 
