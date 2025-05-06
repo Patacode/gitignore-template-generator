@@ -207,6 +207,7 @@ mod tests {
                 #[case("rust -s foo -V")]
                 #[case("rust -e bar -V")]
                 #[case("-aV")]
+                #[case("rust -l -V")]
                 fn it_parses_version_cli_option(#[case] cli_args: &str) {
                     let cli_args = parse_cli_args(cli_args);
                     let parsed_args = ClapArgsParser::new().try_parse(cli_args);
@@ -236,6 +237,7 @@ mod tests {
                 #[case("rust -s foo -h")]
                 #[case("rust -e bar -h")]
                 #[case("-aVh")]
+                #[case("rust -l -h")]
                 fn it_parses_help_cli_option(#[case] cli_args: &str) {
                     let cli_args = parse_cli_args(cli_args);
                     let parsed_args = ClapArgsParser::new().try_parse(cli_args);
@@ -260,6 +262,7 @@ mod tests {
                 #[case("rust -a")]
                 #[case("rust -s foo -a")]
                 #[case("rust -e bar -a")]
+                #[case("rust -l -a")]
                 fn it_parses_author_cli_option_preemptively(
                     #[case] cli_args: &str,
                 ) {
@@ -345,14 +348,20 @@ mod tests {
                 }
 
                 #[rstest]
-                #[case("-l")]
-                #[case("--list")]
-                fn it_parses_list_cli_option(#[case] cli_args: &str) {
+                #[case("-l", "")]
+                #[case("--list", "")]
+                #[case("rust --list", "rust")]
+                #[case("rust python --list", "rust python")]
+                fn it_parses_list_cli_option(
+                    #[case] cli_args: &str,
+                    #[case] template_names: &str,
+                ) {
                     let cli_args = parse_cli_args(cli_args);
                     let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_result = parsed_args.as_ref().ok();
                     let expected_result = Args::default()
+                        .with_template_names(make_string_vec(template_names))
                         .with_server_url(constant::template_manager::BASE_URL)
                         .with_endpoint_uri(
                             constant::template_manager::GENERATOR_URI,
@@ -526,50 +535,6 @@ mod tests {
                         exit_status: constant::exit_status::GENERIC,
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_unexpected_argument_error",
-                        )),
-                        kind: ExitKind::Error,
-                    };
-                    let expected_error = Some(&expected_error);
-
-                    assert!(actual_error.is_some());
-                    assert_eq!(actual_error, expected_error);
-                }
-
-                #[test]
-                fn it_fails_parsing_when_list_option_with_pos_args() {
-                    let cli_args = parse_cli_args("rust --list");
-                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
-
-                    let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramExit {
-                        message: load_expectation_file_as_string(
-                            "exclusive_argument_error",
-                        ),
-                        exit_status: constant::exit_status::GENERIC,
-                        styled_message: Some(load_expectation_file_as_string(
-                            "ansi_exclusive_argument_error",
-                        )),
-                        kind: ExitKind::Error,
-                    };
-                    let expected_error = Some(&expected_error);
-
-                    assert!(actual_error.is_some());
-                    assert_eq!(actual_error, expected_error);
-                }
-
-                #[test]
-                fn it_fails_parsing_when_list_option_with_named_args() {
-                    let cli_args = parse_cli_args("-a --list");
-                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
-
-                    let actual_error = parsed_args.as_ref().err();
-                    let expected_error = ProgramExit {
-                        message: load_expectation_file_as_string(
-                            "exclusive_argument_error",
-                        ),
-                        exit_status: constant::exit_status::GENERIC,
-                        styled_message: Some(load_expectation_file_as_string(
-                            "ansi_exclusive_argument_error",
                         )),
                         kind: ExitKind::Error,
                     };

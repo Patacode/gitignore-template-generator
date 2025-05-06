@@ -13,6 +13,5 @@ impl ClapArg for ListClapArg {
             .long(constant::cli_options::LIST.long)
             .help(constant::help_messages::LIST)
             .action(ArgAction::SetTrue)
-            .exclusive(true)
     }
 }
