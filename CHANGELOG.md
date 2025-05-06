@@ -9,7 +9,24 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- Add new 'list' option to list available templates using toptal api
+
+### 🐛 Bug Fixes
+
+- Use println! macro over print! in main binary crate (*To add systematic ending newline to success response*)
+- [http_client] - Trim success body response (*To remove leading and trailing whitespaces*)
+
+### 🚜 Refactor
+
+- [core] - Rename 'GitignoreTemplateGenerator' to 'GitignoreTemplateManager' (*To use a more appropriate and generic naming as it will handle both generation and listing of templates*)
+- [constant] - Rename 'template_generator' module to 'template_manager' module
+
+### 📚 Documentation
+
+- [core] - Update rdoc of 'GitignoreTemplateGenerator' (*To make it more generic and identify it as 'manager' as it will generate and list gitignore templates*)
+- [parser] - Update ref to template_manager constants
 
 ## [0.4.8] - 2025-05-05 <a id="0.4.8"></a>
 
