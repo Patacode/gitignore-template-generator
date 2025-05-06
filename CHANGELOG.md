@@ -11,6 +11,10 @@ and this project adheres to
 
 @Content
 
+## [0.5.0] - 2025-05-06 <a id="0.5.0"></a>
+
+@Content
+
 ## [0.4.9] - 2025-05-06 <a id="0.4.9"></a>
 
 ### 🚀 Features

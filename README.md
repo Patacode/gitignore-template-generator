@@ -8,7 +8,7 @@ A binary crate to generate templates for .gitignore files
 
 ## Installation
 
-Current release: [0.4.9](CHANGELOG.md#0.4.9)
+Current release: [0.5.0](CHANGELOG.md#0.5.0)
 
 ```bash
 cargo install gitignore-template-generator
@@ -33,7 +33,7 @@ Options:
   -V, --version                      Print version
   -a, --author                       Print author
 
-Version: 0.4.9
+Version: 0.5.0
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
