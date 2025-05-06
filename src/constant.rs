@@ -75,6 +75,10 @@ pub mod help_messages {
     /// Help message bound to [`crate::parser::Args::endpoint_uri`]
     /// field (i.e. endpoint uri option).
     pub const ENDPOINT_URI: &str = "The generator endpoint uri";
+
+    /// Help message bound to [`crate::parser::Args::show_list`]
+    /// field (i.e. template list option).
+    pub const LIST: &str = "List available templates";
 }
 
 pub mod cli_options {
@@ -120,6 +124,14 @@ pub mod cli_options {
     pub const ENDPOINT_URI: CliOptionName = CliOptionName {
         short: 'e',
         long: "endpoint-uri",
+    };
+
+    /// Short and long specifier for template list option.
+    ///
+    /// **Value**: `-l --list`
+    pub const LIST: CliOptionName = CliOptionName {
+        short: 'l',
+        long: "list",
     };
 }
 
