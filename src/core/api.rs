@@ -1,4 +1,4 @@
-pub use crate::core::impls::GitignoreTemplateGenerator;
+pub use crate::core::impls::GitignoreTemplateManager;
 use crate::http_client::HttpClient;
 
 /// DTO struct representing an early or abrupt program exit.
@@ -108,7 +108,7 @@ mod tests {
                         response: Ok(String::from(generated_template)),
                     };
 
-                    let actual = GitignoreTemplateGenerator::generate_from_api(
+                    let actual = GitignoreTemplateManager::generate_from_api(
                         &http_client,
                         constant::template_generator::URI,
                         &template_names,
@@ -136,7 +136,7 @@ mod tests {
                         }),
                     };
 
-                    let actual = GitignoreTemplateGenerator::generate_from_api(
+                    let actual = GitignoreTemplateManager::generate_from_api(
                         &http_client,
                         constant::template_generator::URI,
                         &template_names,
@@ -167,7 +167,7 @@ mod tests {
                         response: Ok(String::from(template_list)),
                     };
 
-                    let actual = GitignoreTemplateGenerator::list_from_api(
+                    let actual = GitignoreTemplateManager::list_from_api(
                         &http_client,
                         constant::template_lister::URI,
                     );
@@ -193,7 +193,7 @@ mod tests {
                         }),
                     };
 
-                    let actual = GitignoreTemplateGenerator::list_from_api(
+                    let actual = GitignoreTemplateManager::list_from_api(
                         &http_client,
                         constant::template_lister::URI,
                     );

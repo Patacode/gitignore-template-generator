@@ -4,9 +4,9 @@ use crate::http_client::HttpClient;
 /// Manager of gitignore templates.
 ///
 /// It can generate and list gitignore templates.
-pub struct GitignoreTemplateGenerator;
+pub struct GitignoreTemplateManager;
 
-impl TemplateGenerator for GitignoreTemplateGenerator {
+impl TemplateGenerator for GitignoreTemplateManager {
     /// Generates a gitignore template matching given template names.
     ///
     /// * Each associated gitignore template will be merged into one big string
@@ -25,7 +25,7 @@ impl TemplateGenerator for GitignoreTemplateGenerator {
     }
 }
 
-impl TemplateLister for GitignoreTemplateGenerator {
+impl TemplateLister for GitignoreTemplateManager {
     fn list_from_api(
         http_client: &impl HttpClient,
         endpoint_uri: &str,
