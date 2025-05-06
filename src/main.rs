@@ -18,7 +18,7 @@ fn main() {
         let http_client = UreqHttpClient { server_url };
         let template_list = GitignoreTemplateGenerator::list_from_api(
             &http_client,
-            &endpoint_uri,
+            endpoint_uri,
         );
 
         match template_list {
