@@ -22,7 +22,7 @@ fn main() {
         );
 
         match template_list {
-            Ok(result) => print!("{result}"),
+            Ok(result) => println!("{result}"),
             Err(error) => {
                 eprintln!("{}", error.message);
                 exit(error.exit_status);
@@ -41,7 +41,7 @@ fn main() {
         );
 
         match generated_template {
-            Ok(template) => print!("{template}"),
+            Ok(template) => println!("{template}"),
             Err(error) => {
                 eprintln!("{}", error.message);
                 exit(error.exit_status);
