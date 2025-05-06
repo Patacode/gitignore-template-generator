@@ -39,9 +39,9 @@ done
 [tasks.release]
 run_task = [
     { name = [
-        "rename-trello-cards",
         "deploy-args",
         "bump-trello-version",
+        "rename-trello-cards",
         "archive-trello-cards",
     ] },
 ]
