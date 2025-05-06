@@ -89,6 +89,7 @@ impl ClapArgsParser {
             show_help: arg_matches.get_flag("HELP"),
             show_version: arg_matches.get_flag("VERSION"),
             show_author: arg_matches.get_flag("AUTHOR"),
+            show_list: arg_matches.get_flag("LIST"),
         }
     }
 

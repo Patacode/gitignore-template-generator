@@ -56,6 +56,14 @@ pub struct Args {
     ///     [`crate::constant::cli_options::AUTHOR`], and falling back to
     ///     `false` if not provided in cli args.
     pub show_author: bool,
+
+    /// The boolean indicator of whether to display list of available templates
+    /// or not.
+    ///
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::LIST`], and falling back to
+    ///     `false` if not provided in cli args.
+    pub show_list: bool,
 }
 
 impl Args {
