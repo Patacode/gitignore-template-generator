@@ -13,7 +13,7 @@ and this project adheres to
 
 ## [0.5.0] - 2025-05-06 <a id="0.5.0"></a>
 
-@Content
+- Same as version 0.4.9. The latter has been yanked due to versioning mix-up (*It was supposed to be a minor version*) 
 
 ## [0.4.9] - 2025-05-06 <a id="0.4.9"></a>
 
