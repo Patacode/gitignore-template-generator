@@ -1,5 +1,5 @@
 use gitignore_template_generator::constant::{
-    error_messages, exit_status, template_generator,
+    error_messages, exit_status, template_manager,
 };
 use mockito::Server;
 use test_bin::get_test_bin;
@@ -61,7 +61,7 @@ mod failure {
             let mut mock_server = Server::new();
             let mock_server_base_url = mock_server.url();
             let template_generator_service_uri =
-                format!("{}/rust", template_generator::URI);
+                format!("{}/rust", template_manager::GENERATOR_URI);
             let template_generator_mock = mock_server
                 .mock("GET", template_generator_service_uri.as_str())
                 .with_status(200)
@@ -99,7 +99,7 @@ mod failure {
             let mut mock_server = Server::new();
             let mock_server_base_url = mock_server.url();
             let template_generator_service_uri =
-                format!("{}/rust", template_generator::URI);
+                format!("{}/rust", template_manager::GENERATOR_URI);
             let template_generator_mock = mock_server
                 .mock("GET", template_generator_service_uri.as_str())
                 .with_status(404)
@@ -108,7 +108,7 @@ mod failure {
             cli_tool
                 .arg("rust")
                 .args(["--server-url", &mock_server_base_url])
-                .args(["--endpoint-uri", template_generator::URI]);
+                .args(["--endpoint-uri", template_manager::GENERATOR_URI]);
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);

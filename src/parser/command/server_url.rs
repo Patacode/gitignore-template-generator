@@ -12,6 +12,6 @@ impl ClapArg for ServerUrlClapArg {
             .short(constant::cli_options::SERVER_URL.short)
             .long(constant::cli_options::SERVER_URL.long)
             .help(constant::help_messages::SERVER_URL)
-            .default_value(constant::template_generator::BASE_URL)
+            .default_value(constant::template_manager::BASE_URL)
     }
 }

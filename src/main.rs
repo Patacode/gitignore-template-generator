@@ -13,7 +13,7 @@ fn main() {
 
     if parsed_cli_args.show_list {
         let server_url = parsed_cli_args.server_url;
-        let endpoint_uri = constant::template_lister::URI;
+        let endpoint_uri = constant::template_manager::LISTER_URI;
 
         let http_client = UreqHttpClient { server_url };
         let template_list =

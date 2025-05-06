@@ -83,10 +83,7 @@ pub fn get_help_message_for(template_name: &str) -> String {
             constant::cli_options::VERSION.short.to_string().as_str(),
         )
         .replace("{version_long}", constant::cli_options::VERSION.long)
-        .replace(
-            "{server_url_default}",
-            constant::template_generator::BASE_URL,
-        )
+        .replace("{server_url_default}", constant::template_manager::BASE_URL)
         .replace(
             "{endpoint_uri_short}",
             constant::cli_options::ENDPOINT_URI
@@ -98,7 +95,10 @@ pub fn get_help_message_for(template_name: &str) -> String {
             "{endpoint_uri_long}",
             constant::cli_options::ENDPOINT_URI.long,
         )
-        .replace("{endpoint_uri_default}", constant::template_generator::URI)
+        .replace(
+            "{endpoint_uri_default}",
+            constant::template_manager::GENERATOR_URI,
+        )
         .replace(
             "{list_short}",
             constant::cli_options::LIST.short.to_string().as_str(),

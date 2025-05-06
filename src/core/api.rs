@@ -110,7 +110,7 @@ mod tests {
 
                     let actual = GitignoreTemplateManager::generate_from_api(
                         &http_client,
-                        constant::template_generator::URI,
+                        constant::template_manager::GENERATOR_URI,
                         &template_names,
                     );
                     let expected: Result<String, ProgramExit> =
@@ -138,7 +138,7 @@ mod tests {
 
                     let actual = GitignoreTemplateManager::generate_from_api(
                         &http_client,
-                        constant::template_generator::URI,
+                        constant::template_manager::GENERATOR_URI,
                         &template_names,
                     );
                     let expected: Result<String, ProgramExit> =
@@ -169,7 +169,7 @@ mod tests {
 
                     let actual = GitignoreTemplateManager::list_from_api(
                         &http_client,
-                        constant::template_lister::URI,
+                        constant::template_manager::LISTER_URI,
                     );
                     let expected: Result<String, ProgramExit> =
                         Ok(String::from(template_list));
@@ -195,7 +195,7 @@ mod tests {
 
                     let actual = GitignoreTemplateManager::list_from_api(
                         &http_client,
-                        constant::template_lister::URI,
+                        constant::template_manager::LISTER_URI,
                     );
                     let expected: Result<String, ProgramExit> =
                         Err(ProgramExit {

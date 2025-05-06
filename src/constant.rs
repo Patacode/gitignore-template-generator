@@ -155,30 +155,23 @@ pub mod exit_status {
     pub const BODY_PARSING_ISSUE: i32 = 3;
 }
 
-pub mod template_generator {
-    //! Constants for template generator service.
+pub mod template_manager {
+    //! Constants for gitignore template manager service.
 
-    /// Template generator service base URL.
+    /// Template manager service base URL.
     pub const BASE_URL: &str = "https://www.toptal.com";
 
     /// Template generator service URI.
     ///
     /// Used in conjunction with [`BASE_URL`] to build full URL and make
     /// API call.
-    pub const URI: &str = "/developers/gitignore/api";
-}
-
-pub mod template_lister {
-    //! Constants for template lister service.
-
-    /// Template lister service base URL.
-    pub const BASE_URL: &str = "https://www.toptal.com";
+    pub const GENERATOR_URI: &str = "/developers/gitignore/api";
 
     /// Template lister service URI.
     ///
     /// Used in conjunction with [`BASE_URL`] to build full URL and make
     /// API call.
-    pub const URI: &str = "/developers/gitignore/api/list";
+    pub const LISTER_URI: &str = "/developers/gitignore/api/list";
 }
 
 pub mod path {
