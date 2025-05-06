@@ -85,6 +85,23 @@ mod success {
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
         }
+
+        #[test]
+        fn it_outputs_available_template_list_from_api_with_list_option() {
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+
+            cli_tool.arg(format!("-{}", constant::cli_options::LIST.short));
+            let result = cli_tool
+                .output()
+                .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
+
+            let actual_output = parse_bytes(&result.stdout);
+            let expected_output =
+                load_expectation_file_as_string("template_list");
+
+            assert!(result.status.success());
+            assert_eq!(actual_output, expected_output);
+        }
     }
 }
 

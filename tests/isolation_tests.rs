@@ -8,7 +8,9 @@ mod success {
     use super::*;
 
     mod pos_args {
-        use gitignore_template_generator::helper::load_expectation_file_as_string;
+        use gitignore_template_generator::{
+            constant, helper::load_expectation_file_as_string,
+        };
 
         use super::*;
 
@@ -45,6 +47,38 @@ mod success {
             assert_eq!(actual_status_code, expected_status_code);
             assert_eq!(actual_output, expected_output);
         }
+
+        #[test]
+        fn it_outputs_available_template_list() {
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+
+            let mut mock_server = Server::new();
+            let mock_server_base_url = mock_server.url();
+            let template_generator_mock = mock_server
+                .mock("GET", constant::template_manager::LISTER_URI)
+                .with_status(200)
+                .with_body(load_expectation_file_as_string("template_list"))
+                .create();
+
+            cli_tool
+                .arg("--list")
+                .args(["--server-url", &mock_server_base_url]);
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
+
+            let actual_output = String::from_utf8_lossy(&result.stdout);
+            let expected_output =
+                load_expectation_file_as_string("template_list");
+
+            let actual_status_code = result.status.code();
+            let expected_status_code = Some(exit_status::SUCCESS);
+
+            template_generator_mock.assert();
+
+            assert_eq!(actual_status_code, expected_status_code);
+            assert_eq!(actual_output, expected_output);
+        }
     }
 }
 
@@ -52,10 +86,12 @@ mod failure {
     use super::*;
 
     mod pos_args {
+        use gitignore_template_generator::constant;
+
         use super::*;
 
         #[test]
-        fn it_outputs_error_and_fails_when_body_parsing_issue() {
+        fn it_outputs_error_and_fails_when_body_parsing_issue_with_generator() {
             let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
             let mut mock_server = Server::new();
@@ -70,6 +106,38 @@ mod failure {
 
             cli_tool
                 .arg("rust")
+                .args(["--server-url", &mock_server_base_url]);
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
+
+            let actual_error_message = String::from_utf8_lossy(&result.stderr);
+            let expected_error_message =
+                format!("{}\n", error_messages::BODY_PARSING_ISSUE);
+
+            let actual_status_code = result.status.code();
+            let expected_status_code = Some(exit_status::BODY_PARSING_ISSUE);
+
+            template_generator_mock.assert();
+
+            assert_eq!(actual_status_code, expected_status_code);
+            assert_eq!(actual_error_message, expected_error_message);
+        }
+
+        #[test]
+        fn it_outputs_error_and_fails_when_body_parsing_issue_with_lister() {
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+
+            let mut mock_server = Server::new();
+            let mock_server_base_url = mock_server.url();
+            let template_generator_mock = mock_server
+                .mock("GET", constant::template_manager::LISTER_URI)
+                .with_status(200)
+                .with_body(vec![0, 159, 146, 150]) // invalid utf-8 sequence
+                .create();
+
+            cli_tool
+                .arg("--list")
                 .args(["--server-url", &mock_server_base_url]);
             let result = cli_tool
                 .output()
