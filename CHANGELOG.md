@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.4.9] - 2025-05-06 <a id="0.4.9"></a>
+
 ### 🚀 Features
 
 - Add new 'list' option to list available templates using toptal api
