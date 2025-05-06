@@ -2,7 +2,7 @@ use super::{ProgramExit, TemplateGenerator, TemplateLister};
 use crate::http_client::HttpClient;
 
 /// Manager of gitignore templates.
-/// 
+///
 /// It can generate and list gitignore templates.
 pub struct GitignoreTemplateGenerator;
 
