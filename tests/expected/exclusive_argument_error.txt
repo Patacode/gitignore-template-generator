@@ -1,0 +1,5 @@
+error: the argument '--list' cannot be used with one or more of the other specified arguments
+
+Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
+
+For more information, try '--help'.

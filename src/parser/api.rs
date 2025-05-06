@@ -117,6 +117,23 @@ impl Args {
         self.endpoint_uri = endpoint_uri.to_string();
         self
     }
+
+    /// Sets new value for `show_list` field.
+    ///
+    /// It needs to be called on struct instance and effectively mutates it.
+    ///
+    /// # Arguments
+    ///
+    /// * `show_list` - The new value to be assigned to `show_list`
+    ///     field.
+    ///
+    /// # Returns
+    ///
+    /// The mutated borrowed instance.
+    pub fn with_show_list(mut self, show_list: bool) -> Self {
+        self.show_list = show_list;
+        self
+    }
 }
 
 /// Cli args parser trait to parse CLI args and return them in an [`Args`].
@@ -326,6 +343,26 @@ mod tests {
                     assert!(actual_result.is_some());
                     assert_eq!(actual_result, expected_result);
                 }
+
+                #[rstest]
+                #[case("-l")]
+                #[case("--list")]
+                fn it_parses_list_cli_option(#[case] cli_args: &str) {
+                    let cli_args = parse_cli_args(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_result = parsed_args.as_ref().ok();
+                    let expected_result = Args::default()
+                        .with_server_url(constant::template_manager::BASE_URL)
+                        .with_endpoint_uri(
+                            constant::template_manager::GENERATOR_URI,
+                        )
+                        .with_show_list(true);
+                    let expected_result = Some(&expected_result);
+
+                    assert!(actual_result.is_some());
+                    assert_eq!(actual_result, expected_result);
+                }
             }
 
             mod failure {
@@ -489,6 +526,50 @@ mod tests {
                         exit_status: constant::exit_status::GENERIC,
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_unexpected_argument_error",
+                        )),
+                        kind: ExitKind::Error,
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
+                fn it_fails_parsing_when_list_option_with_pos_args() {
+                    let cli_args = parse_cli_args("rust --list");
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramExit {
+                        message: load_expectation_file_as_string(
+                            "exclusive_argument_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_exclusive_argument_error",
+                        )),
+                        kind: ExitKind::Error,
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
+                fn it_fails_parsing_when_list_option_with_named_args() {
+                    let cli_args = parse_cli_args("-a --list");
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramExit {
+                        message: load_expectation_file_as_string(
+                            "exclusive_argument_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_exclusive_argument_error",
                         )),
                         kind: ExitKind::Error,
                     };
