@@ -38,7 +38,7 @@ impl HttpClient for UreqHttpClient {
 
         match result {
             Ok(mut response) => match response.body_mut().read_to_string() {
-                Ok(body) => Ok(body),
+                Ok(body) => Ok(body.trim().to_string()),
                 Err(_error) => Err(ProgramExit {
                     message: String::from(
                         constant::error_messages::BODY_PARSING_ISSUE,
