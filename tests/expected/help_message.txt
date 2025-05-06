@@ -8,6 +8,7 @@ Arguments:
 Options:
   -{server_url_short}, --{server_url_long} <SERVER_URL>      {server_url_desc} [default: {server_url_default}]
   -{endpoint_uri_short}, --{endpoint_uri_long} <ENDPOINT_URI>  The generator endpoint uri [default: {endpoint_uri_default}]
+  -{list_short}, --{list_long}                         {list_desc}
   -{help_short}, --{help_long}                         {help_desc}
   -{version_short}, --{version_long}                      {version_desc}
   -{author_short}, --{author_long}                       {author_desc}

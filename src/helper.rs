@@ -99,4 +99,10 @@ pub fn get_help_message_for(template_name: &str) -> String {
             constant::cli_options::ENDPOINT_URI.long,
         )
         .replace("{endpoint_uri_default}", constant::template_generator::URI)
+        .replace(
+            "{list_short}",
+            constant::cli_options::LIST.short.to_string().as_str(),
+        )
+        .replace("{list_long}", constant::cli_options::LIST.long)
+        .replace("{list_desc}", constant::help_messages::LIST)
 }
