@@ -29,6 +29,7 @@ Arguments:
 Options:
   -s, --server-url <SERVER_URL>      The gitignore template generator service url [default: https://www.toptal.com]
   -e, --endpoint-uri <ENDPOINT_URI>  The generator endpoint uri [default: /developers/gitignore/api]
+  -l, --list                         List available templates
   -h, --help                         Print help
   -V, --version                      Print version
   -a, --author                       Print author
