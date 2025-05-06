@@ -21,7 +21,7 @@ pub struct Args {
     /// * Optional value represented by the cli option
     ///     [`crate::constant::cli_options::SERVER_URL`] that takes a string
     ///     value, and falling back to
-    ///     [`crate::constant::template_generator::BASE_URL`] if not provided
+    ///     [`crate::constant::template_manager::BASE_URL`] if not provided
     ///     in cli args.
     pub server_url: String,
 
@@ -30,7 +30,7 @@ pub struct Args {
     /// * Optional value represented by the cli option
     ///     [`crate::constant::cli_options::ENDPOINT_URI`] that takes a string
     ///     value, and falling back to
-    ///     [`crate::constant::template_generator::URI`] if not provided in cli
+    ///     [`crate::constant::template_manager::GENERATOR_URI`] if not provided in cli
     ///     args.
     pub endpoint_uri: String,
 
