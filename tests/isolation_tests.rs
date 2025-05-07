@@ -30,7 +30,7 @@ mod success {
             cli_tool
                 .arg("rust")
                 .args(["--server-url", &mock_server_base_url])
-                .args(["--endpoint-uri", "/custom"]);
+                .args(["--generator-uri", "/custom"]);
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
@@ -176,7 +176,7 @@ mod failure {
             cli_tool
                 .arg("rust")
                 .args(["--server-url", &mock_server_base_url])
-                .args(["--endpoint-uri", template_manager::GENERATOR_URI]);
+                .args(["--generator-uri", template_manager::GENERATOR_URI]);
             let result = cli_tool
                 .output()
                 .expect(error_messages::CMD_EXECUTION_FAILURE);

@@ -72,9 +72,9 @@ pub mod help_messages {
     /// field (i.e. version option).
     pub const VERSION: &str = "Print version";
 
-    /// Help message bound to [`crate::parser::Args::endpoint_uri`]
-    /// field (i.e. endpoint uri option).
-    pub const ENDPOINT_URI: &str = "The generator endpoint uri";
+    /// Help message bound to [`crate::parser::Args::generator_uri`]
+    /// field (i.e. generator uri option).
+    pub const GENERATOR_URI: &str = "The generator endpoint uri";
 
     /// Help message bound to [`crate::parser::Args::show_list`]
     /// field (i.e. template list option).
@@ -118,12 +118,12 @@ pub mod cli_options {
         long: "version",
     };
 
-    /// Short and long specifier for endpoint uri option.
+    /// Short and long specifier for generator uri option.
     ///
-    /// **Value**: `-e --endpoint-uri`
-    pub const ENDPOINT_URI: CliOptionName = CliOptionName {
-        short: 'e',
-        long: "endpoint-uri",
+    /// **Value**: `-g --generator-uri`
+    pub const GENERATOR_URI: CliOptionName = CliOptionName {
+        short: 'g',
+        long: "generator-uri",
     };
 
     /// Short and long specifier for template list option.

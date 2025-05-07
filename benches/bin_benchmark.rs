@@ -21,7 +21,7 @@ fn benchmark_function(c: &mut Criterion) {
             cli_tool
                 .arg("rust")
                 .args(["--server-url", &mock_server_base_url])
-                .args(["--endpoint-uri", "/custom"]);
+                .args(["--generator-uri", "/custom"]);
 
             cli_tool.output().unwrap();
         })

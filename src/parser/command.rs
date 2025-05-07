@@ -3,7 +3,7 @@
 use clap::Arg;
 
 mod author;
-mod endpoint_uri;
+mod generator_uri;
 mod help;
 mod list;
 mod server_url;
@@ -11,7 +11,7 @@ mod template_names;
 mod version;
 
 use author::AuthorClapArg;
-use endpoint_uri::EndpointUriClapArg;
+use generator_uri::GeneratorUriClapArg;
 use help::HelpClapArg;
 use list::ListClapArg;
 use server_url::ServerUrlClapArg;
@@ -26,7 +26,7 @@ pub fn build_clap_args() -> Vec<Arg> {
     vec![
         TemplateNamesClapArg::build(),
         ServerUrlClapArg::build(),
-        EndpointUriClapArg::build(),
+        GeneratorUriClapArg::build(),
         ListClapArg::build(),
         HelpClapArg::build(),
         VersionClapArg::build(),

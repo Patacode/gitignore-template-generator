@@ -28,11 +28,11 @@ pub struct Args {
     /// The gitignore template generator service endpoint uri.
     ///
     /// * Optional value represented by the cli option
-    ///     [`crate::constant::cli_options::ENDPOINT_URI`] that takes a string
+    ///     [`crate::constant::cli_options::GENERATOR_URI`] that takes a string
     ///     value, and falling back to
     ///     [`crate::constant::template_manager::GENERATOR_URI`] if not provided in cli
     ///     args.
-    pub endpoint_uri: String,
+    pub generator_uri: String,
 
     /// The boolean indicator of whether to display help infos or not.
     ///
@@ -101,20 +101,20 @@ impl Args {
         self
     }
 
-    /// Sets new value for `endpoint_uri` field.
+    /// Sets new value for `generator_uri` field.
     ///
     /// It needs to be called on struct instance and effectively mutates it.
     ///
     /// # Arguments
     ///
-    /// * `endpoint_uri` - The new value to be assigned to `endpoint_uri`
-    ///     field.
+    /// * `generator_uri` - The new value to be assigned to
+    ///     `generator_uri` field.
     ///
     /// # Returns
     ///
     /// The mutated borrowed instance.
-    pub fn with_endpoint_uri(mut self, endpoint_uri: &str) -> Self {
-        self.endpoint_uri = endpoint_uri.to_string();
+    pub fn with_generator_uri(mut self, generator_uri: &str) -> Self {
+        self.generator_uri = generator_uri.to_string();
         self
     }
 
@@ -205,7 +205,7 @@ mod tests {
                 #[case("-V rust")]
                 #[case("rust -V")]
                 #[case("rust -s foo -V")]
-                #[case("rust -e bar -V")]
+                #[case("rust -g bar -V")]
                 #[case("-aV")]
                 #[case("rust -l -V")]
                 fn it_parses_version_cli_option(#[case] cli_args: &str) {
@@ -235,7 +235,7 @@ mod tests {
                 #[case("-h rust")]
                 #[case("rust -h")]
                 #[case("rust -s foo -h")]
-                #[case("rust -e bar -h")]
+                #[case("rust -g bar -h")]
                 #[case("-aVh")]
                 #[case("rust -l -h")]
                 fn it_parses_help_cli_option(#[case] cli_args: &str) {
@@ -261,7 +261,7 @@ mod tests {
                 #[case("-a rust")]
                 #[case("rust -a")]
                 #[case("rust -s foo -a")]
-                #[case("rust -e bar -a")]
+                #[case("rust -g bar -a")]
                 #[case("rust -l -a")]
                 fn it_parses_author_cli_option_preemptively(
                     #[case] cli_args: &str,
@@ -295,7 +295,7 @@ mod tests {
                     let expected_result = Args::default()
                         .with_template_names(make_string_vec(cli_options))
                         .with_server_url(constant::template_manager::BASE_URL)
-                        .with_endpoint_uri(
+                        .with_generator_uri(
                             constant::template_manager::GENERATOR_URI,
                         );
                     let expected_result = Some(&expected_result);
@@ -318,7 +318,7 @@ mod tests {
                     let expected_result = Args::default()
                         .with_template_names(make_string_vec("rust"))
                         .with_server_url("https://test.com")
-                        .with_endpoint_uri(
+                        .with_generator_uri(
                             constant::template_manager::GENERATOR_URI,
                         );
                     let expected_result = Some(&expected_result);
@@ -328,9 +328,9 @@ mod tests {
                 }
 
                 #[rstest]
-                #[case("rust -e /test/api")]
-                #[case("rust --endpoint-uri /test/api")]
-                fn it_parses_pos_args_with_endpoint_uri_cli_option(
+                #[case("rust -g /test/api")]
+                #[case("rust --generator-uri /test/api")]
+                fn it_parses_pos_args_with_generator_uri_cli_option(
                     #[case] cli_args: &str,
                 ) {
                     let cli_args = parse_cli_args(cli_args);
@@ -340,7 +340,7 @@ mod tests {
                     let expected_result = Args::default()
                         .with_template_names(make_string_vec("rust"))
                         .with_server_url(constant::template_manager::BASE_URL)
-                        .with_endpoint_uri("/test/api");
+                        .with_generator_uri("/test/api");
                     let expected_result = Some(&expected_result);
 
                     assert!(actual_result.is_some());
@@ -363,7 +363,7 @@ mod tests {
                     let expected_result = Args::default()
                         .with_template_names(make_string_vec(template_names))
                         .with_server_url(constant::template_manager::BASE_URL)
-                        .with_endpoint_uri(
+                        .with_generator_uri(
                             constant::template_manager::GENERATOR_URI,
                         )
                         .with_show_list(true);
@@ -500,19 +500,19 @@ mod tests {
                 }
 
                 #[test]
-                fn it_fails_parsing_when_endpoint_uri_but_no_pos_args() {
-                    let cli_args = parse_cli_args("-e /test/api");
+                fn it_fails_parsing_when_generator_uri_but_no_pos_args() {
+                    let cli_args = parse_cli_args("-g /test/api");
                     let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                     let actual_error = parsed_args.as_ref().err();
                     let expected_error = ProgramExit {
                         message: load_expectation_file_as_string(
-                            "endpoint_uri_no_pos_args_error",
+                            "generator_uri_no_pos_args_error",
                         ),
                         exit_status: constant::exit_status::GENERIC,
 
                         styled_message: Some(load_expectation_file_as_string(
-                            "ansi_endpoint_uri_no_pos_args_error",
+                            "ansi_generator_uri_no_pos_args_error",
                         )),
                         kind: ExitKind::Error,
                     };
@@ -554,13 +554,13 @@ mod tests {
 
                 #[test]
                 fn it_parses_given_cli_options() {
-                    let cli_args = parse_cli_args("rust python -s test -e foo");
+                    let cli_args = parse_cli_args("rust python -s test -g foo");
 
                     let actual_result = ClapArgsParser::new().parse(cli_args);
                     let expected_result = Args::default()
                         .with_template_names(make_string_vec("rust python"))
                         .with_server_url("test")
-                        .with_endpoint_uri("foo");
+                        .with_generator_uri("foo");
 
                     assert_eq!(actual_result, expected_result);
                 }

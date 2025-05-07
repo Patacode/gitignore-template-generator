@@ -81,8 +81,8 @@ impl ClapArgsParser {
                 .unwrap()
                 .to_string(),
 
-            endpoint_uri: arg_matches
-                .get_one::<String>("ENDPOINT_URI")
+            generator_uri: arg_matches
+                .get_one::<String>("GENERATOR_URI")
                 .unwrap()
                 .to_string(),
 

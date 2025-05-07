@@ -13,11 +13,11 @@ fn main() {
 
     if parsed_cli_args.show_list {
         let server_url = parsed_cli_args.server_url;
-        let endpoint_uri = constant::template_manager::LISTER_URI;
+        let lister_uri = constant::template_manager::LISTER_URI;
 
         let http_client = UreqHttpClient { server_url };
         let template_list =
-            GitignoreTemplateManager::list_from_api(&http_client, endpoint_uri);
+            GitignoreTemplateManager::list_from_api(&http_client, lister_uri);
 
         match template_list {
             Ok(result) => println!("{result}"),
@@ -28,13 +28,13 @@ fn main() {
         };
     } else {
         let server_url = parsed_cli_args.server_url;
-        let endpoint_uri = parsed_cli_args.endpoint_uri;
+        let generator_uri = parsed_cli_args.generator_uri;
         let template_names = parsed_cli_args.template_names;
 
         let http_client = UreqHttpClient { server_url };
         let generated_template = GitignoreTemplateManager::generate_from_api(
             &http_client,
-            &endpoint_uri,
+            &generator_uri,
             &template_names,
         );
 
