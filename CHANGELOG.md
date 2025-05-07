@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.6.2] - 2025-05-07 <a id="0.6.2"></a>
+
 ### 🚀 Features
 
 - [core] - Print template list output items one per line
