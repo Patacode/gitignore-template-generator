@@ -1,5 +1,8 @@
 use super::{ProgramExit, TemplateGenerator, TemplateLister};
-use crate::http_client::HttpClient;
+use crate::{
+    constant::template_manager::{GENERATOR_URI, LISTER_URI},
+    http_client::HttpClient,
+};
 
 /// Manager of gitignore templates.
 ///
@@ -22,11 +25,13 @@ impl TemplateGenerator for GitignoreTemplateManager {
     /// See [`TemplateGenerator::generate_from_api`] for more infos.
     fn generate_from_api(
         http_client: &impl HttpClient,
-        endpoint_uri: &str,
+        endpoint_uri: Option<&str>,
         template_names: &[String],
     ) -> Result<String, ProgramExit> {
         let path_param = template_names.join(",");
+        let endpoint_uri = endpoint_uri.unwrap_or(GENERATOR_URI);
         let full_uri = format!("{endpoint_uri}/{path_param}");
+
         http_client.get(&full_uri)
     }
 }
@@ -34,8 +39,9 @@ impl TemplateGenerator for GitignoreTemplateManager {
 impl TemplateLister for GitignoreTemplateManager {
     fn list_from_api(
         http_client: &impl HttpClient,
-        endpoint_uri: &str,
+        endpoint_uri: Option<&str>,
     ) -> Result<String, ProgramExit> {
+        let endpoint_uri = endpoint_uri.unwrap_or(LISTER_URI);
         match http_client.get(endpoint_uri) {
             Ok(result) => Ok(Self::parse_template_list_from_api(result)),
             Err(error) => Err(error),

@@ -46,7 +46,8 @@ pub trait TemplateGenerator {
     /// # Arguments
     ///
     /// * `http_client` - The http client to be used to make the API call.
-    /// * `endpoint_uri` - The endpoint URI to generate templates.
+    /// * `endpoint_uri` - The endpoint URI to generate templates (defaults to
+    ///     [`crate::constant::template_manager::GENERATOR_URI`] if None).
     /// * `template_names` - The template names to be used to generated the
     ///     actual template.
     ///
@@ -56,7 +57,7 @@ pub trait TemplateGenerator {
     /// [`ProgramExit`] on error (e.g. 4xx, network issues...).
     fn generate_from_api(
         http_client: &impl HttpClient,
-        endpoint_uri: &str,
+        endpoint_uri: Option<&str>,
         template_names: &[String],
     ) -> Result<String, ProgramExit>;
 }
@@ -72,7 +73,8 @@ pub trait TemplateLister {
     /// # Arguments
     ///
     /// * `http_client` - The http client to be used to make the API call.
-    /// * `endpoint_uri` - The endpoint URI to list templates.
+    /// * `endpoint_uri` - The endpoint URI to list templates (defaults to
+    ///     [`crate::constant::template_manager::LISTER_URI`] if None).
     ///
     /// # Returns
     ///
@@ -80,7 +82,7 @@ pub trait TemplateLister {
     /// [`ProgramExit`] on error (e.g. 4xx, network issues...).
     fn list_from_api(
         http_client: &impl HttpClient,
-        endpoint_uri: &str,
+        endpoint_uri: Option<&str>,
     ) -> Result<String, ProgramExit>;
 }
 
@@ -110,7 +112,26 @@ mod tests {
 
                     let actual = GitignoreTemplateManager::generate_from_api(
                         &http_client,
-                        constant::template_manager::GENERATOR_URI,
+                        Some(constant::template_manager::GENERATOR_URI),
+                        &template_names,
+                    );
+                    let expected: Result<String, ProgramExit> =
+                        Ok(String::from(generated_template));
+
+                    assert_eq!(actual, expected);
+                }
+
+                #[test]
+                fn it_works_with_none_endpoint_uri() {
+                    let template_names = make_string_vec("rust python");
+                    let generated_template = "all good";
+                    let http_client = MockHttpClient {
+                        response: Ok(String::from(generated_template)),
+                    };
+
+                    let actual = GitignoreTemplateManager::generate_from_api(
+                        &http_client,
+                        None,
                         &template_names,
                     );
                     let expected: Result<String, ProgramExit> =
@@ -138,7 +159,7 @@ mod tests {
 
                     let actual = GitignoreTemplateManager::generate_from_api(
                         &http_client,
-                        constant::template_manager::GENERATOR_URI,
+                        Some(constant::template_manager::GENERATOR_URI),
                         &template_names,
                     );
                     let expected: Result<String, ProgramExit> =
@@ -169,7 +190,24 @@ mod tests {
 
                     let actual = GitignoreTemplateManager::list_from_api(
                         &http_client,
-                        constant::template_manager::LISTER_URI,
+                        Some(constant::template_manager::LISTER_URI),
+                    );
+                    let expected: Result<String, ProgramExit> =
+                        Ok(String::from(template_list));
+
+                    assert_eq!(actual, expected);
+                }
+
+                #[test]
+                fn it_works_with_none_endpoint_uri() {
+                    let template_list = "rust\npython";
+                    let http_client = MockHttpClient {
+                        response: Ok(String::from(template_list)),
+                    };
+
+                    let actual = GitignoreTemplateManager::list_from_api(
+                        &http_client,
+                        None,
                     );
                     let expected: Result<String, ProgramExit> =
                         Ok(String::from(template_list));
@@ -195,7 +233,7 @@ mod tests {
 
                     let actual = GitignoreTemplateManager::list_from_api(
                         &http_client,
-                        constant::template_manager::LISTER_URI,
+                        Some(constant::template_manager::LISTER_URI),
                     );
                     let expected: Result<String, ProgramExit> =
                         Err(ProgramExit {
