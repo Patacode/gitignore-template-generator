@@ -8,6 +8,7 @@
 [1m[4mOptions:[0m
   [1m-{server_url_short}[0m, [1m--{server_url_long}[0m <SERVER_URL>        {server_url_desc} [default: {server_url_default}]
   [1m-{generator_uri_short}[0m, [1m--{generator_uri_long}[0m <GENERATOR_URI>  {generator_uri_desc} [default: {generator_uri_default}]
+  [1m-{lister_uri_short}[0m, [1m--{lister_uri_long}[0m <LISTER_URI>        {lister_uri_desc} [default: {lister_uri_default}]
   [1m-{list_short}[0m, [1m--{list_long}[0m                           {list_desc}
   [1m-{help_short}[0m, [1m--{help_long}[0m                           {help_desc}
   [1m-{version_short}[0m, [1m--{version_long}[0m                        {version_desc}

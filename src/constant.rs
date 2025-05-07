@@ -79,6 +79,10 @@ pub mod help_messages {
     /// Help message bound to [`crate::parser::Args::show_list`]
     /// field (i.e. template list option).
     pub const LIST: &str = "List available templates";
+
+    /// Help message bound to [`crate::parser::Args::lister_uri`]
+    /// field (i.e. template list option).
+    pub const LISTER_URI: &str = "The template lister uri";
 }
 
 pub mod cli_options {
@@ -132,6 +136,14 @@ pub mod cli_options {
     pub const LIST: CliOptionName = CliOptionName {
         short: 'l',
         long: "list",
+    };
+
+    /// Short and long specifier for lister uri option.
+    ///
+    /// **Value**: `-i --lister-uri`
+    pub const LISTER_URI: CliOptionName = CliOptionName {
+        short: 'i',
+        long: "lister-uri",
     };
 }
 

@@ -109,4 +109,14 @@ pub fn get_help_message_for(template_name: &str) -> String {
         )
         .replace("{list_long}", constant::cli_options::LIST.long)
         .replace("{list_desc}", constant::help_messages::LIST)
+        .replace(
+            "{lister_uri_short}",
+            constant::cli_options::LISTER_URI.short.to_string().as_str(),
+        )
+        .replace("{lister_uri_long}", constant::cli_options::LISTER_URI.long)
+        .replace("{lister_uri_desc}", constant::help_messages::LISTER_URI)
+        .replace(
+            "{lister_uri_default}",
+            constant::template_manager::LISTER_URI,
+        )
 }

@@ -34,6 +34,15 @@ pub struct Args {
     ///     args.
     pub generator_uri: String,
 
+    /// The gitignore template lister service endpoint uri.
+    ///
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::LISTER_URI`] that takes a string
+    ///     value, and falling back to
+    ///     [`crate::constant::template_manager::LISTER_URI`] if not provided in cli
+    ///     args.
+    pub lister_uri: String,
+
     /// The boolean indicator of whether to display help infos or not.
     ///
     /// * Optional value represented by the cli option
@@ -115,6 +124,22 @@ impl Args {
     /// The mutated borrowed instance.
     pub fn with_generator_uri(mut self, generator_uri: &str) -> Self {
         self.generator_uri = generator_uri.to_string();
+        self
+    }
+
+    /// Sets new value for `lister_uri` field.
+    ///
+    /// It needs to be called on struct instance and effectively mutates it.
+    ///
+    /// # Arguments
+    ///
+    /// * `lister_uri` - The new value to be assigned to `lister_uri` field.
+    ///
+    /// # Returns
+    ///
+    /// The mutated borrowed instance.
+    pub fn with_lister_uri(mut self, lister_uri: &str) -> Self {
+        self.lister_uri = lister_uri.to_string();
         self
     }
 
@@ -297,6 +322,9 @@ mod tests {
                         .with_server_url(constant::template_manager::BASE_URL)
                         .with_generator_uri(
                             constant::template_manager::GENERATOR_URI,
+                        )
+                        .with_lister_uri(
+                            constant::template_manager::LISTER_URI,
                         );
                     let expected_result = Some(&expected_result);
 
@@ -320,6 +348,9 @@ mod tests {
                         .with_server_url("https://test.com")
                         .with_generator_uri(
                             constant::template_manager::GENERATOR_URI,
+                        )
+                        .with_lister_uri(
+                            constant::template_manager::LISTER_URI,
                         );
                     let expected_result = Some(&expected_result);
 
@@ -340,7 +371,10 @@ mod tests {
                     let expected_result = Args::default()
                         .with_template_names(make_string_vec("rust"))
                         .with_server_url(constant::template_manager::BASE_URL)
-                        .with_generator_uri("/test/api");
+                        .with_generator_uri("/test/api")
+                        .with_lister_uri(
+                            constant::template_manager::LISTER_URI,
+                        );
                     let expected_result = Some(&expected_result);
 
                     assert!(actual_result.is_some());
@@ -366,7 +400,10 @@ mod tests {
                         .with_generator_uri(
                             constant::template_manager::GENERATOR_URI,
                         )
-                        .with_show_list(true);
+                        .with_show_list(true)
+                        .with_lister_uri(
+                            constant::template_manager::LISTER_URI,
+                        );
                     let expected_result = Some(&expected_result);
 
                     assert!(actual_result.is_some());
@@ -554,13 +591,15 @@ mod tests {
 
                 #[test]
                 fn it_parses_given_cli_options() {
-                    let cli_args = parse_cli_args("rust python -s test -g foo");
+                    let cli_args =
+                        parse_cli_args("rust python -s test -g foo -i bar");
 
                     let actual_result = ClapArgsParser::new().parse(cli_args);
                     let expected_result = Args::default()
                         .with_template_names(make_string_vec("rust python"))
                         .with_server_url("test")
-                        .with_generator_uri("foo");
+                        .with_generator_uri("foo")
+                        .with_lister_uri("bar");
 
                     assert_eq!(actual_result, expected_result);
                 }
