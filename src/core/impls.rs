@@ -6,6 +6,12 @@ use crate::http_client::HttpClient;
 /// It can generate and list gitignore templates.
 pub struct GitignoreTemplateManager;
 
+impl GitignoreTemplateManager {
+    fn parse_template_list_from_api(template_list: String) -> String {
+        template_list.replace(',', "\n")
+    }
+}
+
 impl TemplateGenerator for GitignoreTemplateManager {
     /// Generates a gitignore template matching given template names.
     ///
@@ -30,6 +36,9 @@ impl TemplateLister for GitignoreTemplateManager {
         http_client: &impl HttpClient,
         endpoint_uri: &str,
     ) -> Result<String, ProgramExit> {
-        http_client.get(endpoint_uri)
+        match http_client.get(endpoint_uri) {
+            Ok(result) => Ok(Self::parse_template_list_from_api(result)),
+            Err(error) => Err(error),
+        }
     }
 }
