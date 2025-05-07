@@ -62,7 +62,7 @@ pub mod help_messages {
 
     /// Help message bound to [`crate::parser::Args::server_url`]
     /// field (i.e. server url option).
-    pub const SERVER_URL: &str = "The gitignore template generator service url";
+    pub const SERVER_URL: &str = "The template manager url";
 
     /// Help message bound to [`crate::parser::Args::show_help`]
     /// field (i.e. help option).
@@ -74,7 +74,7 @@ pub mod help_messages {
 
     /// Help message bound to [`crate::parser::Args::generator_uri`]
     /// field (i.e. generator uri option).
-    pub const GENERATOR_URI: &str = "The generator endpoint uri";
+    pub const GENERATOR_URI: &str = "The template generator uri";
 
     /// Help message bound to [`crate::parser::Args::show_list`]
     /// field (i.e. template list option).
