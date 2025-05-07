@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.6.1] - 2025-05-07 <a id="0.6.1"></a>
+
 ### ⚙️ Miscellaneous Tasks
 
 - [readme] - Add missing mention of isolation tests and make examples more concise (*Remove example output to make them easily copyable*)
