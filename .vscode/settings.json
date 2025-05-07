@@ -17,6 +17,7 @@
     "MSVC",
     "Patacode",
     "postprocessors",
+    "pycache",
     "rstest",
     "rustc",
     "RUSTFLAGS",
@@ -24,7 +25,8 @@
     "thon",
     "topo",
     "toptal",
-    "ureq"
+    "ureq",
+    "venv"
   ],
   "editor.rulers": [
     80

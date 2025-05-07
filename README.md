@@ -39,8 +39,16 @@ Version: 0.5.0
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
-The cli tool binds to any template generator service able to return templates
-over HTTP. It defaults to `https://www.toptal.com/developers/gitignore/api`.
+The cli tool binds to any template manager service able to manage templates
+over HTTP. It defaults to `toptal` template manager, using
+`https://www.toptal.com/developers/gitignore/api/{templateNames}` to generate
+templates (with `{templateNames}` being a comma-separated list of template
+names), and `https://www.toptal.com/developers/gitignore/api/list` to list
+them.
+
+It is possible to provide a custom template manager service to the cli
+tool. One can easily change the template manager service base url and related
+endpoint uris using the `server-url`, `generator-uri` and `lister-uri` options.
 
 Examples:
 
@@ -70,6 +78,38 @@ Cargo.lock
 *.pdb
 
 # End of https://www.toptal.com/developers/gitignore/api/rust
+```
+
+*Generate a gitignore template for python projects using a custom generator:*
+
+```
+$ gitignore-template-generator python \
+  --server-url https://myapis.com
+  --generator-uri /gitignore/generate
+# Created by https://myapis.com/gitignore/generate/python
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# End of https://myapis.com/gitignore/generate/python
 ```
 
 ## Development
