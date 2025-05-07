@@ -53,13 +53,14 @@ endpoint uris using the `server-url`, `generator-uri` and `lister-uri` options.
 Examples:
 
 *Generate a gitignore template for simple rust projects and store it in a file
-named .gitignore*
+named `.gitignore`*
 
 ```bash
 gitignore-template-generator rust > .gitignore
 ```
 
-*Generate a gitignore template for python projects using a custom generator*
+*Generate a gitignore template for python projects using a custom
+generator (a fictive one here just for the example)*
 
 ```bash
 gitignore-template-generator python \
