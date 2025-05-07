@@ -18,6 +18,10 @@ and this project adheres to
 - Rename 'endpoint-uri' option to 'generator-uri' (*To differentiate from lister uri*)
 - Update help message of generator-uri and server-uri options (*To be more concise, less redundant with context*)
 
+### ⚙️ Miscellaneous Tasks
+
+- [readme] - Improve with more examples and explanations
+
 ## [0.5.0] - 2025-05-06 <a id="0.5.0"></a>
 
 - Same as version 0.4.9. The latter has been yanked due to versioning mix-up (*It was supposed to be a minor version*) 
