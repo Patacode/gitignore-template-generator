@@ -231,6 +231,7 @@ mod tests {
                 #[case("rust -V")]
                 #[case("rust -s foo -V")]
                 #[case("rust -g bar -V")]
+                #[case("rust -i bar -V")]
                 #[case("-aV")]
                 #[case("rust -l -V")]
                 fn it_parses_version_cli_option(#[case] cli_args: &str) {
@@ -261,6 +262,7 @@ mod tests {
                 #[case("rust -h")]
                 #[case("rust -s foo -h")]
                 #[case("rust -g bar -h")]
+                #[case("rust -i bar -h")]
                 #[case("-aVh")]
                 #[case("rust -l -h")]
                 fn it_parses_help_cli_option(#[case] cli_args: &str) {
@@ -287,6 +289,7 @@ mod tests {
                 #[case("rust -a")]
                 #[case("rust -s foo -a")]
                 #[case("rust -g bar -a")]
+                #[case("rust -i bar -a")]
                 #[case("rust -l -a")]
                 fn it_parses_author_cli_option_preemptively(
                     #[case] cli_args: &str,
@@ -375,6 +378,29 @@ mod tests {
                         .with_lister_uri(
                             constant::template_manager::LISTER_URI,
                         );
+                    let expected_result = Some(&expected_result);
+
+                    assert!(actual_result.is_some());
+                    assert_eq!(actual_result, expected_result);
+                }
+
+                #[rstest]
+                #[case("rust -i /test/api")]
+                #[case("rust --lister-uri /test/api")]
+                fn it_parses_pos_args_with_lister_uri_cli_option(
+                    #[case] cli_args: &str,
+                ) {
+                    let cli_args = parse_cli_args(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_result = parsed_args.as_ref().ok();
+                    let expected_result = Args::default()
+                        .with_template_names(make_string_vec("rust"))
+                        .with_server_url(constant::template_manager::BASE_URL)
+                        .with_generator_uri(
+                            constant::template_manager::GENERATOR_URI,
+                        )
+                        .with_lister_uri("/test/api");
                     let expected_result = Some(&expected_result);
 
                     assert!(actual_result.is_some());
@@ -550,6 +576,29 @@ mod tests {
 
                         styled_message: Some(load_expectation_file_as_string(
                             "ansi_generator_uri_no_pos_args_error",
+                        )),
+                        kind: ExitKind::Error,
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
+                fn it_fails_parsing_when_lister_uri_but_no_pos_args() {
+                    let cli_args = parse_cli_args("-i /test/api");
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramExit {
+                        message: load_expectation_file_as_string(
+                            "lister_uri_no_pos_args_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_lister_uri_no_pos_args_error",
                         )),
                         kind: ExitKind::Error,
                     };
