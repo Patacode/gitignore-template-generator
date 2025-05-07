@@ -9,7 +9,14 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- Add new lister-uri option to set custom lister endpoint uri
+
+### 🚜 Refactor
+
+- Rename 'endpoint-uri' option to 'generator-uri' (*To differentiate from lister uri*)
+- Update help message of generator-uri and server-uri options (*To be more concise, less redundant with context*)
 
 ## [0.5.0] - 2025-05-06 <a id="0.5.0"></a>
 
