@@ -9,7 +9,13 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- [core] - Print template list output items one per line
+
+### 🚜 Refactor
+
+- [core] - Wrap endpoint_uri in Option enum (*To have cleaner and more coherent api. Will default to same value as arg parser itself*)
 
 ## [0.6.1] - 2025-05-07 <a id="0.6.1"></a>
 
