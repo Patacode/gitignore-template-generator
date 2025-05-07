@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.6.0] - 2025-05-07 <a id="0.6.0"></a>
+
 ### 🚀 Features
 
 - Add new lister-uri option to set custom lister endpoint uri
