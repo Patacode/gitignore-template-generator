@@ -112,6 +112,17 @@ Thumbs.db
 # End of https://myapis.com/gitignore/generate/python
 ```
 
+*List available templates:*
+
+```
+$ gitignore-template-generator --list
+redis,remix,remix+arc,remix+cloudflarepages,remix+cloudflareworkers
+remix+netlify,remix+vercel,renpy,replit,retool
+rhodesrhomobile,rider,robotframework,root,ros
+ros2,ruby,rubymine,rubymine+all,rubymine+iml
+rust,rust-analyzer,salesforce,salesforcedx,sam
+```
+
 ## Development
 
 Install `cargo-make`, dev tools and build the package:
@@ -125,6 +136,7 @@ Run the tests:
 ```bash
 cargo test # unit + integration tests
 cargo test --lib # unit tests
+cargo test --test isolation_tests # isolation tests
 cargo test --test integration_tests # integration tests
 ```
 
