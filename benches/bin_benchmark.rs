@@ -14,33 +14,40 @@ fn benchmark_function(c: &mut Criterion) {
         .with_body(load_expectation_file_as_string("rust_template"))
         .create();
 
-    let mut template_generation_group = c.benchmark_group("template_generation");
-    template_generation_group.bench_function("Template generation without robust check", |b| {
-        b.iter(|| {
-            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+    let mut template_generation_group =
+        c.benchmark_group("template_generation");
+    template_generation_group.bench_function(
+        "Template generation without robust check",
+        |b| {
+            b.iter(|| {
+                let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cli_tool
-                .arg("rust")
-                .args(["--server-url", &mock_server_base_url])
-                .args(["--generator-uri", "/custom"]);
+                cli_tool
+                    .arg("rust")
+                    .args(["--server-url", &mock_server_base_url])
+                    .args(["--generator-uri", "/custom"]);
 
-            cli_tool.output().unwrap();
-        })
-    });
+                cli_tool.output().unwrap();
+            })
+        },
+    );
 
-    template_generation_group.bench_function("Template generation with robust check", |b| {
-        b.iter(|| {
-            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+    template_generation_group.bench_function(
+        "Template generation with robust check",
+        |b| {
+            b.iter(|| {
+                let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-            cli_tool
-                .arg("rust")
-                .args(["--server-url", &mock_server_base_url])
-                .args(["--generator-uri", "/custom"])
-                .arg("--check");
+                cli_tool
+                    .arg("rust")
+                    .args(["--server-url", &mock_server_base_url])
+                    .args(["--generator-uri", "/custom"])
+                    .arg("--check");
 
-            cli_tool.output().unwrap();
-        })
-    });
+                cli_tool.output().unwrap();
+            })
+        },
+    );
     template_generation_group.finish();
 }
 
