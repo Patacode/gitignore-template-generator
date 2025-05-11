@@ -9,7 +9,12 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- [http_client] - Add new type of http client to mock response with endpoint mapping (*New struct 'MockEndpointHttpClient'*)
+- [core] - Add new method to generate templates from api with robust template checks (*Same as 'generate_from_api' but will first fetch the list of available template names to existence check and will return a proper error accordingly*)
+- [parser] - Add new check option to enable robust template name check
+- Integrate new check option into main binary crate
 
 ## [0.6.2] - 2025-05-07 <a id="0.6.2"></a>
 
