@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{collections::HashMap, time::Duration};
 
 use ureq::Agent;
 
@@ -18,6 +18,13 @@ pub struct MockHttpClient {
     /// The mocked response to be returned when calling [`MockHttpClient::get`]
     /// method.
     pub response: Result<String, ProgramExit>,
+}
+
+/// Http client implementation to mock a response.
+pub struct MockEndpointHttpClient<'a> {
+    /// The mocked response to be returned when calling [`MockHttpClient::get`]
+    /// method.
+    pub response: HashMap<&'a str, Result<String, ProgramExit>>,
 }
 
 impl HttpClient for UreqHttpClient {
@@ -66,5 +73,15 @@ impl HttpClient for MockHttpClient {
     /// result will be returned.
     fn get(&self, _url: &str) -> Result<String, ProgramExit> {
         self.response.clone()
+    }
+}
+
+impl<'a> HttpClient for MockEndpointHttpClient<'a> {
+    /// Returns the result linked to the given url.
+    ///
+    /// The given `url` will only be used to get proper result from linked
+    /// hashmap.
+    fn get(&self, url: &str) -> Result<String, ProgramExit> {
+        self.response[url].clone()
     }
 }

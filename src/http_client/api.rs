@@ -1,5 +1,7 @@
 use crate::ProgramExit;
-pub use crate::http_client::impls::{MockHttpClient, UreqHttpClient};
+pub use crate::http_client::impls::{
+    MockEndpointHttpClient, MockHttpClient, UreqHttpClient,
+};
 
 /// Http client trait to make HTTP calls.
 pub trait HttpClient {
@@ -185,6 +187,85 @@ mod tests {
                     let expected: Result<String, ProgramExit> =
                         Err(ProgramExit {
                             message: String::from(result_content),
+                            exit_status: constant::exit_status::GENERIC,
+                            styled_message: None,
+                            kind: ExitKind::Error,
+                        });
+
+                    assert_eq!(actual, expected);
+                }
+            }
+        }
+    }
+
+    mod mock_endpoint_http_client {
+        use super::*;
+
+        mod get {
+            use super::*;
+
+            mod success {
+                use std::collections::HashMap;
+
+                use super::*;
+
+                #[test]
+                fn it_returns_ok_mocked_response_for_given_url() {
+                    let rust_result_content = "success rust response";
+                    let python_result_content = "success python response";
+                    let http_client = MockEndpointHttpClient {
+                        response: HashMap::from([
+                            (
+                                "/api/rust",
+                                Ok(String::from(rust_result_content)),
+                            ),
+                            (
+                                "/api/python",
+                                Ok(String::from(python_result_content)),
+                            ),
+                        ]),
+                    };
+
+                    let actual = http_client.get("/api/rust");
+                    let expected: Result<String, ProgramExit> =
+                        Ok(String::from(rust_result_content));
+
+                    assert_eq!(actual, expected);
+                }
+
+                #[test]
+                fn it_returns_error_mocked_response_for_given_url() {
+                    let rust_result_content = "success rust response";
+                    let python_result_content = "success python response";
+                    let http_client = MockEndpointHttpClient {
+                        response: HashMap::from([
+                            (
+                                "/api/rust",
+                                Err(ProgramExit {
+                                    message: String::from(rust_result_content),
+                                    exit_status: constant::exit_status::GENERIC,
+                                    styled_message: None,
+                                    kind: ExitKind::Error,
+                                }),
+                            ),
+                            (
+                                "/api/python",
+                                Err(ProgramExit {
+                                    message: String::from(
+                                        python_result_content,
+                                    ),
+                                    exit_status: constant::exit_status::GENERIC,
+                                    styled_message: None,
+                                    kind: ExitKind::Error,
+                                }),
+                            ),
+                        ]),
+                    };
+
+                    let actual = http_client.get("/api/python");
+                    let expected: Result<String, ProgramExit> =
+                        Err(ProgramExit {
+                            message: String::from(python_result_content),
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
                             kind: ExitKind::Error,
