@@ -19,6 +19,13 @@ fn main() {
     let http_client = UreqHttpClient { server_url };
     let result = if parsed_cli_args.show_list {
         GitignoreTemplateManager::list_from_api(&http_client, Some(&lister_uri))
+    } else if parsed_cli_args.check_template_names {
+        GitignoreTemplateManager::generate_from_api_with_template_check(
+            &http_client,
+            Some(&generator_uri),
+            Some(&lister_uri),
+            &template_names,
+        )
     } else {
         GitignoreTemplateManager::generate_from_api(
             &http_client,
