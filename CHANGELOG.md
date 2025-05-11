@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.7.3] - 2025-05-11 <a id="0.7.3"></a>
+
 ### 🏗️ Build
 
 - [cargo] - Exclude unit test files from packaged crate
