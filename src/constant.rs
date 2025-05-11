@@ -88,7 +88,7 @@ pub mod help_messages {
 
     /// Help message bound to [`crate::parser::Args::check_template_names`]
     /// field (i.e. check option).
-    pub const CHECK: &str = "Enable robust template check";
+    pub const CHECK: &str = "Enable robust template names check";
 }
 
 pub mod cli_options {
