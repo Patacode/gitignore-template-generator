@@ -9,7 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🧪 Testing
+
+- [benches] - Add benchmarking to compare template generation with/without robust check
+- [benches] - Add benchmarking for list option
 
 ## [0.7.0] - 2025-05-11 <a id="0.7.0"></a>
 
