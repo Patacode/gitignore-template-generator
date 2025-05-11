@@ -1,6 +1,6 @@
 [package]
 name = "gitignore-template-generator"
-version = "0.6.2"
+version = "0.7.0"
 edition = "2024"
 description = "A binary crate to generate templates for .gitignore files"
 authors = ["Patacode <pata.codegineer@gmail.com>"]

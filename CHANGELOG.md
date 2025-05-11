@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.7.0] - 2025-05-11 <a id="0.7.0"></a>
+
 ### 🚀 Features
 
 - [http_client] - Add new type of http client to mock response with endpoint mapping (*New struct 'MockEndpointHttpClient'*)
