@@ -79,12 +79,16 @@ pub mod help_messages {
     pub const GENERATOR_URI: &str = "The template generator uri";
 
     /// Help message bound to [`crate::parser::Args::show_list`]
-    /// field (i.e. template list option).
+    /// field (i.e. list option).
     pub const LIST: &str = "List available templates";
 
     /// Help message bound to [`crate::parser::Args::lister_uri`]
-    /// field (i.e. template list option).
+    /// field (i.e. lister uri option).
     pub const LISTER_URI: &str = "The template lister uri";
+
+    /// Help message bound to [`crate::parser::Args::check_template_names`]
+    /// field (i.e. check option).
+    pub const CHECK: &str = "Enable robust template check";
 }
 
 pub mod cli_options {
@@ -146,6 +150,14 @@ pub mod cli_options {
     pub const LISTER_URI: CliOptionName = CliOptionName {
         short: 'i',
         long: "lister-uri",
+    };
+
+    /// Short and long specifier for check option.
+    ///
+    /// **Value**: `-c --check`
+    pub const CHECK: CliOptionName = CliOptionName {
+        short: 'c',
+        long: "check",
     };
 }
 

@@ -10,6 +10,7 @@ Options:
   -{generator_uri_short}, --{generator_uri_long} <GENERATOR_URI>  {generator_uri_desc} [default: {generator_uri_default}]
   -{lister_uri_short}, --{lister_uri_long} <LISTER_URI>        {lister_uri_desc} [default: {lister_uri_default}]
   -{list_short}, --{list_long}                           {list_desc}
+  -{check_short}, --{check_long}                          {check_desc}
   -{help_short}, --{help_long}                           {help_desc}
   -{version_short}, --{version_long}                        {version_desc}
   -{author_short}, --{author_long}                         {author_desc}

@@ -91,6 +91,7 @@ impl ClapArgsParser {
                 .unwrap()
                 .to_string(),
 
+            check_template_names: arg_matches.get_flag("CHECK"),
             show_help: arg_matches.get_flag("HELP"),
             show_version: arg_matches.get_flag("VERSION"),
             show_author: arg_matches.get_flag("AUTHOR"),

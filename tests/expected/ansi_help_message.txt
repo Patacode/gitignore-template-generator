@@ -10,6 +10,7 @@
   [1m-{generator_uri_short}[0m, [1m--{generator_uri_long}[0m <GENERATOR_URI>  {generator_uri_desc} [default: {generator_uri_default}]
   [1m-{lister_uri_short}[0m, [1m--{lister_uri_long}[0m <LISTER_URI>        {lister_uri_desc} [default: {lister_uri_default}]
   [1m-{list_short}[0m, [1m--{list_long}[0m                           {list_desc}
+  [1m-{check_short}[0m, [1m--{check_long}[0m                          {check_desc}
   [1m-{help_short}[0m, [1m--{help_long}[0m                           {help_desc}
   [1m-{version_short}[0m, [1m--{version_long}[0m                        {version_desc}
   [1m-{author_short}[0m, [1m--{author_long}[0m                         {author_desc}

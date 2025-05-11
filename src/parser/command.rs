@@ -3,6 +3,7 @@
 use clap::Arg;
 
 mod author;
+mod check;
 mod generator_uri;
 mod help;
 mod list;
@@ -12,6 +13,7 @@ mod template_names;
 mod version;
 
 use author::AuthorClapArg;
+use check::CheckClapArg;
 use generator_uri::GeneratorUriClapArg;
 use help::HelpClapArg;
 use list::ListClapArg;
@@ -31,6 +33,7 @@ pub fn build_clap_args() -> Vec<Arg> {
         GeneratorUriClapArg::build(),
         ListerUriClapArg::build(),
         ListClapArg::build(),
+        CheckClapArg::build(),
         HelpClapArg::build(),
         VersionClapArg::build(),
         AuthorClapArg::build(),

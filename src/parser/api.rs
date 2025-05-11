@@ -73,6 +73,16 @@ pub struct Args {
     ///     [`crate::constant::cli_options::LIST`], and falling back to
     ///     `false` if not provided in cli args.
     pub show_list: bool,
+
+    /// The boolean indicator of whether to enable robust template check or not.
+    ///
+    /// Robust template check allow the script to handle template existence
+    /// check without reaching the generator endpoint.
+    ///
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::CHECK`], and falling back to
+    ///     `false` if not provided in cli args.
+    pub check_template_names: bool,
 }
 
 impl Args {
@@ -159,6 +169,26 @@ impl Args {
         self.show_list = show_list;
         self
     }
+
+    /// Sets new value for `check_template_names` field.
+    ///
+    /// It needs to be called on struct instance and effectively mutates it.
+    ///
+    /// # Arguments
+    ///
+    /// * `check_template_names` - The new value to be assigned to
+    ///     `check_template_names` field.
+    ///
+    /// # Returns
+    ///
+    /// The mutated borrowed instance.
+    pub fn with_check_template_names(
+        mut self,
+        check_template_names: bool,
+    ) -> Self {
+        self.check_template_names = check_template_names;
+        self
+    }
 }
 
 /// Cli args parser trait to parse CLI args and return them in an [`Args`].
@@ -232,6 +262,7 @@ mod tests {
                 #[case("rust -s foo -V")]
                 #[case("rust -g bar -V")]
                 #[case("rust -i bar -V")]
+                #[case("rust -c bar -V")]
                 #[case("-aV")]
                 #[case("rust -l -V")]
                 fn it_parses_version_cli_option(#[case] cli_args: &str) {
@@ -263,6 +294,7 @@ mod tests {
                 #[case("rust -s foo -h")]
                 #[case("rust -g bar -h")]
                 #[case("rust -i bar -h")]
+                #[case("rust -c bar -h")]
                 #[case("-aVh")]
                 #[case("rust -l -h")]
                 fn it_parses_help_cli_option(#[case] cli_args: &str) {
@@ -290,6 +322,7 @@ mod tests {
                 #[case("rust -s foo -a")]
                 #[case("rust -g bar -a")]
                 #[case("rust -i bar -a")]
+                #[case("rust -c bar -a")]
                 #[case("rust -l -a")]
                 fn it_parses_author_cli_option_preemptively(
                     #[case] cli_args: &str,
@@ -430,6 +463,28 @@ mod tests {
                         .with_lister_uri(
                             constant::template_manager::LISTER_URI,
                         );
+                    let expected_result = Some(&expected_result);
+
+                    assert!(actual_result.is_some());
+                    assert_eq!(actual_result, expected_result);
+                }
+
+                #[rstest]
+                #[case("rust python -c")]
+                #[case("rust python --check")]
+                fn it_parses_check_option(#[case] cli_args: &str) {
+                    let cli_args = parse_cli_args(cli_args);
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_result = parsed_args.as_ref().ok();
+                    let expected_result = Args::default()
+                        .with_template_names(make_string_vec("rust python"))
+                        .with_server_url(constant::template_manager::BASE_URL)
+                        .with_generator_uri(
+                            constant::template_manager::GENERATOR_URI,
+                        )
+                        .with_lister_uri(constant::template_manager::LISTER_URI)
+                        .with_check_template_names(true);
                     let expected_result = Some(&expected_result);
 
                     assert!(actual_result.is_some());
@@ -609,6 +664,29 @@ mod tests {
                 }
 
                 #[test]
+                fn it_fails_parsing_when_check_option_but_no_pos_args() {
+                    let cli_args = parse_cli_args("--check");
+                    let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                    let actual_error = parsed_args.as_ref().err();
+                    let expected_error = ProgramExit {
+                        message: load_expectation_file_as_string(
+                            "check_option_no_pos_args_error",
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+
+                        styled_message: Some(load_expectation_file_as_string(
+                            "ansi_check_option_no_pos_args_error",
+                        )),
+                        kind: ExitKind::Error,
+                    };
+                    let expected_error = Some(&expected_error);
+
+                    assert!(actual_error.is_some());
+                    assert_eq!(actual_error, expected_error);
+                }
+
+                #[test]
                 fn it_fails_parsing_when_inexistent_cli_option() {
                     let cli_args = parse_cli_args("-x");
                     let parsed_args = ClapArgsParser::new().try_parse(cli_args);
@@ -640,15 +718,18 @@ mod tests {
 
                 #[test]
                 fn it_parses_given_cli_options() {
-                    let cli_args =
-                        parse_cli_args("rust python -s test -g foo -i bar");
+                    let cli_args = parse_cli_args(
+                        "rust python -s test -g foo -i bar --check --list",
+                    );
 
                     let actual_result = ClapArgsParser::new().parse(cli_args);
                     let expected_result = Args::default()
                         .with_template_names(make_string_vec("rust python"))
                         .with_server_url("test")
                         .with_generator_uri("foo")
-                        .with_lister_uri("bar");
+                        .with_lister_uri("bar")
+                        .with_check_template_names(true)
+                        .with_show_list(true);
 
                     assert_eq!(actual_result, expected_result);
                 }

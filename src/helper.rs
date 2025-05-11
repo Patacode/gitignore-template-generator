@@ -119,4 +119,10 @@ pub fn get_help_message_for(template_name: &str) -> String {
             "{lister_uri_default}",
             constant::template_manager::LISTER_URI,
         )
+        .replace(
+            "{check_short}",
+            constant::cli_options::CHECK.short.to_string().as_str(),
+        )
+        .replace("{check_long}", constant::cli_options::CHECK.long)
+        .replace("{check_desc}", constant::help_messages::CHECK)
 }
