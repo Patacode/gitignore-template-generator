@@ -1,6 +1,11 @@
-use super::{ProgramExit, TemplateGenerator, TemplateLister};
+use std::collections::HashSet;
+
+use super::{ExitKind, ProgramExit, TemplateGenerator, TemplateLister};
 use crate::{
-    constant::template_manager::{GENERATOR_URI, LISTER_URI},
+    constant::{
+        self,
+        template_manager::{GENERATOR_URI, LISTER_URI},
+    },
     http_client::HttpClient,
 };
 
@@ -12,6 +17,18 @@ pub struct GitignoreTemplateManager;
 impl GitignoreTemplateManager {
     fn parse_template_list_from_api(template_list: String) -> String {
         template_list.replace(',', "\n")
+    }
+
+    fn find_invalid_templates<'a>(
+        available: &str,
+        provided: &'a [String],
+    ) -> Vec<&'a str> {
+        let available_set: HashSet<&str> = available.lines().collect();
+        provided
+            .iter()
+            .filter(|name| !available_set.contains(name.as_str()))
+            .map(|name| name.as_str())
+            .collect()
     }
 }
 
@@ -33,6 +50,44 @@ impl TemplateGenerator for GitignoreTemplateManager {
         let full_uri = format!("{endpoint_uri}/{path_param}");
 
         http_client.get(&full_uri)
+    }
+
+    fn generate_from_api_with_template_check(
+        http_client: &impl HttpClient,
+        generator_endpoint_uri: Option<&str>,
+        lister_endpoint_uri: Option<&str>,
+        template_names: &[String],
+    ) -> Result<String, ProgramExit> {
+        let available_templates =
+            Self::list_from_api(http_client, lister_endpoint_uri);
+
+        if available_templates.is_err() {
+            return Err(available_templates.unwrap_err());
+        }
+
+        let invalid_template_names = Self::find_invalid_templates(
+            &available_templates.unwrap(),
+            template_names,
+        );
+
+        if invalid_template_names.is_empty() {
+            Self::generate_from_api(
+                http_client,
+                generator_endpoint_uri,
+                template_names,
+            )
+        } else {
+            Err(ProgramExit {
+                message: constant::error_messages::INEXISTENT_TEMPLATE_NAMES
+                    .replace(
+                        "{templates}",
+                        invalid_template_names.join(", ").as_str(),
+                    ),
+                exit_status: constant::exit_status::GENERIC,
+                styled_message: None,
+                kind: ExitKind::Error,
+            })
+        }
     }
 }
 

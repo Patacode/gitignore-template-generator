@@ -46,6 +46,8 @@ pub mod error_messages {
     /// [`PropList.txt`]: https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt
     pub const WHITESPACES_NOT_ALLOWED: &str =
         "Whitespace characters are not allowed in template names";
+
+    pub const INEXISTENT_TEMPLATE_NAMES: &str = "Following template names are not supported: {templates}. For the list of available template names, try '--list'.";
 }
 
 pub mod help_messages {
