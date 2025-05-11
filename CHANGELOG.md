@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.7.2] - 2025-05-11 <a id="0.7.2"></a>
+
 ### 🚜 Refactor
 
 - Extract unit tests of each module into separate submodule
