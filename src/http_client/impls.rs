@@ -76,7 +76,7 @@ impl HttpClient for MockHttpClient {
     }
 }
 
-impl<'a> HttpClient for MockEndpointHttpClient<'a> {
+impl HttpClient for MockEndpointHttpClient<'_> {
     /// Returns the result linked to the given url.
     ///
     /// The given `url` will only be used to get proper result from linked

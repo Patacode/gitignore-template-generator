@@ -60,10 +60,7 @@ impl TemplateGenerator for GitignoreTemplateManager {
     ) -> Result<String, ProgramExit> {
         let available_templates =
             Self::list_from_api(http_client, lister_endpoint_uri);
-
-        if available_templates.is_err() {
-            return Err(available_templates.unwrap_err());
-        }
+        available_templates.clone()?;
 
         let invalid_template_names = Self::find_invalid_templates(
             &available_templates.unwrap(),

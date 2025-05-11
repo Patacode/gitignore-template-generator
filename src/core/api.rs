@@ -473,7 +473,7 @@ mod tests {
                         + "'--list'.";
                     let expected: Result<String, ProgramExit> =
                         Err(ProgramExit {
-                            message: String::from(expected_error_message),
+                            message: expected_error_message,
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
                             kind: ExitKind::Error,
@@ -516,7 +516,7 @@ mod tests {
                         + "'--list'.";
                     let expected: Result<String, ProgramExit> =
                         Err(ProgramExit {
-                            message: String::from(expected_error_message),
+                            message: expected_error_message,
                             exit_status: constant::exit_status::GENERIC,
                             styled_message: None,
                             kind: ExitKind::Error,
