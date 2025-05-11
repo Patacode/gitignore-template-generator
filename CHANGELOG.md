@@ -9,7 +9,13 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🏗️ Build
+
+- [cargo] - Exclude unit test files from packaged crate
+
+### ⚙️ Miscellaneous Tasks
+
+- [readme] - Update help output with new check option
 
 ## [0.7.2] - 2025-05-11 <a id="0.7.2"></a>
 
