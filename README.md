@@ -32,6 +32,7 @@ Options:
   -i, --lister-uri <LISTER_URI>        The template lister uri [default: /developers/gitignore/api/list]
   -l, --list                           List available templates
   -c, --check                          Enable robust template names check
+  -t, --timeout <TIMEOUT>              The template generation and listing service calls timeout [default: 5]
   -h, --help                           Print help
   -V, --version                        Print version
   -a, --author                         Print author
