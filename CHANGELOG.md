@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.8.0] - 2025-05-12 <a id="0.8.0"></a>
+
 ### 🚀 Features
 
 - [http_client] - Add global timeout field to UreqHttpClient
