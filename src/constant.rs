@@ -52,6 +52,12 @@ pub mod error_messages {
 
     // Conversion of String to u64.
     pub const FAILED_U64_CONVERSION: &str = "Failed to convert to u64";
+
+    /// Timeout for current HTTP call.
+    pub const TIMEOUT: &str = "timeout: global";
+
+    /// Invalid utf-8 encoding.
+    pub const INVALID_ENCODING: &str = "io: stream did not contain valid UTF-8";
 }
 
 pub mod help_messages {
@@ -196,6 +202,9 @@ pub mod exit_status {
 
     /// Exit status code for HTTP body parsing error.
     pub const BODY_PARSING_ISSUE: i32 = 3;
+
+    /// Exit status code for any error from HTTP client itself.
+    pub const HTTP_CLIENT_ERROR: i32 = 4;
 }
 
 pub mod template_manager {

@@ -147,10 +147,10 @@ mod failure {
 
             let actual_error_message = String::from_utf8_lossy(&result.stderr);
             let expected_error_message =
-                format!("{}\n", error_messages::BODY_PARSING_ISSUE);
+                format!("{}\n", error_messages::INVALID_ENCODING);
 
             let actual_status_code = result.status.code();
-            let expected_status_code = Some(exit_status::BODY_PARSING_ISSUE);
+            let expected_status_code = Some(exit_status::HTTP_CLIENT_ERROR);
 
             template_generator_mock.assert();
 
@@ -179,10 +179,10 @@ mod failure {
 
             let actual_error_message = String::from_utf8_lossy(&result.stderr);
             let expected_error_message =
-                format!("{}\n", error_messages::BODY_PARSING_ISSUE);
+                format!("{}\n", error_messages::INVALID_ENCODING);
 
             let actual_status_code = result.status.code();
-            let expected_status_code = Some(exit_status::BODY_PARSING_ISSUE);
+            let expected_status_code = Some(exit_status::HTTP_CLIENT_ERROR);
 
             template_generator_mock.assert();
 
@@ -192,6 +192,10 @@ mod failure {
     }
 
     mod named_args {
+        use std::{thread, time::Duration};
+
+        use gitignore_template_generator::constant;
+
         use super::*;
 
         #[test]
@@ -259,6 +263,43 @@ mod failure {
 
             let actual_status_code = result.status.code();
             let expected_status_code = Some(exit_status::GENERIC);
+
+            template_generator_mock.assert();
+
+            assert_eq!(actual_status_code, expected_status_code);
+            assert_eq!(actual_error_message, expected_error_message);
+        }
+
+        #[test]
+        fn it_outputs_error_and_fails_when_timeout_reached() {
+            let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+
+            let mut mock_server = Server::new();
+            let mock_server_base_url = mock_server.url();
+            let template_generator_mock = mock_server
+                .mock("GET", template_manager::LISTER_URI)
+                .with_status(200)
+                .with_chunked_body(|w| {
+                    thread::sleep(Duration::from_secs(2));
+                    w.write_all(b"rust\npython")
+                })
+                .create();
+
+            cli_tool
+                .arg("--list")
+                .args(["--server-url", &mock_server_base_url])
+                .args(["--lister-uri", template_manager::LISTER_URI])
+                .args(["--timeout", "1"]);
+            let result = cli_tool
+                .output()
+                .expect(error_messages::CMD_EXECUTION_FAILURE);
+
+            let actual_error_message = String::from_utf8_lossy(&result.stderr);
+            let expected_error_message =
+                constant::error_messages::TIMEOUT.to_string() + "\n";
+
+            let actual_status_code = result.status.code();
+            let expected_status_code = Some(exit_status::HTTP_CLIENT_ERROR);
 
             template_generator_mock.assert();
 

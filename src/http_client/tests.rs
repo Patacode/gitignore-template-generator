@@ -137,9 +137,9 @@ mod ureq_client {
                     http_client.get(&format!("{server_url}{mock_uri}"));
                 let expected: Result<String, ProgramExit> = Err(ProgramExit {
                     message: String::from(
-                        constant::error_messages::BODY_PARSING_ISSUE,
+                        constant::error_messages::INVALID_ENCODING,
                     ),
-                    exit_status: constant::exit_status::BODY_PARSING_ISSUE,
+                    exit_status: constant::exit_status::HTTP_CLIENT_ERROR,
                     styled_message: None,
                     kind: ExitKind::Error,
                 });

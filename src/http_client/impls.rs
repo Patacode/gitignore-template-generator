@@ -55,11 +55,9 @@ impl HttpClient for UreqHttpClient {
         match result {
             Ok(mut response) => match response.body_mut().read_to_string() {
                 Ok(body) => Ok(body.trim().to_string()),
-                Err(_error) => Err(ProgramExit {
-                    message: String::from(
-                        constant::error_messages::BODY_PARSING_ISSUE,
-                    ),
-                    exit_status: constant::exit_status::BODY_PARSING_ISSUE,
+                Err(error) => Err(ProgramExit {
+                    message: error.to_string(),
+                    exit_status: constant::exit_status::HTTP_CLIENT_ERROR,
                     styled_message: None,
                     kind: ExitKind::Error,
                 }),
