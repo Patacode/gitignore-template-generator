@@ -9,7 +9,12 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- [http_client] - Add global timeout field to UreqHttpClient
+- [parser] - Add timeout option to set timeout during HTTP calls
+- Integrate timeout option to binary crate
+- [http_client] - Propagate error from http client itself if any (*Allow for more detailed error message than just a generic static one for all*)
 
 ## [0.7.3] - 2025-05-11 <a id="0.7.3"></a>
 
