@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, time::Duration};
 
 use mockito::Server;
 
@@ -49,7 +49,35 @@ mod ureq_client {
                     .create();
 
                 let server_url = mock_server.url();
-                let http_client = UreqHttpClient { server_url };
+                let http_client = UreqHttpClient {
+                    server_url,
+                    global_timeout: None,
+                };
+
+                let actual = http_client.get(mock_uri);
+                let expected: Result<String, ProgramExit> =
+                    Ok(String::from(mock_body));
+
+                mock.assert();
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_fetches_data_as_string_with_given_timeout() {
+                let mut mock_server = Server::new();
+                let mock_body = "gitignore template for rust";
+                let mock_uri = "/api/rust";
+                let mock = mock_server
+                    .mock("GET", mock_uri)
+                    .with_status(200)
+                    .with_body(mock_body)
+                    .create();
+
+                let server_url = mock_server.url();
+                let http_client = UreqHttpClient {
+                    server_url,
+                    global_timeout: Some(Duration::from_secs(5)),
+                };
 
                 let actual = http_client.get(mock_uri);
                 let expected: Result<String, ProgramExit> =

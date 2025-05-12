@@ -184,6 +184,8 @@ pub mod exit_status {
 pub mod template_manager {
     //! Constants for gitignore template manager service.
 
+    use std::time::Duration;
+
     /// Template manager service base URL.
     pub const BASE_URL: &str = "https://www.toptal.com";
 
@@ -198,6 +200,9 @@ pub mod template_manager {
     /// Used in conjunction with [`BASE_URL`] to build full URL and make
     /// API call.
     pub const LISTER_URI: &str = "/developers/gitignore/api/list";
+
+    /// Timeout for HTTP calls to generator/lister service.
+    pub const TIMEOUT: Duration = Duration::from_secs(5);
 }
 
 pub mod path {

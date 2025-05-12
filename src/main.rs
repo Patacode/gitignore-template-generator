@@ -16,7 +16,10 @@ fn main() {
     let lister_uri = parsed_cli_args.lister_uri;
     let template_names = parsed_cli_args.template_names;
 
-    let http_client = UreqHttpClient { server_url };
+    let http_client = UreqHttpClient {
+        server_url,
+        global_timeout: None,
+    };
     let result = if parsed_cli_args.show_list {
         GitignoreTemplateManager::list_from_api(&http_client, Some(&lister_uri))
     } else if parsed_cli_args.check_template_names {

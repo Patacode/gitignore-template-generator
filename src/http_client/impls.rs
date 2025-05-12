@@ -11,6 +11,9 @@ pub struct UreqHttpClient {
     ///
     /// Used as base url when calling [`UreqHttpClient::get`] method.
     pub server_url: String,
+
+    /// The timeout for the entire HTTP call.
+    pub global_timeout: Option<Duration>,
 }
 
 /// Http client implementation to mock a response.
@@ -37,7 +40,10 @@ impl HttpClient for UreqHttpClient {
     fn get(&self, url: &str) -> Result<String, ProgramExit> {
         let full_url = format!("{}{url}", self.server_url);
         let agent: Agent = Agent::config_builder()
-            .timeout_global(Some(Duration::from_secs(5)))
+            .timeout_global(Some(
+                self.global_timeout
+                    .unwrap_or(constant::template_manager::TIMEOUT),
+            ))
             .build()
             .into();
 
