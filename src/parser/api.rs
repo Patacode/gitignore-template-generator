@@ -83,6 +83,17 @@ pub struct Args {
     ///     [`crate::constant::cli_options::CHECK`], and falling back to
     ///     `false` if not provided in cli args.
     pub check_template_names: bool,
+
+    /// The service call timeout.
+    ///
+    /// Robust template check allow the script to handle template existence
+    /// check without reaching the generator endpoint.
+    ///
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::TIMEOUT`], and falling back to
+    ///     [`crate::constant::template_manager::TIMEOUT`] if not provided in
+    ///     cli args.
+    pub timeout: u64,
 }
 
 impl Args {
@@ -187,6 +198,22 @@ impl Args {
         check_template_names: bool,
     ) -> Self {
         self.check_template_names = check_template_names;
+        self
+    }
+
+    /// Sets new value for `timeout` field.
+    ///
+    /// It needs to be called on struct instance and effectively mutates it.
+    ///
+    /// # Arguments
+    ///
+    /// * `timeout` - The new value to be assigned to `timeout` field.
+    ///
+    /// # Returns
+    ///
+    /// The mutated borrowed instance.
+    pub fn with_timeout(mut self, timeout: u64) -> Self {
+        self.timeout = timeout;
         self
     }
 }

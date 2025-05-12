@@ -47,7 +47,11 @@ pub mod error_messages {
     pub const WHITESPACES_NOT_ALLOWED: &str =
         "Whitespace characters are not allowed in template names";
 
+    // One or more template names are not supported.
     pub const INEXISTENT_TEMPLATE_NAMES: &str = "Following template names are not supported: {templates}. For the list of available template names, try '--list'.";
+
+    // Conversion of String to u64.
+    pub const FAILED_U64_CONVERSION: &str = "Failed to convert to u64";
 }
 
 pub mod help_messages {
@@ -89,6 +93,11 @@ pub mod help_messages {
     /// Help message bound to [`crate::parser::Args::check_template_names`]
     /// field (i.e. check option).
     pub const CHECK: &str = "Enable robust template names check";
+
+    /// Help message bound to [`crate::parser::Args::timeout`]
+    /// field (i.e. timeout option).
+    pub const TIMEOUT: &str =
+        "The template generation and listing service calls timeout";
 }
 
 pub mod cli_options {
@@ -159,6 +168,14 @@ pub mod cli_options {
         short: 'c',
         long: "check",
     };
+
+    /// Short and long specifier for timeout option.
+    ///
+    /// **Value**: `-t --timeout`
+    pub const TIMEOUT: CliOptionName = CliOptionName {
+        short: 't',
+        long: "timeout",
+    };
 }
 
 pub mod parser_infos {
@@ -184,8 +201,6 @@ pub mod exit_status {
 pub mod template_manager {
     //! Constants for gitignore template manager service.
 
-    use std::time::Duration;
-
     /// Template manager service base URL.
     pub const BASE_URL: &str = "https://www.toptal.com";
 
@@ -202,7 +217,7 @@ pub mod template_manager {
     pub const LISTER_URI: &str = "/developers/gitignore/api/list";
 
     /// Timeout for HTTP calls to generator/lister service.
-    pub const TIMEOUT: Duration = Duration::from_secs(5);
+    pub const TIMEOUT: &str = "5";
 }
 
 pub mod path {

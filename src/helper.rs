@@ -125,4 +125,11 @@ pub fn get_help_message_for(template_name: &str) -> String {
         )
         .replace("{check_long}", constant::cli_options::CHECK.long)
         .replace("{check_desc}", constant::help_messages::CHECK)
+        .replace(
+            "{timeout_short}",
+            constant::cli_options::TIMEOUT.short.to_string().as_str(),
+        )
+        .replace("{timeout_long}", constant::cli_options::TIMEOUT.long)
+        .replace("{timeout_desc}", constant::help_messages::TIMEOUT)
+        .replace("{timeout_default}", constant::template_manager::TIMEOUT)
 }

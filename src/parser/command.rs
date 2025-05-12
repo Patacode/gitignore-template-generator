@@ -10,6 +10,7 @@ mod list;
 mod lister_uri;
 mod server_url;
 mod template_names;
+mod timeout;
 mod version;
 
 use author::AuthorClapArg;
@@ -20,6 +21,7 @@ use list::ListClapArg;
 use lister_uri::ListerUriClapArg;
 use server_url::ServerUrlClapArg;
 use template_names::TemplateNamesClapArg;
+use timeout::TimeoutClapArg;
 use version::VersionClapArg;
 
 pub trait ClapArg {
@@ -34,6 +36,7 @@ pub fn build_clap_args() -> Vec<Arg> {
         ListerUriClapArg::build(),
         ListClapArg::build(),
         CheckClapArg::build(),
+        TimeoutClapArg::build(),
         HelpClapArg::build(),
         VersionClapArg::build(),
         AuthorClapArg::build(),

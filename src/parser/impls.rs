@@ -91,6 +91,8 @@ impl ClapArgsParser {
                 .unwrap()
                 .to_string(),
 
+            timeout: arg_matches.get_one::<u64>("TIMEOUT").unwrap().to_owned(),
+
             check_template_names: arg_matches.get_flag("CHECK"),
             show_help: arg_matches.get_flag("HELP"),
             show_version: arg_matches.get_flag("VERSION"),
