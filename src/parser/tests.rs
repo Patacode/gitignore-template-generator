@@ -119,18 +119,8 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::default()
-                    .with_template_names(make_string_vec(cli_options))
-                    .with_server_url(constant::template_manager::BASE_URL)
-                    .with_generator_uri(
-                        constant::template_manager::GENERATOR_URI,
-                    )
-                    .with_lister_uri(constant::template_manager::LISTER_URI)
-                    .with_timeout(
-                        constant::template_manager::TIMEOUT.parse().expect(
-                            constant::error_messages::FAILED_U64_CONVERSION,
-                        ),
-                    );
+                let expected_result = Args::new()
+                    .with_template_names(make_string_vec(cli_options));
                 let expected_result = Some(&expected_result);
 
                 println!("{:?}", parsed_args);
@@ -148,18 +138,9 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::default()
+                let expected_result = Args::new()
                     .with_template_names(make_string_vec("rust"))
-                    .with_server_url("https://test.com")
-                    .with_generator_uri(
-                        constant::template_manager::GENERATOR_URI,
-                    )
-                    .with_lister_uri(constant::template_manager::LISTER_URI)
-                    .with_timeout(
-                        constant::template_manager::TIMEOUT.parse().expect(
-                            constant::error_messages::FAILED_U64_CONVERSION,
-                        ),
-                    );
+                    .with_server_url("https://test.com");
                 let expected_result = Some(&expected_result);
 
                 assert!(actual_result.is_some());
@@ -176,16 +157,10 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::default()
+                let expected_result = Args::new()
                     .with_template_names(make_string_vec("rust"))
                     .with_server_url(constant::template_manager::BASE_URL)
-                    .with_generator_uri("/test/api")
-                    .with_lister_uri(constant::template_manager::LISTER_URI)
-                    .with_timeout(
-                        constant::template_manager::TIMEOUT.parse().expect(
-                            constant::error_messages::FAILED_U64_CONVERSION,
-                        ),
-                    );
+                    .with_generator_uri("/test/api");
                 let expected_result = Some(&expected_result);
 
                 assert!(actual_result.is_some());
@@ -202,18 +177,9 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::default()
+                let expected_result = Args::new()
                     .with_template_names(make_string_vec("rust"))
-                    .with_server_url(constant::template_manager::BASE_URL)
-                    .with_generator_uri(
-                        constant::template_manager::GENERATOR_URI,
-                    )
-                    .with_lister_uri("/test/api")
-                    .with_timeout(
-                        constant::template_manager::TIMEOUT.parse().expect(
-                            constant::error_messages::FAILED_U64_CONVERSION,
-                        ),
-                    );
+                    .with_lister_uri("/test/api");
                 let expected_result = Some(&expected_result);
 
                 assert!(actual_result.is_some());
@@ -233,19 +199,9 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::default()
+                let expected_result = Args::new()
                     .with_template_names(make_string_vec(template_names))
-                    .with_server_url(constant::template_manager::BASE_URL)
-                    .with_generator_uri(
-                        constant::template_manager::GENERATOR_URI,
-                    )
-                    .with_show_list(true)
-                    .with_lister_uri(constant::template_manager::LISTER_URI)
-                    .with_timeout(
-                        constant::template_manager::TIMEOUT.parse().expect(
-                            constant::error_messages::FAILED_U64_CONVERSION,
-                        ),
-                    );
+                    .with_show_list(true);
                 let expected_result = Some(&expected_result);
 
                 assert!(actual_result.is_some());
@@ -260,19 +216,9 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::default()
+                let expected_result = Args::new()
                     .with_template_names(make_string_vec("rust python"))
-                    .with_server_url(constant::template_manager::BASE_URL)
-                    .with_generator_uri(
-                        constant::template_manager::GENERATOR_URI,
-                    )
-                    .with_lister_uri(constant::template_manager::LISTER_URI)
-                    .with_check_template_names(true)
-                    .with_timeout(
-                        constant::template_manager::TIMEOUT.parse().expect(
-                            constant::error_messages::FAILED_U64_CONVERSION,
-                        ),
-                    );
+                    .with_check_template_names(true);
                 let expected_result = Some(&expected_result);
 
                 assert!(actual_result.is_some());
@@ -287,14 +233,8 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::default()
+                let expected_result = Args::new()
                     .with_template_names(make_string_vec("rust python"))
-                    .with_server_url(constant::template_manager::BASE_URL)
-                    .with_generator_uri(
-                        constant::template_manager::GENERATOR_URI,
-                    )
-                    .with_lister_uri(constant::template_manager::LISTER_URI)
-                    .with_check_template_names(false)
                     .with_timeout(5);
                 let expected_result = Some(&expected_result);
 
@@ -316,15 +256,8 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::default()
+                let expected_result = Args::new()
                     .with_template_names(make_string_vec("rust python"))
-                    .with_server_url(constant::template_manager::BASE_URL)
-                    .with_generator_uri(
-                        constant::template_manager::GENERATOR_URI,
-                    )
-                    .with_lister_uri(constant::template_manager::LISTER_URI)
-                    .with_check_template_names(false)
-                    .with_timeout(5)
                     .with_timeout_unit(unit);
                 let expected_result = Some(&expected_result);
 

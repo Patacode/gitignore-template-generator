@@ -111,6 +111,24 @@ pub struct Args {
 }
 
 impl Args {
+    pub fn new() -> Self {
+        Self {
+            template_names: Vec::new(),
+            server_url: crate::constant::template_manager::BASE_URL.to_string(),
+            generator_uri: crate::constant::template_manager::GENERATOR_URI
+                .to_string(),
+            lister_uri: crate::constant::template_manager::LISTER_URI
+                .to_string(),
+            show_help: false,
+            show_version: false,
+            show_author: false,
+            show_list: false,
+            check_template_names: false,
+            timeout: crate::constant::template_manager::TIMEOUT_INT,
+            timeout_unit: crate::constant::template_manager::TIMEOUT_UNIT_ENUM,
+        }
+    }
+
     /// Sets new value for `template_names` field.
     ///
     /// It needs to be called on struct instance and effectively mutates it.

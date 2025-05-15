@@ -222,6 +222,8 @@ pub mod exit_status {
 pub mod template_manager {
     //! Constants for gitignore template manager service.
 
+    use crate::parser::TimeoutUnit;
+
     /// Template manager service base URL.
     pub const BASE_URL: &str = "https://www.toptal.com";
 
@@ -240,8 +242,14 @@ pub mod template_manager {
     /// Timeout for HTTP calls to generator/lister service.
     pub const TIMEOUT: &str = "5";
 
+    /// Timeout for HTTP calls to generator/lister service.
+    pub const TIMEOUT_INT: u64 = 5;
+
     /// Timeout unit.
     pub const TIMEOUT_UNIT: &str = "second";
+
+    /// Timeout unit.
+    pub const TIMEOUT_UNIT_ENUM: TimeoutUnit = TimeoutUnit::SECOND;
 }
 
 pub mod path {
