@@ -104,6 +104,10 @@ pub mod help_messages {
     /// field (i.e. timeout option).
     pub const TIMEOUT: &str =
         "The template generation and listing service calls timeout";
+
+    /// Help message bound to [`crate::parser::Args::timeout_unit`]
+    /// field (i.e. timeout unit option).
+    pub const TIMEOUT_UNIT: &str = "The timeout unit";
 }
 
 pub mod cli_options {
@@ -182,6 +186,14 @@ pub mod cli_options {
         short: 't',
         long: "timeout",
     };
+
+    /// Short and long specifier for timeout option.
+    ///
+    /// **Value**: `-u --timeout-unit`
+    pub const TIMEOUT_UNIT: CliOptionName = CliOptionName {
+        short: 'u',
+        long: "timeout-unit",
+    };
 }
 
 pub mod parser_infos {
@@ -227,6 +239,9 @@ pub mod template_manager {
 
     /// Timeout for HTTP calls to generator/lister service.
     pub const TIMEOUT: &str = "5";
+
+    /// Timeout unit.
+    pub const TIMEOUT_UNIT: &str = "second";
 }
 
 pub mod path {

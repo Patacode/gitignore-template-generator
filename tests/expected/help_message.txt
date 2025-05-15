@@ -12,6 +12,7 @@ Options:
   -{list_short}, --{list_long}                           {list_desc}
   -{check_short}, --{check_long}                          {check_desc}
   -{timeout_short}, --{timeout_long} <TIMEOUT>              {timeout_desc} [default: {timeout_default}]
+  -{timeout_unit_short}, --{timeout_unit_long} <TIMEOUT_UNIT>    {timeout_unit_desc} [default: {timeout_unit_default}] [possible values: {timeout_unit_values}]
   -{help_short}, --{help_long}                           {help_desc}
   -{version_short}, --{version_long}                        {version_desc}
   -{author_short}, --{author_long}                         {author_desc}

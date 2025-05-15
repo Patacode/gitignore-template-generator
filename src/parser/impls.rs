@@ -2,7 +2,7 @@ use std::{ffi::OsString, process::exit};
 
 use clap::{ArgMatches, Command};
 
-use super::{Args, ArgsParser, command::build_clap_args};
+use super::{Args, ArgsParser, TimeoutUnit, command::build_clap_args};
 use crate::{ExitKind, ProgramExit, constant};
 
 /// Default implementation of args parser that parses CLI args using
@@ -92,6 +92,11 @@ impl ClapArgsParser {
                 .to_string(),
 
             timeout: arg_matches.get_one::<u64>("TIMEOUT").unwrap().to_owned(),
+
+            timeout_unit: arg_matches
+                .get_one::<TimeoutUnit>("TIMEOUT_UNIT")
+                .unwrap()
+                .to_owned(),
 
             check_template_names: arg_matches.get_flag("CHECK"),
             show_help: arg_matches.get_flag("HELP"),

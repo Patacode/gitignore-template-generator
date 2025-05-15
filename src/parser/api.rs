@@ -1,7 +1,16 @@
 use std::ffi::OsString;
 
+use clap::ValueEnum;
+
 use crate::ProgramExit;
 pub use crate::parser::impls::ClapArgsParser;
+
+#[derive(Clone, Copy, Debug, ValueEnum, PartialEq, Default)]
+pub enum TimeoutUnit {
+    MILLISECOND,
+    #[default]
+    SECOND,
+}
 
 /// Struct to gather cli args parsing result.
 ///
@@ -86,14 +95,19 @@ pub struct Args {
 
     /// The service call timeout.
     ///
-    /// Robust template check allow the script to handle template existence
-    /// check without reaching the generator endpoint.
-    ///
     /// * Optional value represented by the cli option
     ///     [`crate::constant::cli_options::TIMEOUT`], and falling back to
     ///     [`crate::constant::template_manager::TIMEOUT`] if not provided in
     ///     cli args.
     pub timeout: u64,
+
+    /// The timeout unit.
+    ///
+    /// * Optional value represented by the cli option
+    ///     [`crate::constant::cli_options::TIMEOUT_UNIT`], and falling back to
+    ///     [`crate::constant::template_manager::TIMEOUT_UNIT`] if not provided in
+    ///     cli args.
+    pub timeout_unit: TimeoutUnit,
 }
 
 impl Args {
@@ -214,6 +228,22 @@ impl Args {
     /// The mutated borrowed instance.
     pub fn with_timeout(mut self, timeout: u64) -> Self {
         self.timeout = timeout;
+        self
+    }
+
+    /// Sets new value for `timeout_unit` field.
+    ///
+    /// It needs to be called on struct instance and effectively mutates it.
+    ///
+    /// # Arguments
+    ///
+    /// * `timeout_unit` - The new value to be assigned to `timeout_unit` field.
+    ///
+    /// # Returns
+    ///
+    /// The mutated borrowed instance.
+    pub fn with_timeout_unit(mut self, timeout_unit: TimeoutUnit) -> Self {
+        self.timeout_unit = timeout_unit;
         self
     }
 }

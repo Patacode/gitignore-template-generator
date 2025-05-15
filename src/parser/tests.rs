@@ -24,6 +24,7 @@ mod default_args_parser {
             #[case("rust -i bar -V")]
             #[case("rust -c -V")]
             #[case("rust -t 5 -V")]
+            #[case("rust -u second -V")]
             #[case("-aV")]
             #[case("rust -l -V")]
             fn it_parses_version_cli_option(#[case] cli_args: &str) {
@@ -57,6 +58,7 @@ mod default_args_parser {
             #[case("rust -i bar -h")]
             #[case("rust -c -h")]
             #[case("rust -t 5 -h")]
+            #[case("rust -u second -h")]
             #[case("-aVh")]
             #[case("rust -l -h")]
             fn it_parses_help_cli_option(#[case] cli_args: &str) {
@@ -86,6 +88,7 @@ mod default_args_parser {
             #[case("rust -i bar -a")]
             #[case("rust -c -a")]
             #[case("rust -t 5 -a")]
+            #[case("rust -u second -a")]
             #[case("rust -l -a")]
             fn it_parses_author_cli_option_preemptively(
                 #[case] cli_args: &str,
@@ -293,6 +296,36 @@ mod default_args_parser {
                     .with_lister_uri(constant::template_manager::LISTER_URI)
                     .with_check_template_names(false)
                     .with_timeout(5);
+                let expected_result = Some(&expected_result);
+
+                assert!(actual_result.is_some());
+                assert_eq!(actual_result, expected_result);
+            }
+
+            #[rstest]
+            #[case("rust python -u second", TimeoutUnit::SECOND)]
+            #[case(
+                "rust python --timeout-unit millisecond",
+                TimeoutUnit::MILLISECOND
+            )]
+            fn it_parses_timeout_unit_option(
+                #[case] cli_args: &str,
+                #[case] unit: TimeoutUnit,
+            ) {
+                let cli_args = parse_cli_args(cli_args);
+                let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                let actual_result = parsed_args.as_ref().ok();
+                let expected_result = Args::default()
+                    .with_template_names(make_string_vec("rust python"))
+                    .with_server_url(constant::template_manager::BASE_URL)
+                    .with_generator_uri(
+                        constant::template_manager::GENERATOR_URI,
+                    )
+                    .with_lister_uri(constant::template_manager::LISTER_URI)
+                    .with_check_template_names(false)
+                    .with_timeout(5)
+                    .with_timeout_unit(unit);
                 let expected_result = Some(&expected_result);
 
                 assert!(actual_result.is_some());
@@ -536,6 +569,28 @@ mod default_args_parser {
                 assert!(actual_error.is_some());
                 assert_eq!(actual_error, expected_error);
             }
+
+            #[test]
+            fn it_fails_parsing_when_non_allowed_timeout_unit() {
+                let cli_args = parse_cli_args("-u millisecon");
+                let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                let actual_error = parsed_args.as_ref().err();
+                let expected_error = ProgramExit {
+                    message: load_expectation_file_as_string(
+                        "non_allowed_timeout_unit_error",
+                    ),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: Some(load_expectation_file_as_string(
+                        "ansi_non_allowed_timeout_unit_error",
+                    )),
+                    kind: ExitKind::Error,
+                };
+                let expected_error = Some(&expected_error);
+
+                assert!(actual_error.is_some());
+                assert_eq!(actual_error, expected_error);
+            }
         }
     }
 
@@ -548,7 +603,7 @@ mod default_args_parser {
             #[test]
             fn it_parses_given_cli_options() {
                 let cli_args = parse_cli_args(
-                    "rust python -s test -g foo -i bar --check --list -t 6",
+                    "rust python -s test -g foo -i bar --check --list -t 6 -u millisecond",
                 );
 
                 let actual_result = ClapArgsParser::new().parse(cli_args);
@@ -559,7 +614,8 @@ mod default_args_parser {
                     .with_lister_uri("bar")
                     .with_check_template_names(true)
                     .with_show_list(true)
-                    .with_timeout(6);
+                    .with_timeout(6)
+                    .with_timeout_unit(TimeoutUnit::MILLISECOND);
 
                 assert_eq!(actual_result, expected_result);
             }
