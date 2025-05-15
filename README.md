@@ -33,6 +33,7 @@ Options:
   -l, --list                           List available templates
   -c, --check                          Enable robust template names check
   -t, --timeout <TIMEOUT>              The template generation and listing service calls timeout [default: 5]
+  -u, --timeout-unit <TIMEOUT_UNIT>    The timeout unit [default: second] [possible values: millisecond, second]
   -h, --help                           Print help
   -V, --version                        Print version
   -a, --author                         Print author
