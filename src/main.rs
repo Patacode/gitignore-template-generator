@@ -3,7 +3,7 @@ use std::{process::exit, time::Duration};
 use gitignore_template_generator::{
     GitignoreTemplateManager, TemplateGenerator, TemplateLister,
     http_client::UreqHttpClient,
-    parser::{ArgsParser, ClapArgsParser},
+    parser::{ArgsParser, ClapArgsParser, TimeoutUnit},
 };
 
 fn main() {
@@ -15,7 +15,12 @@ fn main() {
     let generator_uri = parsed_cli_args.generator_uri;
     let lister_uri = parsed_cli_args.lister_uri;
     let template_names = parsed_cli_args.template_names;
-    let global_timeout = Some(Duration::from_secs(parsed_cli_args.timeout));
+    let timeout_unit = parsed_cli_args.timeout_unit;
+    let global_timeout = if timeout_unit == TimeoutUnit::SECOND {
+        Some(Duration::from_secs(parsed_cli_args.timeout))
+    } else {
+        Some(Duration::from_millis(parsed_cli_args.timeout))
+    };
 
     let http_client = UreqHttpClient {
         server_url,
