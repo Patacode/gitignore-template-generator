@@ -32,12 +32,12 @@ pub trait ClapArg {
 
 pub fn build_clap_args() -> Vec<Arg> {
     vec![
-        TemplateNamesClapArg::build(),
-        ServerUrlClapArg::build(),
-        GeneratorUriClapArg::build(),
-        ListerUriClapArg::build(),
-        ListClapArg::build(),
         CheckClapArg::build(),
+        GeneratorUriClapArg::build(),
+        ListClapArg::build(),
+        ListerUriClapArg::build(),
+        ServerUrlClapArg::build(),
+        TemplateNamesClapArg::build(),
         TimeoutClapArg::build(),
         TimeoutUnitClapArg::build(),
         HelpClapArg::build(),
