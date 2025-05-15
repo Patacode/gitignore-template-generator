@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.9.0] - 2025-05-15 <a id="0.9.0"></a>
+
 ### 🚀 Features
 
 - [parser] - Add new cli option timeout-unit to set timeout unit (millisecond/second)
