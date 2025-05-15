@@ -27,11 +27,11 @@ Arguments:
   [TEMPLATE_NAMES]...  A non-empty list of gitignore template names
 
 Options:
-  -s, --server-url <SERVER_URL>        The template manager url [default: https://www.toptal.com]
-  -g, --generator-uri <GENERATOR_URI>  The template generator uri [default: /developers/gitignore/api]
-  -i, --lister-uri <LISTER_URI>        The template lister uri [default: /developers/gitignore/api/list]
-  -l, --list                           List available templates
   -c, --check                          Enable robust template names check
+  -g, --generator-uri <GENERATOR_URI>  The template generator uri [default: /developers/gitignore/api]
+  -l, --list                           List available templates
+  -i, --lister-uri <LISTER_URI>        The template lister uri [default: /developers/gitignore/api/list]
+  -s, --server-url <SERVER_URL>        The template manager url [default: https://www.toptal.com]
   -t, --timeout <TIMEOUT>              The template generation and listing service calls timeout [default: 5]
   -u, --timeout-unit <TIMEOUT_UNIT>    The timeout unit [default: second] [possible values: millisecond, second]
   -h, --help                           Print help
