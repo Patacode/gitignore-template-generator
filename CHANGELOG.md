@@ -9,7 +9,9 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚜 Refactor
+
+- [parser] - Define new constructor method in Args struct (*To init new structs with proper default values*)
 
 ## [0.9.1] - 2025-05-15 <a id="0.9.1"></a>
 
