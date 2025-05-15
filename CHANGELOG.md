@@ -9,7 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- [parser] - Add new cli option timeout-unit to set timeout unit (millisecond/second)
+- Integrate new cli option timeout-unit in main binary crate
 
 ## [0.8.0] - 2025-05-12 <a id="0.8.0"></a>
 
