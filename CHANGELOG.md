@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.9.1] - 2025-05-15 <a id="0.9.1"></a>
+
 ### 🚜 Refactor
 
 - Order custom cli options by alphabetic order in help output
