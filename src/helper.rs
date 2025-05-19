@@ -131,7 +131,15 @@ pub fn get_help_message_for(template_name: &str) -> String {
         )
         .replace("{timeout_long}", constant::cli_options::TIMEOUT.long)
         .replace("{timeout_desc}", constant::help_messages::TIMEOUT)
-        .replace("{timeout_default}", constant::template_manager::TIMEOUT)
+        .replace(
+            "{timeout_default}",
+            format!(
+                "{}s/{}ms",
+                constant::template_manager::TIMEOUT,
+                constant::template_manager::TIMEOUT_MILLISECOND
+            )
+            .as_str(),
+        )
         .replace(
             "{timeout_unit_short}",
             constant::cli_options::TIMEOUT_UNIT

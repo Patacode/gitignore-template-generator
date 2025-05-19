@@ -242,11 +242,20 @@ pub mod template_manager {
     /// Timeout for HTTP calls to generator/lister service.
     pub const TIMEOUT: &str = "5";
 
+    /// Timeout in milliseconds for HTTP calls to generator/lister service.
+    pub const TIMEOUT_MILLISECOND: &str = "5000";
+
     /// Timeout for HTTP calls to generator/lister service.
     pub const TIMEOUT_INT: u64 = 5;
 
+    /// Timeout milliseconds for HTTP calls to generator/lister service.
+    pub const TIMEOUT_MILLISECOND_INT: u64 = 5000;
+
     /// Timeout unit.
     pub const TIMEOUT_UNIT: &str = "second";
+
+    /// Timeout unit.
+    pub const TIMEOUT_MILLISECOND_UNIT: &str = "millisecond";
 
     /// Timeout unit.
     pub const TIMEOUT_UNIT_ENUM: TimeoutUnit = TimeoutUnit::SECOND;

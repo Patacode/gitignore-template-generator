@@ -258,7 +258,12 @@ mod default_args_parser {
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
                     .with_template_names(make_string_vec("rust python"))
-                    .with_timeout_unit(unit);
+                    .with_timeout_unit(unit)
+                    .with_timeout(if unit == TimeoutUnit::MILLISECOND {
+                        constant::template_manager::TIMEOUT_MILLISECOND_INT
+                    } else {
+                        constant::template_manager::TIMEOUT_INT
+                    });
                 let expected_result = Some(&expected_result);
 
                 assert!(actual_result.is_some());
