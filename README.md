@@ -32,7 +32,7 @@ Options:
   -l, --list                           List available templates
   -i, --lister-uri <LISTER_URI>        The template lister uri [default: /developers/gitignore/api/list]
   -s, --server-url <SERVER_URL>        The template manager url [default: https://www.toptal.com]
-  -t, --timeout <TIMEOUT>              The template generation and listing service calls timeout [default: 5]
+  -t, --timeout <TIMEOUT>              The template generation and listing service calls timeout [default: 5s/5000ms]
   -u, --timeout-unit <TIMEOUT_UNIT>    The timeout unit [default: second] [possible values: millisecond, second]
   -h, --help                           Print help
   -V, --version                        Print version
