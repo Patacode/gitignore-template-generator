@@ -11,7 +11,7 @@ and this project adheres to
 
 ### 🚀 Features
 
-- Set conditional value for timeout based on timeout-unit option
+- Set conditional default value for timeout based on timeout-unit option
 
 ### 📚 Documentation
 
