@@ -258,6 +258,8 @@ pub mod template_manager {
     pub const TIMEOUT_MILLISECOND_UNIT: &str = "millisecond";
 
     /// Second timeout unit (enum version).
+    ///
+    /// `value` - TimeoutUnit::SECOND
     pub const TIMEOUT_UNIT_ENUM: TimeoutUnit = TimeoutUnit::SECOND;
 }
 
