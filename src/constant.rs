@@ -239,25 +239,25 @@ pub mod template_manager {
     /// API call.
     pub const LISTER_URI: &str = "/developers/gitignore/api/list";
 
-    /// Timeout for HTTP calls to generator/lister service.
+    /// Timeout in seconds for HTTP calls to generator/lister service (str version).
     pub const TIMEOUT: &str = "5";
 
-    /// Timeout in milliseconds for HTTP calls to generator/lister service.
+    /// Timeout in milliseconds for HTTP calls to generator/lister service (str version).
     pub const TIMEOUT_MILLISECOND: &str = "5000";
 
-    /// Timeout for HTTP calls to generator/lister service.
+    /// Timeout in seconds for HTTP calls to generator/lister service (integer version).
     pub const TIMEOUT_INT: u64 = 5;
 
-    /// Timeout milliseconds for HTTP calls to generator/lister service.
+    /// Timeout milliseconds for HTTP calls to generator/lister service (integer version).
     pub const TIMEOUT_MILLISECOND_INT: u64 = 5000;
 
-    /// Timeout unit.
+    /// Second timeout unit (str version).
     pub const TIMEOUT_UNIT: &str = "second";
 
-    /// Timeout unit.
+    /// Millisecond timeout unit (str version).
     pub const TIMEOUT_MILLISECOND_UNIT: &str = "millisecond";
 
-    /// Timeout unit.
+    /// Second timeout unit (enum version).
     pub const TIMEOUT_UNIT_ENUM: TimeoutUnit = TimeoutUnit::SECOND;
 }
 
