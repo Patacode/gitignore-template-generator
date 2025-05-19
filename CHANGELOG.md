@@ -9,7 +9,17 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- Set conditional value for timeout based on timeout-unit option
+
+### 📚 Documentation
+
+- [constant] - Update rdoc of template_manager constants
+
+### ⚙️ Miscellaneous Tasks
+
+- [readme] - Update help output with new conditional timeout value
 
 ## [0.9.2] - 2025-05-15 <a id="0.9.2"></a>
 
