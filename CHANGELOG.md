@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.10.0] - 2025-05-19 <a id="0.10.0"></a>
+
 ### 🚀 Features
 
 - Set conditional default value for timeout based on timeout-unit option
