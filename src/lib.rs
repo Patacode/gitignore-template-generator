@@ -1,5 +1,4 @@
-//! Components used to safely generate gitignore
-//! templates from a template generator API over HTTP.
+#![doc = include_str!("../DOCUMENTATION.md")]
 
 pub mod constant;
 mod core;
