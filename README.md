@@ -4,13 +4,13 @@
 [<img alt="crates.io" src="https://img.shields.io/crates/v/gitignore-template-generator?logoColor=E3A835&style=for-the-badge&color=9c7325&logo=rust" height="20">](https://crates.io/crates/gitignore-template-generator)
 [<img alt="crates.io" src="https://img.shields.io/crates/d/gitignore-template-generator?logoColor=E3A835&style=for-the-badge&color=152673" height="20">](https://crates.io/crates/gitignore-template-generator)
 <br/>
-[<img alt="documentation" src="https://img.shields.io/badge/Documentation-blue?style=for-the-badge&logo=rust" height="20">](https://docs.rs/gitignore-template-generator/0.11.0/gitignore_template_generator)
+[<img alt="documentation" src="https://img.shields.io/badge/Documentation-blue?style=for-the-badge&logo=rust" height="20">](https://docs.rs/gitignore-template-generator/0.11.1/gitignore_template_generator)
 
 A binary crate to generate templates for .gitignore files
 
 ## Installation
 
-Current release: [0.11.0](CHANGELOG.md#0.11.0)
+Current release: [0.11.1](CHANGELOG.md#0.11.1)
 
 ```bash
 cargo install gitignore-template-generator
@@ -40,7 +40,7 @@ Options:
   -V, --version                        Print version
   -a, --author                         Print author
 
-Version: 0.11.0
+Version: 0.11.1
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
@@ -49,7 +49,7 @@ service. It takes gitignore template names as positional arguments and
 generates a gitignore template for you.
 
 It also supports a variety of CLI options that allow you to customize its
-behavior. Have a look at the [official crate documentation](https://docs.rs/gitignore-template-generator/0.11.0/gitignore_template_generator)
+behavior. Have a look at the [official crate documentation](https://docs.rs/gitignore-template-generator/0.11.1/gitignore_template_generator)
 for more details.
 
 Examples:

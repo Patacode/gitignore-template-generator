@@ -37,7 +37,7 @@ cargo add gitignore-template-generator
 Or add the following line to your `Cargo.toml`:
 
 ```yaml
-gitignore-template-generator = "0.11.0"
+gitignore-template-generator = "0.11.1"
 ```
 
 ## Usage
@@ -64,7 +64,7 @@ Options:
   -V, --version                        Print version
   -a, --author                         Print author
 
-Version: 0.11.0
+Version: 0.11.1
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
@@ -767,7 +767,7 @@ version information:
 
 ```text
 $ gitignore-template-generator --version
-gitignore-template-generator 0.11.0
+gitignore-template-generator 0.11.1
 ```
 
 By being preemptive, it means any other arguments, either *named* or
@@ -780,7 +780,7 @@ $ gitignore-template-generator rust python \
     --generator-uri /bar
     --server-url https://myapis.foobar.com
     --help
-gitignore-template-generator 0.11.0
+gitignore-template-generator 0.11.1
 ```
 
 It's a special kinda *default* option coming from virtually all cli tools,
@@ -790,7 +790,7 @@ It has precedence over [-a --author](#-a-author) options if specified along:
 
 ```text
 $ gitignore-template-generator -Va
-gitignore-template-generator 0.11.0
+gitignore-template-generator 0.11.1
 ```
 
 And cannot be specified multiple times:
