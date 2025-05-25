@@ -9,7 +9,9 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚜 Refactor
+
+- Expose core components namespaced with core (*No longer inlined*)
 
 ## [0.13.0] - 2025-05-25 <a id="0.13.0"></a>
 
