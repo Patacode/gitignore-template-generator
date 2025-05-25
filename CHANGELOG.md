@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.10.1] - 2025-05-25 <a id="0.10.1"></a>
+
 ### 📚 Documentation
 
 - Update root documentation with separate doc file (*Detailed explanations on each supported CLI options and how the tool internally works (high-level)*)
