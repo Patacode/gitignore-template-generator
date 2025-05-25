@@ -49,9 +49,16 @@ run_task = [
 [tasks.release-dryrun]
 run_task = [{ name = ["deploy-dryrun-args"] }]
 
-[tasks.doc]
+[tasks.gen-doc]
 command = "cargo"
 args = ["doc"]
+
+[tasks.rm-static-doc]
+command = "rm"
+args = ["-f", "target/doc/gitignore_template_generator/index.html"]
+
+[tasks.doc]
+run_task = [{ name = ["rm-static-doc", "gen-doc"] }]
 
 # cargo
 [tasks.install-git-cliff]
