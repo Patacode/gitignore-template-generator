@@ -9,7 +9,9 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### ⚙️ Miscellaneous Tasks
+
+- [readme] - Enhance development section (*With refined coverage report and additional useful command*)
 
 ## [0.11.0] - 2025-05-25 <a id="0.11.0"></a>
 
