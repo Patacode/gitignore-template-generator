@@ -272,7 +272,8 @@ valid (i.e. supported by the template manager service):
 
 ```text
 & gitignore-template-generator rust pyth javaa --check
-Following template names are not supported: pyth, javaa. For the list of available template names, try '--list'.
+Following template names are not supported: pyth, javaa.
+For the list of available template names, try '--list'.
 ```
 
 Behind the scene, the template lister service, as pointed to by the
