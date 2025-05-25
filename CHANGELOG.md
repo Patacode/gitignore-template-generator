@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.12.0] - 2025-05-25 <a id="0.12.0"></a>
+
 ### 🚀 Features
 
 - Add validation for server-url option to ensure valid url (*Validity check as per the standard and scheme must be http or https*)
