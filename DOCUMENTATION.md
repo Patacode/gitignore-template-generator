@@ -1,4 +1,46 @@
-# Binary Crate Documentation
+# Documentation
+
+Welcome to the documentation of `gitignore_template_generator` crate.
+
+This crate is mainly binary but has been designed with a well-structured
+library crate anyone can reuse to craft his own custom flavor of gitignore
+template generation.
+
+Here, you'll find detailed infos on [how to install the crate](#installation),
+[how to use the CLI tool](#usage), [general rules around the CLI parser](#general-rules),
+[how each supported CLI options work](#cli-options), with examples, as well as
+[technical documentation on the library components](#modules) (i.e. modules,
+structs, enums and traits) used by the binary.
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [General rules](#general-rules)
+- [CLI options](#cli-options)
+- [Technical documentation](#modules)
+
+## Installation
+
+Run the below command to globally install the **gitignore-template-generator**
+binary:
+
+```bash
+cargo install gitignore-template-generator
+```
+
+To install it as a library, run the following `Cargo` command in your project
+directory:
+
+```bash
+cargo add gitignore-template-generator
+```
+
+Or add the following line to your `Cargo.toml`:
+
+```yaml
+gitignore-template-generator = "0.10.0"
+```
+
+## Usage
 
 Available options:
 
@@ -26,10 +68,9 @@ Version: 0.10.0
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
-The CLI tool is a simple API binder to toptal gitignore template generation
+The CLI tool is a simple API binder to `toptal` gitignore template generation
 service. It takes gitignore template names as positional arguments and
-generates a gitignore template for all the provided arguments you can reuse
-in your project:
+generates a gitignore template for you:
 
 ```text
 $ gitignore-template-generator rust python java
@@ -38,15 +79,17 @@ $ gitignore-template-generator rust python java
 # ...
 ```
 
+Result is printed to `stdout`, so you can easily redirect or pipe it if needed.
+
 Behind the scene, it calls the template generator service as pointed to by
 the [-g --generator-uri](#-g-generator-uri) option.
 
-Positional arguments cannot contains commas (`,`) nor white spaces (as defined
-in the [Unicode Character Database](https://www.unicode.org/reports/tr44)
+Positional arguments cannot contains comma (`,`) nor `White_Space` characters
+(as defined in the [Unicode Character Database](https://www.unicode.org/reports/tr44)
 [`PropList.txt`](https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt)):
 
 ```text
-$ gitignore-template-generator "rust," "python"
+$ gitignore -template-generator "rust," "python"
 error: invalid value 'rust,' for '[TEMPLATE_NAMES]...': Commas are not allowed in template names
 
 For more information, try '--help'.
@@ -56,8 +99,159 @@ error: invalid value 'rus t' for '[TEMPLATE_NAMES]...': Whitespace characters ar
 For more information, try '--help'.
 ```
 
-All the other CLI options are optionals. See below sections for detailed
-explanations of each:
+Also, unless you specified the [-l --list](#-l-list), [-h --help](#-h-help),
+[-V --version](#-V-version) or [-a --author](#-a-author) options—which
+exempt the tool from its normal flow—you must give at least one template
+name:
+
+```text
+$ gitignore-template-generator
+error: the following required arguments were not provided:
+  <TEMPLATE_NAMES>...
+
+Usage: gitignore-template-generator <TEMPLATE_NAMES>...
+
+For more information, try '--help'.
+```
+
+## General rules
+
+The CLI engine parsing your arguments supports a variety of alternative syntax
+for you to specify *positional* and *named* arguments. Let's
+have a look at each one of them.
+
+Be noted that, all your arguments, being either *positional* or *named*, are
+separated from each others by a space character (` `).
+
+- [Positional arguments](#positional-arguments)
+- [Named arguments](#named-arguments)
+  - [Boolean options](#boolean-options)
+
+### Positional Arguments
+
+These arguments are strings provided as-is, without the `-` or `--` prefix:
+
+```text
+& gitignore-template-generator rust python java
+```
+
+In above example, `rust`, `python` and `java` constitute the *positional*
+arguments provided to **gitignore-template-generator**.
+
+They can be surrounded by single (`'`) or double (`"`) quotes, allowing you to
+escape any *invalid* characters:
+
+```text
+& gitignore-template-generator "rust"
+& gitignore-template-generator 'python'
+& gitignore-template-generator "java" 'go'
+& gitignore-template-generator "jav a" 'g -o'
+```
+
+Last line in above example is just to showcase the possibility of providing
+`White_Space` characters—which can't be provided without quoting your
+argument—but is not valid in the context of **gitignore-template-generator**.
+
+### Named Arguments
+
+These arguments are formed by the pair `option` + `value`, where `option`
+represents a string prefixed by the dash (`-`) or double-dash (`--`) character,
+and where `value` represents a string provided as-is, same as a
+*positional* argument, supporting the same rules and syntax:
+
+```text
+& gitignore-template-generator rust --timeout 10
+& gitignore-template-generator --server-url "https://myapis.foobar.com" python java
+& gitignore-template-generator -c pyth java rut
+```
+
+Each related option supports a short and long naming. For example, in the
+context of **gitignore-template-generator**, the
+[generator-uri](#-g-generator-uri) option, can be specified as `-g` or
+`--generator-uri`.
+
+To separate the `option` from its `value`, you can either use the space character
+(` `), the equal sign (`=`), or no separator if the `option` is
+specified using its short naming:
+
+```text
+& gitignore-template-generator rust --timeout 10
+& gitignore-template-generator --server-url="https://myapis.foobar.com" python java
+& gitignore-template-generator -t33 python java rust
+```
+
+Same as for *positional* arguments, *named* arguments can be surrounded by
+single (`'`) or double (`"`) quotes, allowing you to escape any *invalid*
+characters:
+
+```text
+& gitignore-template-generator '--server-url=https://myapis.foobar.com' python java
+& gitignore-template-generator "-t33" python java rust
+& gitignore-template-generator "-t'33'" python java rust
+```
+
+Last line in above example is just to showcase the possibility of providing
+*invalid* characters (`'` in this case). It will effectively provide `'33'` as
+a value to the `-t` option, but is not valid in the context of
+**gitignore-template-generator**.
+
+Although rarely used, you can also surround the `option` part with single (`'`)
+or double (`"`) quotes:
+
+```text
+& gitignore-template-generator '--server-url'="https://myapis.foobar.com" python java
+```
+
+Moreover, depending on their nature, *named* arguments can be provided one or
+more times:
+
+```text
+& gitignore-template-generator rust --timeout 10
+& gitignore-template-generator -g /test1 python java rust -g /test2
+```
+
+Last line in above example is just to showcase the possibility of providing
+a named argument multiple times, but is not valid in the context of
+**gitignore-template-generator**.
+
+Last but not least, options specified using their short naming can be combined
+through one single dash (`-`) prefix:
+
+```text
+& gitignore-template-generator -ahVl
+```
+
+Which specifically comes in handy to combine multiple boolean options. 
+
+#### Boolean options
+
+They constitute a special case of *named* arguments. They act as flag-like
+options. Specifying them triggers their underlying function.
+
+In the below example, wherever the option is placed, its underlying flag will
+be enabled:
+
+```text
+& gitignore-template-generator --list
+& gitignore-template-generator rust pyth --check javaa
+```
+
+Also, since they are **boolean** and behave like flags, they are not supposed
+to take any values:
+
+```text
+$ gitignore-template-generator rust pytho --check="true"
+error: unexpected value 'true' for '--check' found; no more were expected
+
+Usage: gitignore-template-generator --check [TEMPLATE_NAMES]...
+
+For more information, try '--help'.
+```
+
+## CLI options
+
+All the supported CLI options are optional, and the
+[list of general rules](#general-rules) described above applies to all of them.
 
 - [-c --check](#-c-check)
 - [-g --generator-uri](#-g-generator-uri)
@@ -70,7 +264,7 @@ explanations of each:
 - [-V --version](#-V-version)
 - [-a --author](#-a-author)
 
-## -c --check
+### -c --check
 
 This option is a **boolean** option that, when set, enables robust template
 names check, meaning it will ensure that all provided template names are
@@ -81,14 +275,15 @@ valid (i.e. supported by the template manager service):
 Following template names are not supported: pyth, javaa. For the list of available template names, try '--list'.
 ```
 
-Behind the scene, the template lister service will be called to check for any
+Behind the scene, the template lister service, as pointed to by the
+[-i --lister-uri](#-i-lister-uri) option, will be called to check for any
 unsupported template names, thus, a slight overhead might be expected.
 
 This option comes in handy whenever the underlying template manager service does
 not provide meaningful error message for invalid template names, and you want
 to ensure all provided values are valid.
 
-With the default template manager service (i.e. toptal), a 404
+With the default template manager service (i.e. `toptal`), a **404**
 is returned for invalid template names, but no meaningful error message. So,
 without the `-c/--check` option, the resulting output would be:
 
@@ -109,29 +304,6 @@ Usage: gitignore-template-generator --check <TEMPLATE_NAMES>...
 For more information, try '--help'.
 ```
 
-As well, since it's a **boolean** option, it does not take any value:
-
-```text
-$ gitignore-template-generator "rust" "pytho" --check="true"
-error: unexpected value 'true' for '--check' found; no more were expected
-
-Usage: gitignore-template-generator --check [TEMPLATE_NAMES]...
-
-For more information, try '--help'.
-```
-
-Be noted that the following is valid:
-
-```text
-& gitignore-template-generator --check rust pyth javaa
-```
-
-As its a **boolean** option, it does not take into account any following
-positional arguments, but act more like a flag.
-
-Only with the `=` syntax one can try to provide a value to it, but will result
-in an error.
-
 And cannot be specified multiple times:
 
 ```text
@@ -143,11 +315,11 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -g --generator-uri
+### -g --generator-uri
 
 This option allows you to set a custom template generator uri. It takes a string
 value and defaults to `/developers/gitignore/api` if not provided, which
-correspond to the gitignore template generator uri of portal service:
+corresponds to the gitignore template generator uri of `toptal` service:
 
 ```text
 $ gitignore-template-generator rust python --generator-uri /developers/gitignore/api
@@ -157,11 +329,11 @@ $ gitignore-template-generator rust python --generator-uri /developers/gitignore
 ```
 
 This endpoint takes one path parameter as defined in
-`https://www.toptal.com/developers/gitignore/api/{templateNames}`, with
+`/developers/gitignore/api/{templateNames}`, with
 `{templateNames}` being a comma-separated list of template names.
 
 It isn't really useful when used alone, as default template manager service is
-toptal and it only supports `/developers/gitignore/api` uri to generate
+`toptal`, which only supports `/developers/gitignore/api` uri to generate
 gitignore templates. But it comes in handy in combination with
 the [-s --server-url](#-s-server-url) option, as it allows you to make it
 point to some custom API:
@@ -184,21 +356,13 @@ Usage: gitignore-template-generator --generator-uri <GENERATOR_URI> <TEMPLATE_NA
 For more information, try '--help'.
 ```
 
-It must also start with a `/`:
+It must also start with a slash (`/`):
 
 ```text
 $ gitignore-template-generator --generator-uri developers/gitignore/api
 error: invalid value 'developers/gitignore/api' for '[GENERATOR_URI]...': URIs must start a slash (/)
 
 For more information, try '--help'.
-```
-
-Depending on how the underlying template manager service handles undefined
-endpoints, if an undefined uri is provided, the resulting output would be:
-
-```text
-$ gitignore-template-generator rust -generator-uri /foo
-An error occurred during the API call: http status: 404
 ```
 
 And cannot be specified multiple times:
@@ -212,7 +376,16 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -l --list
+Moreover, depending on how the underlying template manager service handles
+undefined endpoints, if an undefined uri is provided, the resulting output
+would usually be:
+
+```text
+$ gitignore-template-generator rust -generator-uri /foo
+An error occurred during the API call: http status: 404
+```
+
+### -l --list
 
 This option is a **boolean** option that, when set, will list all the available
 template names:
@@ -250,16 +423,7 @@ template4
 Behind the scene, it calls the template lister service as pointed to by the
 [-i --lister-uri](#-i-lister-uri) option.
 
-If the following options are provided and this option is set, they will be
-skipped:
-
-- [-c --check](#-c-check)
-- [-g --generator-uri](#-g-generator-uri)
-
-Same applies for positional arguments, if some are given, and this option is
-set, they will be skipped.
-
-And cannot be specified multiple times:
+And it cannot be specified multiple times:
 
 ```text
 $ gitignore-template-generator --list --list
@@ -270,11 +434,20 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -i --lister-uri
+If the following options are provided and this option is set, they will be
+skipped:
+
+- [-c --check](#-c-check)
+- [-g --generator-uri](#-g-generator-uri)
+
+Same applies to positional arguments, if some are given, and this option is
+set, they will be skipped.
+
+### -i --lister-uri
 
 This option allows you to set a custom template lister uri. It takes a string
 value and defaults to `/developers/gitignore/api/list` if not provided, which
-correspond to the gitignore template lister uri of portal service:
+corresponds to the gitignore template lister uri of `portal` service:
 
 ```text
 $ gitignore-template-generator --list --lister-uri /developers/gitignore/api/list
@@ -291,7 +464,7 @@ coming from the fact that robust template names check relies on the lister
 service.
 
 Moreover, it isn't really useful when used alone, as default template manager
-service is toptal and it only supports `/developers/gitignore/api/list` uri to
+service is `toptal`, which only supports `/developers/gitignore/api/list` uri to
 list available gitignore templates. But it comes in handy in combination with
 the [-s --server-url](#-s-server-url) option, as it allows you to make it
 point to some custom API:
@@ -325,29 +498,13 @@ Usage: gitignore-template-generator --lister-uri <LISTER_URI> <TEMPLATE_NAMES>..
 For more information, try '--help'.
 ```
 
-It must also start with a `/`:
+It must also start with a slash (`/`):
 
 ```text
 $ gitignore-template-generator --lister-uri developers/gitignore/api/list
 error: invalid value 'developers/gitignore/api/list' for '[GENERATOR_URI]...': URIs must start a slash (/)
 
 For more information, try '--help'.
-```
-
-Depending on how the underlying template manager service handles undefined
-endpoints, if an undefined uri is provided, the resulting output would be:
-
-```text
-$ gitignore-template-generator --list --lister-uri /foo
-An error occurred during the API call: http status: 404
-```
-
-Same result would happen if template generation with robust template names check
-enabled:
-
-```text
-$ gitignore-template-generator rust pyth --check --lister-uri /foo
-An error occurred during the API call: http status: 404
 ```
 
 And cannot be specified multiple times:
@@ -362,11 +519,28 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -s --server-url
+Moreover, depending on how the underlying template manager service handles
+undefined endpoints, if an undefined uri is provided, the resulting output
+would usually be:
+
+```text
+$ gitignore-template-generator --list --lister-uri /foo
+An error occurred during the API call: http status: 404
+```
+
+Same result would happen if template generation with robust template names check
+enabled:
+
+```text
+$ gitignore-template-generator rust pyth --check --lister-uri /foo
+An error occurred during the API call: http status: 404
+```
+
+### -s --server-url
 
 This option allows you to set a custom template manager base url. It takes a string
 value and defaults to `https://www.toptal.com` if not provided, which
-correspond to the toptal base url, where their gitignore template generation
+corresponds to the `toptal` base url, where their gitignore template generation
 service is hosted:
 
 ```text
@@ -378,7 +552,7 @@ $ gitignore-template-generator rust python --server-url https://myapis.foobar.co
 
 It comes in handy if you want the tool to use your own custom gitignore
 template generation service. And is pretty useful when combined with
-[-g --generator-uri](#-g-generator-uri) and/or [-i --lister-uri](#-i-lister-uri)
+[-g --generator-uri](#-g-generator-uri) or [-i --lister-uri](#-i-lister-uri)
 options, as it allows to customize the hit endpoint uris, unless you rely on
 the defaults.
 
@@ -403,13 +577,6 @@ error: invalid value 'htps:/myapis.foobar.com' for '[SERVER_URL]...': Value must
 For more information, try '--help'.
 ```
 
-If an inexistent server is provided, the result would be:
-
-```text
-$ gitignore-template-generator rust python --server-url https://myapis.foobar.com
-An error occurred during the API call: io: failed to lookup address information: Name or service not known
-```
-
 And cannot be specified multiple times:
 
 ```text
@@ -422,7 +589,14 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -t --timeout
+Moreover, if an inexistent server is provided, the result would be:
+
+```text
+$ gitignore-template-generator rust python --server-url https://myapis.foobar.com
+An error occurred during the API call: io: failed to lookup address information: Name or service not known
+```
+
+### -t --timeout
 
 This option allows you to change the service calls timeout. It takes an unsigned
 integer value and, if not provided, conditionally defaults to `5` if
@@ -436,8 +610,8 @@ $ gitignore-template-generator rust python --timeout 4
 # ...
 ```
 
-The conditional default value allows to prevent timeout issues if
-[-u --timeout-unit](#-u-timeout-unit) is set to `millisecond` alone:
+The default value is conditionally assigned in order to prevent timeout issues
+if [-u --timeout-unit](#-u-timeout-unit) is set to `millisecond` alone:
 
 ```text
 $ gitignore-template-generator rust python --timeout-unit millisecond
@@ -447,7 +621,7 @@ $ gitignore-template-generator rust python --timeout-unit millisecond
 ```
 
 This option comes in handy to limit polling time if the generator is really
-way too slow.
+way too slow, or some maximum timeout limit must be complied with.
 
 Naturally, this option cannot be provided without positional arguments:
 
@@ -485,10 +659,10 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -u --timeout-unit
+### -u --timeout-unit
 
 This option allows you to change the timeout unit. It takes a string value
-defined in [second, millisecond] and defaults to `second` if not provided:
+among `[second, millisecond]` and defaults to `second` if not provided:
 
 ```text
 $ gitignore-template-generator rust python --timeout-unit millisecond
@@ -513,7 +687,7 @@ Usage: gitignore-template-generator --timeout-unit <TIMEOUT_UNIT> <TEMPLATE_NAME
 For more information, try '--help'.
 ```
 
-It must be set to a valid value from supported set:
+It must be set to a valid value from supported set (`[second, millisecond]`):
 
 ```text
 $ gitignore-template-generator rust python --timeout-unit millisecondd
@@ -534,7 +708,7 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -h --help
+### -h --help
 
 This option is a preemptive **boolean** option that, when set, will display
 a help message, listing you available options with short description for
@@ -547,7 +721,7 @@ $ gitignore-template-generator --help
 # ...
 ```
 
-By being preemptive, it means any other arguments, either named or positional,
+By being preemptive, it means any other arguments, either *named* or *positional*,
 will be skipped:
 
 ```text
@@ -562,7 +736,7 @@ $ gitignore-template-generator rust python \
 # ...
 ```
 
-It's a special kinda 'default' option coming from virtually all cli tools,
+It's a special kinda *default* option coming from virtually all cli tools,
 along with [-V --version](#-V-version) and [-a --author](#-a-author) options.
 
 It has precedence over [-V --version](#-V-version) and [-a --author](#-a-author)
@@ -573,17 +747,6 @@ $ gitignore-template-generator -hVa
 # ...
 # help output
 # ...
-```
-
-It does not take any value:
-
-```text
-$ gitignore-template-generator --help="true"
-error: unexpected value 'true' for '--help' found; no more were expected
-
-Usage: gitignore-template-generator --help [TEMPLATE_NAMES]...
-
-For more information, try '--help'.
 ```
 
 And cannot be specified multiple times:
@@ -597,7 +760,7 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -V --version
+### -V --version
 
 This option is a preemptive **boolean** option that, when set, will display
 version information:
@@ -607,8 +770,8 @@ $ gitignore-template-generator --version
 gitignore-template-generator 0.10.0
 ```
 
-By being preemptive, it means any other arguments, either named or positional,
-will be skipped:
+By being preemptive, it means any other arguments, either *named* or
+*positional*, will be skipped:
 
 ```text
 $ gitignore-template-generator rust python \
@@ -620,7 +783,7 @@ $ gitignore-template-generator rust python \
 gitignore-template-generator 0.10.0
 ```
 
-It's a special kinda 'default' option coming from virtually all cli tools,
+It's a special kinda *default* option coming from virtually all cli tools,
 along with [-h --help](#-h-help) and [-a --author](#-a-author) options.
 
 It has precedence over [-a --author](#-a-author) options if specified along:
@@ -628,17 +791,6 @@ It has precedence over [-a --author](#-a-author) options if specified along:
 ```text
 $ gitignore-template-generator -Va
 gitignore-template-generator 0.10.0
-```
-
-It does not take any value:
-
-```text
-$ gitignore-template-generator --version="true"
-error: unexpected value 'true' for '--version' found; no more were expected
-
-Usage: gitignore-template-generator --version [TEMPLATE_NAMES]...
-
-For more information, try '--help'.
 ```
 
 And cannot be specified multiple times:
@@ -652,7 +804,7 @@ Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
 For more information, try '--help'.
 ```
 
-## -a --author
+### -a --author
 
 This option is a preemptive **boolean** option that, when set, will display
 author information:
@@ -662,8 +814,8 @@ $ gitignore-template-generator --version
 Patacode <pata.codegineer@gmail.com>
 ```
 
-By being preemptive, it means any other arguments, either named or positional,
-will be skipped:
+By being preemptive, it means any other arguments, either *named* or
+*positional*, will be skipped:
 
 ```text
 $ gitignore-template-generator rust python \
@@ -675,21 +827,10 @@ $ gitignore-template-generator rust python \
 Patacode <pata.codegineer@gmail.com>
 ```
 
-It's a special kinda 'default' option coming from virtually all cli tools,
+It's a special kinda *default* option coming from virtually all cli tools,
 along with [-h --help](#-h-help) and [-V --version](#-V-version) options.
 
-It does not take any value:
-
-```text
-$ gitignore-template-generator --author="true"
-error: unexpected value 'true' for '--author' found; no more were expected
-
-Usage: gitignore-template-generator --author [TEMPLATE_NAMES]...
-
-For more information, try '--help'.
-```
-
-And cannot be specified multiple times:
+And it cannot be specified multiple times:
 
 ```text
 $ gitignore-template-generator -aa
