@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.10.2] - 2025-05-25 <a id="0.10.2"></a>
+
 - Same as version 0.10.1. The latter has been yanked due to missing packaged resource
 
 ### 🐛 Bug Fixes
