@@ -9,7 +9,9 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🧪 Testing
+
+- [parser] - Add more unit tests (*On boolean option with value and multiple time spec*)
 
 ## [0.10.2] - 2025-05-25 <a id="0.10.2"></a>
 
