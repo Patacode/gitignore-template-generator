@@ -529,6 +529,82 @@ mod default_args_parser {
                 assert!(actual_error.is_some());
                 assert_eq!(actual_error, expected_error);
             }
+
+            #[rstest]
+            #[case("-cc", "--check")]
+            #[case("-g /bar -g /foo", "--generator-uri <GENERATOR_URI>")]
+            #[case("-ll", "--list")]
+            #[case("-i /bar -i /foo", "--lister-uri <LISTER_URI>")]
+            #[case(
+                "-s https://foo.com -s https://bar.com",
+                "--server-url <SERVER_URL>"
+            )]
+            #[case("-t1 -t2", "--timeout <TIMEOUT>")]
+            #[case("-u millisecond -u second", "--timeout-unit <TIMEOUT_UNIT>")]
+            #[case("-hh", "--help")]
+            #[case("-VV", "--version")]
+            #[case("-aa", "--author")]
+            fn it_fails_parsing_when_option_specified_multiple_times(
+                #[case] cli_args: &str,
+                #[case] option_name: &str,
+            ) {
+                let cli_args = parse_cli_args(cli_args);
+                let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                let actual_error = parsed_args.as_ref().err();
+                let expected_error = ProgramExit {
+                    message: load_expectation_file_as_string(
+                        "given_multiple_times_error",
+                    )
+                    .replace("{argument_name}", option_name),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: Some(
+                        load_expectation_file_as_string(
+                            "ansi_given_multiple_times_error",
+                        )
+                        .replace("{argument_name}", option_name),
+                    ),
+                    kind: ExitKind::Error,
+                };
+                let expected_error = Some(&expected_error);
+
+                assert!(actual_error.is_some());
+                assert_eq!(actual_error, expected_error);
+            }
+
+            #[rstest]
+            #[case("--check=true", "--check")]
+            #[case("--list=true", "--list")]
+            #[case("--help=true", "--help")]
+            #[case("--version=true", "--version")]
+            #[case("--author=true", "--author")]
+            fn it_fails_parsing_when_value_given_to_boolean_option(
+                #[case] cli_args: &str,
+                #[case] option_name: &str,
+            ) {
+                let cli_args = parse_cli_args(cli_args);
+                let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                let actual_error = parsed_args.as_ref().err();
+                let expected_error = ProgramExit {
+                    message: load_expectation_file_as_string(
+                        "boolean_option_with_value_error",
+                    )
+                    .replace("{argument_name}", option_name),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: Some(
+                        load_expectation_file_as_string(
+                            "ansi_boolean_option_with_value_error",
+                        )
+                        .replace("{argument_name}", option_name),
+                    ),
+                    kind: ExitKind::Error,
+                };
+                let expected_error = Some(&expected_error);
+
+                assert!(actual_error.is_some());
+                assert_eq!(actual_error, expected_error);
+            }
         }
     }
 

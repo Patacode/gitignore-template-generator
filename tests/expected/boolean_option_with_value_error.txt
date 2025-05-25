@@ -1,0 +1,5 @@
+error: unexpected value 'true' for '{argument_name}' found; no more were expected
+
+Usage: gitignore-template-generator {argument_name} [TEMPLATE_NAMES]...
+
+For more information, try '--help'.

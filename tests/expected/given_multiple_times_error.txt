@@ -1,0 +1,5 @@
+error: the argument '{argument_name}' cannot be used multiple times
+
+Usage: gitignore-template-generator [OPTIONS] [TEMPLATE_NAMES]...
+
+For more information, try '--help'.
