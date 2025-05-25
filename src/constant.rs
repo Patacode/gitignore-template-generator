@@ -48,7 +48,7 @@ pub mod error_messages {
         "Whitespace characters are not allowed in template names";
 
     // One or more template names are not supported.
-    pub const INEXISTENT_TEMPLATE_NAMES: &str = "Following template names are not supported: {templates}. For the list of available template names, try '--list'.";
+    pub const INEXISTENT_TEMPLATE_NAMES: &str = "Following template names are not supported: {templates}.\nFor the list of available template names, try '--list'.";
 
     // Conversion of String to u64.
     pub const FAILED_U64_CONVERSION: &str = "Failed to convert to u64";

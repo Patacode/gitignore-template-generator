@@ -344,50 +344,8 @@ mod gitignore_template_generator {
                     &template_names,
                 );
                 let expected_error_message = String::from(
-                    "Following template names are not supported: pyth. ",
+                    "Following template names are not supported: pyth.\n",
                 ) + "For the list of available template names, try "
-                    + "'--list'.";
-                let expected: Result<String, ProgramExit> = Err(ProgramExit {
-                    message: expected_error_message,
-                    exit_status: constant::exit_status::GENERIC,
-                    styled_message: None,
-                    kind: ExitKind::Error,
-                });
-
-                assert_eq!(actual, expected);
-            }
-
-            #[test]
-            fn it_returns_inexistent_templates_error() {
-                let template_names = make_string_vec("rust pyth foo");
-                let generated_template = "all good";
-                let generator_url = format!(
-                    "{}/rust,python",
-                    constant::template_manager::GENERATOR_URI
-                );
-                let template_list = "rust\npython";
-                let http_client = MockEndpointHttpClient {
-                    response: HashMap::from([
-                        (
-                            generator_url.as_str(),
-                            Ok(String::from(generated_template)),
-                        ),
-                        (
-                            constant::template_manager::LISTER_URI,
-                            Ok(String::from(template_list)),
-                        ),
-                    ]),
-                };
-
-                let actual = GitignoreTemplateManager::generate_from_api_with_template_check(
-                    &http_client,
-                    Some(constant::template_manager::GENERATOR_URI),
-                    Some(constant::template_manager::LISTER_URI),
-                    &template_names,
-                );
-                let expected_error_message = String::from(
-                    "Following template names are not supported: pyth, ",
-                ) + "foo. For the list of available template names, try "
                     + "'--list'.";
                 let expected: Result<String, ProgramExit> = Err(ProgramExit {
                     message: expected_error_message,

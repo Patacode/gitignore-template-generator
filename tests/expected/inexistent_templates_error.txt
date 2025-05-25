@@ -1,1 +1,2 @@
-Following template names are not supported: pyth, foo. For the list of available template names, try '--list'.
+Following template names are not supported: pyth, foo.
+For the list of available template names, try '--list'.
