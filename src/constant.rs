@@ -58,6 +58,8 @@ pub mod error_messages {
 
     /// Invalid utf-8 encoding.
     pub const INVALID_ENCODING: &str = "io: stream did not contain valid UTF-8";
+
+    pub const URI_WITHOUT_STARTING_SLASH: &str = "URIs must start a slash (/)";
 }
 
 pub mod help_messages {

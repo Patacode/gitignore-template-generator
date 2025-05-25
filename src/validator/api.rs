@@ -47,4 +47,16 @@ pub trait CliArgsValidator {
     /// A result containing the provided value if valid, or
     /// an error containing proper error message.
     fn has_valid_template_name(value: &str) -> Result<String, String>;
+
+    /// Checks if given value starts with a slash (`/`).
+    ///
+    /// # Arguments
+    ///
+    /// `value` - The value to be checked
+    ///
+    /// # Returns
+    ///
+    /// A result containing the provided value if a slash was found as first
+    /// character, or an error containing proper error message.
+    fn is_starting_with_slash(value: &str) -> Result<String, String>;
 }

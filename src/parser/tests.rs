@@ -20,8 +20,8 @@ mod default_args_parser {
             #[case("-V rust")]
             #[case("rust -V")]
             #[case("rust -s foo -V")]
-            #[case("rust -g bar -V")]
-            #[case("rust -i bar -V")]
+            #[case("rust -g /bar -V")]
+            #[case("rust -i /bar -V")]
             #[case("rust -c -V")]
             #[case("rust -t 5 -V")]
             #[case("rust -u second -V")]
@@ -54,8 +54,8 @@ mod default_args_parser {
             #[case("-h rust")]
             #[case("rust -h")]
             #[case("rust -s foo -h")]
-            #[case("rust -g bar -h")]
-            #[case("rust -i bar -h")]
+            #[case("rust -g /bar -h")]
+            #[case("rust -i /bar -h")]
             #[case("rust -c -h")]
             #[case("rust -t 5 -h")]
             #[case("rust -u second -h")]
@@ -84,8 +84,8 @@ mod default_args_parser {
             #[case("-a rust")]
             #[case("rust -a")]
             #[case("rust -s foo -a")]
-            #[case("rust -g bar -a")]
-            #[case("rust -i bar -a")]
+            #[case("rust -g /bar -a")]
+            #[case("rust -i /bar -a")]
             #[case("rust -c -a")]
             #[case("rust -t 5 -a")]
             #[case("rust -u second -a")]
@@ -605,6 +605,37 @@ mod default_args_parser {
                 assert!(actual_error.is_some());
                 assert_eq!(actual_error, expected_error);
             }
+
+            #[rstest]
+            #[case("--lister-uri foo", "--lister-uri <LISTER_URI>")]
+            #[case("--generator-uri foo", "--generator-uri <GENERATOR_URI>")]
+            fn it_fails_parsing_when_uri_without_starting_slash(
+                #[case] cli_args: &str,
+                #[case] option_name: &str,
+            ) {
+                let cli_args = parse_cli_args(cli_args);
+                let parsed_args = ClapArgsParser::new().try_parse(cli_args);
+
+                let actual_error = parsed_args.as_ref().err();
+                let expected_error = ProgramExit {
+                    message: load_expectation_file_as_string(
+                        "uri_without_starting_slash_error",
+                    )
+                    .replace("{argument_name}", option_name),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: Some(
+                        load_expectation_file_as_string(
+                            "ansi_uri_without_starting_slash_error",
+                        )
+                        .replace("{argument_name}", option_name),
+                    ),
+                    kind: ExitKind::Error,
+                };
+                let expected_error = Some(&expected_error);
+
+                assert!(actual_error.is_some());
+                assert_eq!(actual_error, expected_error);
+            }
         }
     }
 
@@ -617,15 +648,15 @@ mod default_args_parser {
             #[test]
             fn it_parses_given_cli_options() {
                 let cli_args = parse_cli_args(
-                    "rust python -s test -g foo -i bar --check --list -t 6 -u millisecond",
+                    "rust python -s test -g /foo -i /bar --check --list -t 6 -u millisecond",
                 );
 
                 let actual_result = ClapArgsParser::new().parse(cli_args);
                 let expected_result = Args::default()
                     .with_template_names(make_string_vec("rust python"))
                     .with_server_url("test")
-                    .with_generator_uri("foo")
-                    .with_lister_uri("bar")
+                    .with_generator_uri("/foo")
+                    .with_lister_uri("/bar")
                     .with_check_template_names(true)
                     .with_show_list(true)
                     .with_timeout(6)

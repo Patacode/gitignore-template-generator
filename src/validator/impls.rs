@@ -53,4 +53,14 @@ impl CliArgsValidator for DefaultCliArgsValidator {
             },
         }
     }
+
+    fn is_starting_with_slash(value: &str) -> Result<String, String> {
+        if value.starts_with('/') {
+            Ok(value.to_string())
+        } else {
+            Err(String::from(
+                constant::error_messages::URI_WITHOUT_STARTING_SLASH,
+            ))
+        }
+    }
 }
