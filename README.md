@@ -98,7 +98,7 @@ Generate code coverage report in HTML format under `target/tarpaulin`:
 ```bash
 cargo tarpaulin \
   --out Html \
-  --exclude-files src/lib.rs src/main.rs benches/* tests/* \
+  --exclude-files src/lib.rs src/main.rs benches/* tests/* src/constant.rs src/core.rs src/http_client.rs src/parser.rs src/validator.rs src/**/tests.rs src/**/api.rs \
   --output-dir target/tarpaulin
 ```
 
@@ -106,6 +106,24 @@ Benchmark the binary crate:
 
 ```bash
 cargo bench
+```
+
+Generate and open documentation:
+
+```bash
+cargo doc --open
+```
+
+Lint code:
+
+```bash
+cargo clippy --all-targets --all-features
+```
+
+Format code with nightly features (required to sort imports):
+
+```bash
+cargo +nightly fmt -- --unstable-features
 ```
 
 ## License
