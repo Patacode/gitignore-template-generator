@@ -9,7 +9,11 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+- Same as version 0.10.1. The latter has been yanked due to missing packaged resource
+
+### 🐛 Bug Fixes
+
+- [cargo] - Add DOCUMENTATION.md file in packaged resources
 
 ## [0.10.1] - 2025-05-25 <a id="0.10.1"></a>
 
