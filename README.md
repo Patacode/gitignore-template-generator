@@ -44,16 +44,13 @@ Version: 0.10.0
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
-The cli tool binds to any template manager service able to manage templates
-over HTTP. It defaults to `toptal` template manager, using
-`https://www.toptal.com/developers/gitignore/api/{templateNames}` to generate
-templates (with `{templateNames}` being a comma-separated list of template
-names), and `https://www.toptal.com/developers/gitignore/api/list` to list
-them.
+The CLI tool is a simple API binder to `toptal` gitignore template generation
+service. It takes gitignore template names as positional arguments and
+generates a gitignore template for you.
 
-It is possible to provide a custom template manager service to the cli
-tool. One can easily change the template manager service base url and related
-endpoint uris using the `server-url`, `generator-uri` and `lister-uri` options.
+It also supports a variety of CLI options that allow you to customize its
+behavior. Have a look at the [official crate documentation](https://docs.rs/gitignore-template-generator/0.10.0/gitignore_template_generator)
+for more details.
 
 Examples:
 
@@ -105,7 +102,7 @@ cargo tarpaulin \
   --output-dir target/tarpaulin
 ```
 
-Benchmark binary and library crates:
+Benchmark the binary crate:
 
 ```bash
 cargo bench
