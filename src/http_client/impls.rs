@@ -2,7 +2,11 @@ use std::{collections::HashMap, time::Duration};
 
 use ureq::Agent;
 
-use crate::{ExitKind, ProgramExit, constant, http_client::api::HttpClient};
+use crate::{
+    constant,
+    core::{ExitKind, ProgramExit},
+    http_client::api::HttpClient,
+};
 
 /// Http client implementation relying on [`ureq`].
 #[derive(Default)]

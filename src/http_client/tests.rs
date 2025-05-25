@@ -3,7 +3,10 @@ use std::{collections::HashMap, time::Duration};
 use mockito::Server;
 
 use super::*;
-use crate::{ExitKind, ProgramExit, constant};
+use crate::{
+    constant,
+    core::{ExitKind, ProgramExit},
+};
 
 mod ureq_client {
     use super::*;

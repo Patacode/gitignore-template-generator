@@ -3,7 +3,10 @@ use std::{ffi::OsString, process::exit};
 use clap::{ArgMatches, Command};
 
 use super::{Args, ArgsParser, TimeoutUnit, command::build_clap_args};
-use crate::{ExitKind, ProgramExit, constant};
+use crate::{
+    constant,
+    core::{ExitKind, ProgramExit},
+};
 
 /// Default implementation of args parser that parses CLI args using
 /// [`clap`].

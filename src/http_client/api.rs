@@ -1,4 +1,4 @@
-use crate::ProgramExit;
+use crate::core::ProgramExit;
 pub use crate::http_client::impls::{
     MockEndpointHttpClient, MockHttpClient, UreqHttpClient,
 };

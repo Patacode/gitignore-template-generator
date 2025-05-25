@@ -1,7 +1,7 @@
 use std::{process::exit, time::Duration};
 
 use gitignore_template_generator::{
-    GitignoreTemplateManager, TemplateGenerator, TemplateLister,
+    core::{GitignoreTemplateManager, TemplateGenerator, TemplateLister},
     http_client::UreqHttpClient,
     parser::{ArgsParser, ClapArgsParser, TimeoutUnit},
 };
