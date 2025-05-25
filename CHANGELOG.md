@@ -9,7 +9,18 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 📚 Documentation
+
+- Update root documentation with separate doc file (*Detailed explanations on each supported CLI options and how the tool internally works (high-level)*)
+
+### 🏗️ Build
+
+- [cargo] - Add version update for DOCUMENTATION.md in pre release hooks
+- [make] - Update doc generation task (*To delete static root html file before*)
+
+### ⚙️ Miscellaneous Tasks
+
+- [readme] - Update file with shorter usage section and add ref to crate doc
 
 ## [0.10.0] - 2025-05-19 <a id="0.10.0"></a>
 
