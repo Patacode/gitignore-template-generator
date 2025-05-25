@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.13.0] - 2025-05-25 <a id="0.13.0"></a>
+
 ### 🚀 Features
 
 - Put informative part of error message from check option on separate line
