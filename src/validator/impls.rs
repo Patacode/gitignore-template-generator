@@ -1,3 +1,5 @@
+use url::Url;
+
 use super::api::CliArgsValidator;
 use crate::constant;
 
@@ -61,6 +63,20 @@ impl CliArgsValidator for DefaultCliArgsValidator {
             Err(String::from(
                 constant::error_messages::URI_WITHOUT_STARTING_SLASH,
             ))
+        }
+    }
+
+    fn is_valid_url(value: &str) -> Result<String, String> {
+        match Url::parse(value) {
+            Ok(valid_url) => {
+                if valid_url.scheme() == "https" || valid_url.scheme() == "http"
+                {
+                    Ok(value.to_string())
+                } else {
+                    Err(String::from(constant::error_messages::INVALID_URL))
+                }
+            }
+            Err(_) => Err(String::from(constant::error_messages::INVALID_URL)),
         }
     }
 }

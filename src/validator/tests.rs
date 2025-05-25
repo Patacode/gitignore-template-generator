@@ -1,3 +1,5 @@
+use rstest::*;
+
 use super::*;
 use crate::constant;
 
@@ -130,6 +132,75 @@ mod default_cli_args_validator {
                 ));
                 let actual =
                     DefaultCliArgsValidator::has_valid_template_name(value);
+
+                assert_eq!(actual, expected);
+            }
+        }
+    }
+
+    mod is_starting_with_slash {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            fn it_returns_ok_for_value_starting_with_slash() {
+                let value = "/valid/uri";
+
+                let expected: Result<String, String> = Ok(String::from(value));
+                let actual =
+                    DefaultCliArgsValidator::is_starting_with_slash(value);
+
+                assert_eq!(actual, expected);
+            }
+        }
+
+        mod failure {
+            use super::*;
+
+            #[test]
+            fn it_returns_error_for_valid_not_starting_with_slash() {
+                let expected: Result<String, String> = Err(String::from(
+                    constant::error_messages::URI_WITHOUT_STARTING_SLASH,
+                ));
+                let actual = DefaultCliArgsValidator::is_starting_with_slash(
+                    "invalid/uri",
+                );
+
+                assert_eq!(actual, expected);
+            }
+        }
+    }
+
+    mod is_valid_url {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            fn it_returns_ok_for_valid_url() {
+                let value = "https://www.hello.com";
+
+                let expected: Result<String, String> = Ok(String::from(value));
+                let actual = DefaultCliArgsValidator::is_valid_url(value);
+
+                assert_eq!(actual, expected);
+            }
+        }
+
+        mod failure {
+            use super::*;
+
+            #[rstest]
+            #[case("hello")]
+            #[case("https//foo.com")]
+            #[case("htps:/myapis.foobar.com")]
+            fn it_returns_error_for_invalid_url(#[case] input_url: &str) {
+                let expected: Result<String, String> =
+                    Err(String::from(constant::error_messages::INVALID_URL));
+                let actual = DefaultCliArgsValidator::is_valid_url(input_url);
 
                 assert_eq!(actual, expected);
             }

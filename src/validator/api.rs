@@ -59,4 +59,20 @@ pub trait CliArgsValidator {
     /// A result containing the provided value if a slash was found as first
     /// character, or an error containing proper error message.
     fn is_starting_with_slash(value: &str) -> Result<String, String>;
+
+    /// Checks if given value is a valid URL.
+    ///
+    /// URL validity is checked against the [URL Standard]
+    ///
+    /// [URL Standard]: https://url.spec.whatwg.org/
+    ///
+    /// # Arguments
+    ///
+    /// `value` - The value to be checked
+    ///
+    /// # Returns
+    ///
+    /// A result containing the provided value if valid url, or an error
+    /// containing proper error message.
+    fn is_valid_url(value: &str) -> Result<String, String>;
 }
