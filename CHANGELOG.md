@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.11.0] - 2025-05-25 <a id="0.11.0"></a>
+
 ### 🚀 Features
 
 - Add new validation for uri options enforcing them to start with a slash (/)
