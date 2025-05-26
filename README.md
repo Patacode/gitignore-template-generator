@@ -44,11 +44,11 @@ Version: 0.13.1
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
-The CLI tool is a simple API binder to `toptal` gitignore template generation
+Simple API binder to `toptal` gitignore template generation
 service. It takes gitignore template names as positional arguments and
 generates a gitignore template for you.
 
-It also supports a variety of CLI options that allow you to customize its
+It supports a variety of CLI options that allow you to customize its
 behavior. Have a look at the [official crate documentation](https://docs.rs/gitignore-template-generator/0.13.1/gitignore_template_generator)
 for more details.
 
