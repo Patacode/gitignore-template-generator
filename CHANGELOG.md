@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.13.2] - 2025-05-26 <a id="0.13.2"></a>
+
 ### 📚 Documentation
 
 - [core] - Update root module doc (*Make it shorter and more explicit*)
