@@ -169,6 +169,8 @@ It's the default, see [below section](#usage) for more infos.
 
 ### Local templating
 
+*Work in progress. Coming in next release*
+
 - **Feature flag**: `local_templating`
 - **Default**: `no`
 - **Dependency**: `/`
