@@ -44,13 +44,17 @@ Version: 0.13.2
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
-Simple API binder to `toptal` gitignore template generation
-service. It takes gitignore template names as positional arguments and
-generates a gitignore template for you.
+By default, this tool is a simple API binder to `toptal` gitignore template
+generation service. It takes gitignore template names as positional arguments
+and generates a gitignore template for you.
 
-It supports a variety of CLI options that allow you to customize its
-behavior. Have a look at the [official crate documentation](https://docs.rs/gitignore-template-generator/0.13.2/gitignore_template_generator)
+It supports a variety of CLI options and feature flags to
+customize its behavior with finer control. Have a look at the [official crate documentation](https://docs.rs/gitignore-template-generator/0.13.2/gitignore_template_generator)
 for more details.
+
+You might be interested in the [local templating](DOCUMENTATION.md#local-templating)
+feature for example 🙂 Which allows you to generate gitignore templates from the
+local file system.
 
 Examples:
 
