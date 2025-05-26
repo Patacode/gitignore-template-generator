@@ -7,13 +7,15 @@ library crate anyone can reuse to craft his own custom flavor of gitignore
 template generation.
 
 Here, you'll find detailed infos on [how to install the crate](#installation),
-[how to use the CLI tool](#usage), [general rules around the CLI parser](#general-rules),
+[how to use the CLI tool](#usage), [the available feature flags](#features),
+[general rules around the CLI parser](#general-rules),
 [how each supported CLI options work](#cli-options), with examples, as well as
 [technical documentation on the library components](#modules) (i.e. modules,
 structs, enums and traits) used by the binary.
 
 - [Installation](#installation)
 - [Usage](#usage)
+- [Features](#features)
 - [General rules](#general-rules)
 - [CLI options](#cli-options)
 - [Technical documentation](#modules)
@@ -68,9 +70,9 @@ Version: 0.13.2
 Author: Patacode <pata.codegineer@gmail.com>
 ```
 
-The CLI tool is a simple API binder to `toptal` gitignore template generation
-service. It takes gitignore template names as positional arguments and
-generates a gitignore template for you:
+By default, the CLI tool is a simple API binder to `toptal` gitignore template
+generation service. It takes gitignore template names as positional arguments
+and generates a gitignore template for you:
 
 ```text
 $ gitignore-template-generator rust python java
@@ -80,6 +82,7 @@ $ gitignore-template-generator rust python java
 ```
 
 Result is printed to `stdout`, so you can easily redirect or pipe it if needed.
+Any error will be printed to `stderr`.
 
 Behind the scene, it calls the template generator service as pointed to by
 the [-g --generator-uri](#-g-generator-uri) option.
@@ -112,6 +115,114 @@ error: the following required arguments were not provided:
 Usage: gitignore-template-generator <TEMPLATE_NAMES>...
 
 For more information, try '--help'.
+```
+
+## Features
+
+This crate comes with various features you can freely enable/disable as per
+your needs.
+
+By default, you have the `clap` CLI parser along with `ureq` HTTP client crates,
+with simple API binding to `toptal` gitignore template generation service
+(see [below section](#usage) for more infos).
+
+The default crate's flavor might be too feature-rich for your use case, or
+you might feel it lacks features. To customize its flavor, here are the
+available features you might want to opt in or out:
+
+- [Cli][#cli]
+- [Remote templating](#remote-templating)
+- [Local templating](#local-templating)
+
+The `cli` and `remote_templating` features are there by default and
+`local_templating` can be enabled on-demand.
+
+Either `remote_templating` or `local_templating` must be enabled at any time.
+
+### Cli
+
+*Required for now but coming soon as a feature flag*
+
+**Feature flag**: `cli`
+**Default**: `yes`
+**Dependency**: `clap`
+
+This feature allows the use of `clap` as a CLI parser.
+
+It makes the crate much heavier but allows for a fully-fledged experience
+with it.
+
+It's the default, see [below section](#usage) for more infos.
+
+### Remote templating
+
+*Required for now but coming soon as a feature flag*
+
+**Feature flag**: `remote_templating`
+**Default**: `yes`
+**Dependency**: `ureq`
+
+This feature allows to generate gitignore templates using a remote API through
+HTTP.
+
+It's the default, see [below section](#usage) for more infos.
+
+### Local templating
+
+**Feature flag**: `local_templating`
+**Default**: `no`
+**Dependency**: `/`
+
+This feature allows to generate gitignore templates using template files
+stored on local file system.
+
+When generating a gitignore template, the binary crate will fetch for
+templates in the directory pointed to by the environment variable
+`GITIGNORE_TEMPLATE_GENERATOR_HOME`. If not set, it will fall back to
+`$HOME/.gitignore_template_generator`.
+
+If pointed directory does not exist, the binary crate will simply consider it
+as an empty database, not supporting any template names.
+
+Apart from this extra search in local file system, behavior is expected to be
+the same as for remote template generation: unsupported template names will
+result in same error, and if any other error occurred (e.g. filesystem error,
+insufficient privilege...), error propagation is expected to be the same as
+well.
+
+If combined with [remote templating](#remote-templating), local result will
+be merged into remote result, and local template names will be prefixed with a
+star (`*`) in [-l --list](#-l-list) output. As well, robust template names check
+will additionally include local template list.
+
+With this feature enabled, the expected workflow is the following:
+
+1. Fetch from remote any *valid* remote template names (i.e. supported by the
+  templating service)
+2. Fetch from local any remaining template names
+3. If any error occurred, either remotely or locally, they will all be
+  propagated. This includes error messages to `stderr` and script's return value,
+  which, for the latter, will be the sum of remote and local execution status.
+
+As remote fetching will only be done for *valid* template names (i.e. supported
+by the templating service), even without the [-c --check](#-c-check) option
+enabled, it allows for a more granular error message in case no matched
+templates were found, neither locally, nor remotely.
+
+Here is an example where remote service is operational but none of the
+provided template names, `foo` and `bar` in this case, were matched:
+
+```text
+$ echo $GITIGNORE_TEMPLATE_GENERATOR_HOME
+$HOME/.gitignore_template_generator/templates
+$ ls $HOME/.gitignore_template_generator/templates
+rust
+python
+java
+$ gitignore-template-generator foo bar
+One or more provided template names are not supported.
+To enable robust template names check, retry with '--check'.
+For the list of available template names, try '--list'.
 ```
 
 ## General rules
