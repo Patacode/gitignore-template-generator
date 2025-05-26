@@ -162,8 +162,8 @@ It's the default, see [below section](#usage) for more infos.
 - **Default**: `yes`
 - **Dependency**: `ureq`
 
-This feature allows to generate gitignore templates using a remote API through
-HTTP.
+This feature allows to generate gitignore templates through HTTP using a remote
+API.
 
 It's the default, see [below section](#usage) for more infos.
 
