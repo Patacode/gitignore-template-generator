@@ -9,7 +9,13 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 📚 Documentation
+
+- [core] - Update root module doc (*Make it shorter and more explicit*)
+
+### ⚙️ Miscellaneous Tasks
+
+- [readme] - Shorten some paragraphs in installation section
 
 ## [0.13.1] - 2025-05-25 <a id="0.13.1"></a>
 
