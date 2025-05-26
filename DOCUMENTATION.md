@@ -130,7 +130,7 @@ The default crate's flavor might be too feature-rich for your use case, or
 you might feel it lacks features. To customize its flavor, here are the
 available features you might want to opt in or out:
 
-- [Cli][#cli]
+- [Cli](#cli)
 - [Remote templating](#remote-templating)
 - [Local templating](#local-templating)
 
