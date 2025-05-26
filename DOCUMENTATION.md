@@ -128,7 +128,7 @@ with simple API binding to `toptal` gitignore template generation service
 
 The default crate's flavor might be too feature-rich for your use case, or
 you might feel it lacks features. To customize its flavor, here are the
-available features you might want to opt in or out:
+available features you can opt in or out:
 
 - [Cli](#cli)
 - [Remote templating](#remote-templating)
