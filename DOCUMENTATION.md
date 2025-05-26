@@ -143,9 +143,9 @@ Either `remote_templating` or `local_templating` must be enabled at any time.
 
 *Required for now but coming soon as a feature flag*
 
-**Feature flag**: `cli`
-**Default**: `yes`
-**Dependency**: `clap`
+- **Feature flag**: `cli`
+- **Default**: `yes`
+- **Dependency**: `clap`
 
 This feature allows the use of `clap` as a CLI parser.
 
@@ -158,9 +158,9 @@ It's the default, see [below section](#usage) for more infos.
 
 *Required for now but coming soon as a feature flag*
 
-**Feature flag**: `remote_templating`
-**Default**: `yes`
-**Dependency**: `ureq`
+- **Feature flag**: `remote_templating`
+- **Default**: `yes`
+- **Dependency**: `ureq`
 
 This feature allows to generate gitignore templates using a remote API through
 HTTP.
@@ -169,9 +169,9 @@ It's the default, see [below section](#usage) for more infos.
 
 ### Local templating
 
-**Feature flag**: `local_templating`
-**Default**: `no`
-**Dependency**: `/`
+- **Feature flag**: `local_templating`
+- **Default**: `no`
+- **Dependency**: `/`
 
 This feature allows to generate gitignore templates using template files
 stored on local file system.
