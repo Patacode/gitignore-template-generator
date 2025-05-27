@@ -128,6 +128,133 @@ mod gitignore_template_generator {
         }
     }
 
+    mod generate_locally_with_template_check {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            #[serial]
+            fn it_generates_template_from_local_fs_using_env_var() {
+                let template_dir = helper::get_resource_path("templates");
+                let template_names = make_string_vec("python rust");
+                unsafe {
+                    std::env::set_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
+                }
+
+                let expected_template = helper::load_expectation_file_as_string(
+                    "local_rust_python_template",
+                );
+                let actual_template =
+                    GitignoreTemplateManager::generate_locally_with_template_check(
+                        &template_dir,
+                        &template_names,
+                    );
+
+                assert!(actual_template.is_ok());
+
+                let actual_template = actual_template.unwrap();
+                assert_eq!(actual_template, expected_template);
+
+                unsafe {
+                    std::env::remove_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                    );
+                }
+            }
+
+            #[test]
+            fn it_generates_template_from_local_fs_using_given_dir() {
+                let template_dir = helper::get_resource_path("templates");
+                let template_names = make_string_vec("python rust");
+
+                let expected_template = helper::load_expectation_file_as_string(
+                    "local_rust_python_template",
+                );
+                let actual_template =
+                    GitignoreTemplateManager::generate_locally_with_template_check(
+                        &template_dir,
+                        &template_names,
+                    );
+
+                assert!(actual_template.is_ok());
+
+                let actual_template = actual_template.unwrap();
+                assert_eq!(actual_template, expected_template);
+            }
+        }
+
+        mod failure {
+            use std::{
+                fs::{self, File},
+                os::unix::fs::PermissionsExt,
+                path::Path,
+            };
+
+            use super::*;
+
+            #[test]
+            fn it_fails_with_detailed_msg_when_unsupported_template_names() {
+                let template_dir = helper::get_resource_path("templates");
+                let template_names = make_string_vec("python rust unknown");
+
+                let expected_error = ProgramExit {
+                    message:
+                        constant::error_messages::INEXISTENT_TEMPLATE_NAMES
+                            .replace("{templates}", "unknown"),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: None,
+                    kind: ExitKind::Error,
+                };
+                let actual_error = GitignoreTemplateManager::generate_locally_with_template_check(
+                    &template_dir,
+                    &template_names,
+                );
+
+                assert!(actual_error.is_err());
+
+                let actual_error = actual_error.unwrap_err();
+                assert_eq!(actual_error, expected_error);
+            }
+
+            #[test]
+            fn it_propagates_fs_error_if_any_occurred() {
+                let template_dir = helper::get_resource_path("templates");
+                let template_names = make_string_vec("foo");
+                let file_path = format!("{template_dir}/foo.txt");
+                let file_path = Path::new(&file_path);
+                let file = File::create(&file_path).unwrap();
+
+                let mut perms = file.metadata().unwrap().permissions();
+                perms.set_mode(0o264);
+                fs::set_permissions(&file_path, perms).unwrap();
+
+                let expected_error = ProgramExit {
+                    message: format!(
+                        "{}: Permission denied (os error 13)",
+                        constant::error_messages::LOCAL_GENERATION
+                    ),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: None,
+                    kind: ExitKind::Error,
+                };
+                let actual_error = GitignoreTemplateManager::generate_locally_with_template_check(
+                    &template_dir,
+                    &template_names,
+                );
+
+                assert!(actual_error.is_err());
+
+                let actual_error = actual_error.unwrap_err();
+                assert_eq!(actual_error, expected_error);
+            }
+        }
+    }
+
     mod generate_from_api {
         use super::*;
 

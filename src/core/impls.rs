@@ -80,6 +80,51 @@ impl GitignoreTemplateManager {
 }
 
 impl TemplateGenerator for GitignoreTemplateManager {
+    fn generate_locally(
+        default_template_dir: &str,
+        template_names: &[String],
+    ) -> Result<String, ProgramExit> {
+        let template_dir = match std::env::var(HOME_ENV_VAR) {
+            Ok(directory_path) => directory_path,
+            Err(_) => default_template_dir.into(),
+        };
+
+        let templates = Self::map_template_names_to_their_content(
+            &template_dir,
+            template_names,
+        )?;
+
+        Ok(templates.join("\n\n"))
+    }
+
+    fn generate_locally_with_template_check(
+        default_template_dir: &str,
+        template_names: &[String],
+    ) -> Result<String, ProgramExit> {
+        let available_templates = Self::list_locally(default_template_dir);
+        available_templates.clone()?;
+
+        let invalid_template_names = Self::find_invalid_templates(
+            &available_templates.unwrap(),
+            template_names,
+        );
+
+        if invalid_template_names.is_empty() {
+            Self::generate_locally(default_template_dir, template_names)
+        } else {
+            Err(ProgramExit {
+                message: constant::error_messages::INEXISTENT_TEMPLATE_NAMES
+                    .replace(
+                        "{templates}",
+                        invalid_template_names.join(", ").as_str(),
+                    ),
+                exit_status: constant::exit_status::GENERIC,
+                styled_message: None,
+                kind: ExitKind::Error,
+            })
+        }
+    }
+
     /// Generates a gitignore template matching given template names.
     ///
     /// * Each associated gitignore template will be merged into one big string
@@ -132,23 +177,6 @@ impl TemplateGenerator for GitignoreTemplateManager {
                 kind: ExitKind::Error,
             })
         }
-    }
-
-    fn generate_locally(
-        default_template_dir: &str,
-        template_names: &[String],
-    ) -> Result<String, ProgramExit> {
-        let template_dir = match std::env::var(HOME_ENV_VAR) {
-            Ok(directory_path) => directory_path,
-            Err(_) => default_template_dir.into(),
-        };
-
-        let templates = Self::map_template_names_to_their_content(
-            &template_dir,
-            template_names,
-        )?;
-
-        Ok(templates.join("\n\n"))
     }
 }
 

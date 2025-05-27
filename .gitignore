@@ -25,3 +25,6 @@ release/
 
 # Private notes
 NOTES.md
+
+# Auto-generated test resources
+tests/resources/templates/foo.txt

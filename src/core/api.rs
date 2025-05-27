@@ -63,6 +63,32 @@ pub trait TemplateGenerator: TemplateLister {
         template_names: &[String],
     ) -> Result<String, ProgramExit>;
 
+    /// Generates a string template matching given template names using local
+    /// file system, with robust template names check.
+    ///
+    /// Behaves the same as [`TemplateGenerator::generate_locally`] but will
+    /// return a detailed error message in case any of provided template
+    /// names are not listed in available template list (as returned by
+    /// [`TemplateLister::list_locally`]).
+    ///
+    /// # Arguments
+    ///
+    /// * `default_template_dir` - The fallback directory in which templates
+    ///     are stored. Will be used in case `GITIGNORE_TEMPLATE_GENERATOR_HOME`
+    ///     env var is not set.
+    /// * `template_names` - The template names to be used to generate the
+    ///     actual template.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the generated template on success, or a
+    /// [`ProgramExit`] on error (e.g. file system failure, insufficient
+    /// privilege, template not found...).
+    fn generate_locally_with_template_check(
+        default_template_dir: &str,
+        template_names: &[String],
+    ) -> Result<String, ProgramExit>;
+
     /// Generates a string template matching given template names through an
     /// API call.
     ///
@@ -88,7 +114,7 @@ pub trait TemplateGenerator: TemplateLister {
     ) -> Result<String, ProgramExit>;
 
     /// Generates a string template matching given template names through an
-    /// API call, with robust template name checks.
+    /// API call, with robust template names check.
     ///
     /// Behaves the same as [`TemplateGenerator::generate_from_api`] but will
     /// return a detailed error message in case any of provided template
