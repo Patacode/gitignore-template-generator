@@ -1,4 +1,9 @@
-use std::collections::HashMap;
+use std::{
+    collections::HashMap,
+    fs::{self, File},
+    os::unix::fs::PermissionsExt,
+    path::Path,
+};
 
 use serial_test::serial;
 
@@ -168,6 +173,7 @@ mod gitignore_template_generator {
             }
 
             #[test]
+            #[serial]
             fn it_generates_template_from_local_fs_using_given_dir() {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust");
@@ -189,15 +195,10 @@ mod gitignore_template_generator {
         }
 
         mod failure {
-            use std::{
-                fs::{self, File},
-                os::unix::fs::PermissionsExt,
-                path::Path,
-            };
-
             use super::*;
 
             #[test]
+            #[serial]
             fn it_fails_with_detailed_msg_when_unsupported_template_names() {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust unknown");
@@ -222,16 +223,17 @@ mod gitignore_template_generator {
             }
 
             #[test]
+            #[serial]
             fn it_propagates_fs_error_if_any_occurred() {
-                let template_dir = helper::get_resource_path("templates");
+                let template_dir = helper::get_resource_path("templates/dummy");
                 let template_names = make_string_vec("foo");
                 let file_path = format!("{template_dir}/foo.txt");
                 let file_path = Path::new(&file_path);
-                let file = File::create(&file_path).unwrap();
+                let file = File::create(file_path).unwrap();
 
                 let mut perms = file.metadata().unwrap().permissions();
                 perms.set_mode(0o264);
-                fs::set_permissions(&file_path, perms).unwrap();
+                fs::set_permissions(file_path, perms).unwrap();
 
                 let expected_error = ProgramExit {
                     message: format!(
@@ -638,6 +640,7 @@ mod gitignore_template_generator {
             }
 
             #[test]
+            #[serial]
             fn it_lists_templates_from_local_fs_using_given_dir() {
                 let template_dir = helper::get_resource_path("templates");
 
@@ -652,6 +655,7 @@ mod gitignore_template_generator {
             }
 
             #[test]
+            #[serial]
             fn it_returns_empty_string_when_inexistent_dir() {
                 let template_dir = helper::get_resource_path("inexistent");
 
@@ -670,6 +674,7 @@ mod gitignore_template_generator {
             use super::*;
 
             #[test]
+            #[serial]
             fn it_propagates_fs_error_if_any_occurred() {
                 let template_dir =
                     helper::get_resource_path("templates/python.txt");

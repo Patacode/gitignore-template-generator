@@ -27,4 +27,4 @@ release/
 NOTES.md
 
 # Auto-generated test resources
-tests/resources/templates/foo.txt
+tests/resources/templates/dummy/foo.txt
