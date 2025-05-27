@@ -160,11 +160,7 @@ impl TemplateLister for GitignoreTemplateManager {
         };
         let directory_handler = DirectoryHandler::new(&template_dir);
         match directory_handler.list_files() {
-            Ok(template_names) => Ok(template_names
-                .iter()
-                .map(|template_name| format!("*{template_name}"))
-                .collect::<Vec<String>>()
-                .join("\n")),
+            Ok(template_names) => Ok(template_names.join("\n")),
             Err(error) => match error.kind() {
                 ErrorKind::NotFound => Ok(String::from("")),
                 _ => Err(ProgramExit {

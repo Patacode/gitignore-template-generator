@@ -494,7 +494,7 @@ mod gitignore_template_generator {
                     );
                 }
 
-                let expected_list = "*python\n*rust";
+                let expected_list = "python\nrust";
                 let actual_list =
                     GitignoreTemplateManager::list_locally(&template_dir);
 
@@ -514,7 +514,7 @@ mod gitignore_template_generator {
             fn it_lists_templates_from_local_fs_using_given_dir() {
                 let template_dir = helper::get_resource_path("templates");
 
-                let expected_list = "*python\n*rust";
+                let expected_list = "python\nrust";
                 let actual_list =
                     GitignoreTemplateManager::list_locally(&template_dir);
 
