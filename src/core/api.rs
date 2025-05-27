@@ -38,7 +38,33 @@ pub enum ExitKind {
 /// Template generator trait to generate a template via an API call made
 /// over HTTP.
 pub trait TemplateGenerator: TemplateLister {
-    /// Generates a string template matching given template names.
+    /// Generates a string template matching given template names using local
+    /// file system.
+    ///
+    /// It will first try to locate template dir using
+    /// `GITIGNORE_TEMPLATE_GENERATOR_HOME` env var, and if not set, will then
+    /// use provided `default_template_dir`.
+    ///
+    /// # Arguments
+    ///
+    /// * `default_template_dir` - The fallback directory in which templates
+    ///     are stored. Will be used in case `GITIGNORE_TEMPLATE_GENERATOR_HOME`
+    ///     env var is not set.
+    /// * `template_names` - The template names to be used to generate the
+    ///     actual template.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the generated template on success, or a
+    /// [`ProgramExit`] on error (e.g. file system failure, insufficient
+    /// privilege...).
+    fn generate_locally(
+        default_template_dir: &str,
+        template_names: &[String],
+    ) -> Result<String, ProgramExit>;
+
+    /// Generates a string template matching given template names through an
+    /// API call.
     ///
     /// The template is generated via a GET API call made over HTTP using
     /// the given http client.
@@ -48,7 +74,7 @@ pub trait TemplateGenerator: TemplateLister {
     /// * `http_client` - The http client to be used to make the API call.
     /// * `endpoint_uri` - The endpoint URI to generate templates (defaults to
     ///     [`crate::constant::template_manager::GENERATOR_URI`] if None).
-    /// * `template_names` - The template names to be used to generated the
+    /// * `template_names` - The template names to be used to generate the
     ///     actual template.
     ///
     /// # Returns
@@ -61,8 +87,8 @@ pub trait TemplateGenerator: TemplateLister {
         template_names: &[String],
     ) -> Result<String, ProgramExit>;
 
-    /// Generates a string template matching given template names with robust
-    /// template checks.
+    /// Generates a string template matching given template names through an
+    /// API call, with robust template name checks.
     ///
     /// Behaves the same as [`TemplateGenerator::generate_from_api`] but will
     /// return a detailed error message in case any of provided template
@@ -77,7 +103,7 @@ pub trait TemplateGenerator: TemplateLister {
     ///     if None).
     /// * `endpoint_uri` - The endpoint URI to list templates (defaults to
     ///     [`crate::constant::template_manager::LISTER_URI`] if None).
-    /// * `template_names` - The template names to be used to generated the
+    /// * `template_names` - The template names to be used to generate the
     ///     actual template.
     ///
     /// # Returns
@@ -96,7 +122,28 @@ pub trait TemplateGenerator: TemplateLister {
 /// Template lister trait to list available templates via an API call made
 /// over HTTP.
 pub trait TemplateLister {
-    /// Lists available templates.
+    /// Lists available templates using local file system.
+    ///
+    /// It will first try to locate template dir using
+    /// `GITIGNORE_TEMPLATE_GENERATOR_HOME` env var, and if not set, will then
+    /// use provided `default_template_dir`.
+    ///
+    /// # Arguments
+    ///
+    /// * `default_template_dir` - The fallback directory in which templates
+    ///     are stored. Will be used in case `GITIGNORE_TEMPLATE_GENERATOR_HOME`
+    ///     env var is not set.
+    /// * `template_names` - The template names to be used to generate the
+    ///     actual template.
+    ///
+    /// # Returns
+    ///
+    /// A result containing the list of available templates on success, or a
+    /// [`ProgramExit`] on error (e.g. file system failure, insufficient
+    /// privilege...).
+    fn list_locally(default_template_dir: &str) -> Result<String, ProgramExit>;
+
+    /// Lists available templates through an API call.
     ///
     /// The template list is fetched via a GET API call made over HTTP using
     /// the given http client.

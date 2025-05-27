@@ -1,14 +1,132 @@
 use std::collections::HashMap;
 
+use serial_test::serial;
+
 use super::*;
 use crate::{
     constant,
-    helper::make_string_vec,
+    helper::{self, make_string_vec},
     http_client::{MockEndpointHttpClient, MockHttpClient},
 };
 
 mod gitignore_template_generator {
     use super::*;
+
+    mod generate_locally {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            #[serial]
+            fn it_generates_template_from_local_fs_using_env_var() {
+                let template_dir = helper::get_resource_path("templates");
+                let template_names = make_string_vec("python rust");
+                unsafe {
+                    std::env::set_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
+                }
+
+                let expected_template = helper::load_expectation_file_as_string(
+                    "local_rust_python_template",
+                );
+                let actual_template =
+                    GitignoreTemplateManager::generate_locally(
+                        &template_dir,
+                        &template_names,
+                    );
+
+                assert!(actual_template.is_ok());
+
+                let actual_template = actual_template.unwrap();
+                assert_eq!(actual_template, expected_template);
+
+                unsafe {
+                    std::env::remove_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                    );
+                }
+            }
+
+            #[test]
+            fn it_generates_template_from_local_fs_using_given_dir() {
+                let template_dir = helper::get_resource_path("templates");
+                let template_names = make_string_vec("python rust");
+
+                let expected_template = helper::load_expectation_file_as_string(
+                    "local_rust_python_template",
+                );
+                let actual_template =
+                    GitignoreTemplateManager::generate_locally(
+                        &template_dir,
+                        &template_names,
+                    );
+
+                assert!(actual_template.is_ok());
+
+                let actual_template = actual_template.unwrap();
+                assert_eq!(actual_template, expected_template);
+            }
+        }
+
+        mod failure {
+            use super::*;
+
+            #[test]
+            fn it_fails_when_unsupported_template_names() {
+                let template_dir = helper::get_resource_path("templates");
+                let template_names = make_string_vec("python rust unknown");
+
+                let expected_error = ProgramExit {
+                    message: format!(
+                        "{}: {}",
+                        constant::error_messages::LOCAL_GENERATION,
+                        constant::error_messages::UNSUPPORTED_TEMPLATE
+                    ),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: None,
+                    kind: ExitKind::Error,
+                };
+                let actual_error = GitignoreTemplateManager::generate_locally(
+                    &template_dir,
+                    &template_names,
+                );
+
+                assert!(actual_error.is_err());
+
+                let actual_error = actual_error.unwrap_err();
+                assert_eq!(actual_error, expected_error);
+            }
+
+            #[test]
+            fn it_propagates_fs_error_if_any_occurred() {
+                let template_dir = helper::get_resource_path("templates");
+                let template_names = make_string_vec("dummy");
+
+                let expected_error = ProgramExit {
+                    message: format!(
+                        "{}: Is a directory (os error 21)",
+                        constant::error_messages::LOCAL_GENERATION
+                    ),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: None,
+                    kind: ExitKind::Error,
+                };
+                let actual_error = GitignoreTemplateManager::generate_locally(
+                    &template_dir,
+                    &template_names,
+                );
+
+                assert!(actual_error.is_err());
+
+                let actual_error = actual_error.unwrap_err();
+                assert_eq!(actual_error, expected_error);
+            }
+        }
+    }
 
     mod generate_from_api {
         use super::*;
@@ -355,6 +473,96 @@ mod gitignore_template_generator {
                 });
 
                 assert_eq!(actual, expected);
+            }
+        }
+    }
+
+    mod list_locally {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            #[serial]
+            fn it_lists_templates_from_local_fs_using_env_var() {
+                let template_dir = helper::get_resource_path("templates");
+                unsafe {
+                    std::env::set_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
+                }
+
+                let expected_list = "*python\n*rust";
+                let actual_list =
+                    GitignoreTemplateManager::list_locally(&template_dir);
+
+                assert!(actual_list.is_ok());
+
+                let actual_list = actual_list.unwrap();
+                assert_eq!(actual_list, expected_list);
+
+                unsafe {
+                    std::env::remove_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                    );
+                }
+            }
+
+            #[test]
+            fn it_lists_templates_from_local_fs_using_given_dir() {
+                let template_dir = helper::get_resource_path("templates");
+
+                let expected_list = "*python\n*rust";
+                let actual_list =
+                    GitignoreTemplateManager::list_locally(&template_dir);
+
+                assert!(actual_list.is_ok());
+
+                let actual_list = actual_list.unwrap();
+                assert_eq!(actual_list, expected_list);
+            }
+
+            #[test]
+            fn it_returns_empty_string_when_inexistent_dir() {
+                let template_dir = helper::get_resource_path("inexistent");
+
+                let expected_list = "";
+                let actual_list =
+                    GitignoreTemplateManager::list_locally(&template_dir);
+
+                assert!(actual_list.is_ok());
+
+                let actual_list = actual_list.unwrap();
+                assert_eq!(actual_list, expected_list);
+            }
+        }
+
+        mod failure {
+            use super::*;
+
+            #[test]
+            fn it_propagates_fs_error_if_any_occurred() {
+                let template_dir =
+                    helper::get_resource_path("templates/python.txt");
+
+                let expected_error = ProgramExit {
+                    message: format!(
+                        "{}: Not a directory (os error 20)",
+                        constant::error_messages::LOCAL_LISTING
+                    ),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: None,
+                    kind: ExitKind::Error,
+                };
+                let actual_error =
+                    GitignoreTemplateManager::list_locally(&template_dir);
+
+                assert!(actual_error.is_err());
+
+                let actual_error = actual_error.unwrap_err();
+                assert_eq!(actual_error, expected_error);
             }
         }
     }

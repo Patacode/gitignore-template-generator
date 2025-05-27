@@ -22,6 +22,21 @@ pub fn load_expectation_file_as_string(expectation_file_name: &str) -> String {
         .expect(constant::error_messages::FILE_READ_TO_STRING_FAILURE)
 }
 
+pub fn load_resource(resource_name: &str) -> String {
+    let resource_path = get_resource_path(resource_name);
+
+    fs::read_to_string(resource_path)
+        .expect(constant::error_messages::FILE_READ_TO_STRING_FAILURE)
+}
+
+pub fn get_resource_path(resource_name: &str) -> String {
+    format!(
+        "{}/{}/{resource_name}",
+        env!("CARGO_MANIFEST_DIR"),
+        constant::path::TEST_RESOURCES
+    )
+}
+
 pub fn parse_bytes(bytes: &[u8]) -> Cow<str> {
     String::from_utf8_lossy(bytes)
 }
@@ -157,4 +172,12 @@ pub fn get_help_message_for(template_name: &str) -> String {
             constant::template_manager::TIMEOUT_UNIT,
         )
         .replace("{timeout_unit_values}", "millisecond, second")
+}
+
+pub fn capitalize(s: &str) -> String {
+    let mut c = s.chars();
+    match c.next() {
+        None => String::new(),
+        Some(first) => first.to_uppercase().collect::<String>() + c.as_str(),
+    }
 }

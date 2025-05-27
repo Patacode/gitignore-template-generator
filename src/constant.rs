@@ -64,6 +64,14 @@ pub mod error_messages {
 
     /// Invalid URL.
     pub const INVALID_URL: &str = "Value must be a valid URL";
+
+    pub const LOCAL_GENERATION: &str =
+        "An error occurred while generating template from local file system";
+
+    pub const LOCAL_LISTING: &str =
+        "An error occurred while listing templates from local file system";
+
+    pub const UNSUPPORTED_TEMPLATE: &str = "One or more provided template names are not supported\nTo enable robust template names check, retry with '--check'.\nFor the list of available template names, try '--list'.";
 }
 
 pub mod help_messages {
@@ -230,6 +238,12 @@ pub mod template_manager {
 
     use crate::parser::TimeoutUnit;
 
+    /// Env variable name pointing to local template directory
+    pub const HOME_ENV_VAR: &str = "GITIGNORE_TEMPLATE_GENERATOR_HOME";
+
+    /// Default local template directory
+    pub const DEFAULT_HOME: &str = ".gitignore_template_generator";
+
     /// Template manager service base URL.
     pub const BASE_URL: &str = "https://www.toptal.com";
 
@@ -274,4 +288,7 @@ pub mod path {
 
     /// Path to directory containing test output expectations.
     pub const TEST_EXPECTATIONS: &str = "tests/expected";
+
+    /// Path to directory containing test resources.
+    pub const TEST_RESOURCES: &str = "tests/resources";
 }

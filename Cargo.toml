@@ -43,6 +43,10 @@ mockito = "1.7.0"
 regex = "1.11.1"
 rstest = "0.25.0"
 test_bin = "0.4.0"
+serial_test = "3.2.0"
+
+[features]
+local_templating = []
 
 [package.metadata.release]
 pre-release-commit-message = "chore: prepare for release v{{version}}"
