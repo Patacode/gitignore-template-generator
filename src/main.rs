@@ -116,6 +116,9 @@ fn main() {
     let result = get_result(&parsed_cli_args);
 
     match result {
+        Ok(output) if output.value.is_empty() => {
+            println!("Nothing to be printed")
+        }
         Ok(output) => println!("{}", output.value),
         Err(error) => {
             eprintln!("{}", error.message);

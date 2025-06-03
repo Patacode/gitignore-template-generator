@@ -1,3 +1,5 @@
+#[cfg(feature = "local_templating")]
+use std::{fs, path::Path};
 use std::{thread, time::Duration};
 
 use gitignore_template_generator::{
@@ -13,6 +15,97 @@ use test_bin::get_test_bin;
 
 mod success {
     use super::*;
+
+    mod named_args {
+        use super::*;
+
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "local_templating")] {
+                #[test]
+                #[serial]
+                fn it_outputs_empty_output_message_when_empty_template_list() {
+                    let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+                    let template_dir = get_resource_path("templates/empty");
+                    if !Path::new(&template_dir).exists() {
+                        fs::create_dir(&template_dir).expect("Error creating empty directory");
+                    }
+
+                    unsafe {
+                        std::env::set_var(
+                            constant::template_manager::HOME_ENV_VAR,
+                            &template_dir,
+                        );
+                    }
+
+                    let mut mock_server = Server::new();
+                    let mock_server_base_url = mock_server.url();
+                    let template_lister_service_uri = template_manager::LISTER_URI;
+                    let template_lister_mock = mock_server
+                        .mock("GET", template_lister_service_uri)
+                        .with_status(200)
+                        .with_body("")
+                        .create();
+
+                    cli_tool
+                        .arg("--list")
+                        .args(["--server-url", &mock_server_base_url]);
+                    let result = cli_tool
+                        .output()
+                        .expect(error_messages::CMD_EXECUTION_FAILURE);
+
+                    let actual_message = String::from_utf8_lossy(&result.stdout);
+                    let expected_message = "Nothing to be printed\n";
+
+                    let actual_status_code = result.status.code();
+                    let expected_status_code = Some(exit_status::SUCCESS);
+
+                    unsafe {
+                        std::env::remove_var(
+                            constant::template_manager::HOME_ENV_VAR,
+                        );
+                    }
+
+                    template_lister_mock.assert();
+
+                    assert_eq!(actual_status_code, expected_status_code);
+                    assert_eq!(actual_message, expected_message);
+                }
+            } else {
+                #[test]
+                #[parallel]
+                fn it_outputs_empty_output_message_when_empty_template_list() {
+                    let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+
+                    let mut mock_server = Server::new();
+                    let mock_server_base_url = mock_server.url();
+                    let template_lister_service_uri = template_manager::LISTER_URI;
+                    let template_lister_mock = mock_server
+                        .mock("GET", template_lister_service_uri)
+                        .with_status(200)
+                        .with_body("")
+                        .create();
+
+                    cli_tool
+                        .arg("--list")
+                        .args(["--server-url", &mock_server_base_url]);
+                    let result = cli_tool
+                        .output()
+                        .expect(error_messages::CMD_EXECUTION_FAILURE);
+
+                    let actual_message = String::from_utf8_lossy(&result.stdout);
+                    let expected_message = "Nothing to be printed\n";
+
+                    let actual_status_code = result.status.code();
+                    let expected_status_code = Some(exit_status::SUCCESS);
+
+                    template_lister_mock.assert();
+
+                    assert_eq!(actual_status_code, expected_status_code);
+                    assert_eq!(actual_message, expected_message);
+                }
+            }
+        }
+    }
 
     mod pos_args {
         use super::*;
