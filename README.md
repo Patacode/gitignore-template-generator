@@ -53,8 +53,8 @@ customize its behavior with finer control. Have a look at the [official crate do
 for more details.
 
 You might be interested in the [local templating](DOCUMENTATION.md#local-templating)
-feature for example 🙂 Which allows you to generate gitignore templates from the
-local file system.
+feature—which allows you to generate gitignore templates from your local file
+system—for example.
 
 Examples:
 
