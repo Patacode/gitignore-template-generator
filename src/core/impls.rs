@@ -360,15 +360,11 @@ impl TemplateGenerator for GitignoreTemplateManager<'_> {
             .iter()
             .map(|template_manager| match template_manager.list() {
                 Ok(supported_templates) => {
-                    let templates_to_process: Vec<String> = template_names
-                        .iter()
-                        .filter(|template_name| {
-                            supported_templates
-                                .value
-                                .lines()
-                                .any(|line| line == template_name.as_str())
-                        })
-                        .cloned()
+                    let templates_to_process: Vec<String> = supported_templates
+                        .value
+                        .lines()
+                        .filter(|line| template_names.contains(&line.to_string()))
+                        .map(|line| line.to_string())
                         .collect();
 
                     let result =
