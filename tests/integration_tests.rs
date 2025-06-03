@@ -16,7 +16,7 @@ mod success {
                 #[rstest]
                 #[serial]
                 #[case("rust", "local_remote_rust_template")]
-                #[case("rust python", "local_remote_rust_python_template")]
+                #[case("rust python", "local_real_remote_python_rust_template")]
                 fn it_outputs_gitignore_templates_from_api(
                     #[case] pos_args: &str,
                     #[case] expectation_file_name: &str,
@@ -210,7 +210,7 @@ mod success {
 
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("local_remote_rust_python_template");
+                        load_expectation_file_as_string("local_real_remote_python_rust_template");
 
                     unsafe {
                         std::env::remove_var(
@@ -264,7 +264,7 @@ mod success {
 
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("local_remote_rust_python_template");
+                        load_expectation_file_as_string("local_real_remote_python_rust_template");
 
                     unsafe {
                         std::env::remove_var(
@@ -320,7 +320,7 @@ mod success {
 
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("local_remote_rust_python_template");
+                        load_expectation_file_as_string("local_real_remote_python_rust_template");
 
                     unsafe {
                         std::env::remove_var(
