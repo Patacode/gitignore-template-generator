@@ -36,6 +36,7 @@ clap = { version = "4.5.32", default-features = false, features = [
 ] }
 ureq = "3.0.10"
 url = "2.5.4"
+cfg-if = "1.0.0"
 
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }

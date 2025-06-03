@@ -5,19 +5,22 @@ use std::{
     path::Path,
 };
 
-use serial_test::serial;
+use serial_test::{parallel, serial};
 
 use super::*;
 use crate::{
     constant,
+    core::impls::{
+        LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager,
+    },
     helper::{self, make_string_vec},
     http_client::{MockEndpointHttpClient, MockHttpClient},
 };
 
-mod gitignore_template_generator {
+mod local_gitignore_template_manager {
     use super::*;
 
-    mod generate_locally {
+    mod generate {
         use super::*;
 
         mod success {
@@ -34,41 +37,63 @@ mod gitignore_template_generator {
                         &template_dir,
                     );
                 }
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
 
-                let expected_template = helper::load_expectation_file_as_string(
-                    "local_rust_python_template",
-                );
-                let actual_template =
-                    GitignoreTemplateManager::generate_locally(
-                        &template_dir,
-                        &template_names,
-                    );
-
-                assert!(actual_template.is_ok());
-
-                let actual_template = actual_template.unwrap();
-                assert_eq!(actual_template, expected_template);
+                let expected_template = QualifiedString {
+                    value: helper::load_expectation_file_as_string(
+                        "local_rust_python_template",
+                    ),
+                    kind: StringKind::Local,
+                };
+                let actual_template = generator.generate(&template_names);
 
                 unsafe {
                     std::env::remove_var(
                         constant::template_manager::HOME_ENV_VAR,
                     );
                 }
+
+                assert!(actual_template.is_ok());
+
+                let actual_template = actual_template.unwrap();
+                assert_eq!(actual_template, expected_template);
             }
 
             #[test]
+            #[parallel]
             fn it_generates_template_from_local_fs_using_given_dir() {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust");
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
 
-                let expected_template = helper::load_expectation_file_as_string(
-                    "local_rust_python_template",
-                );
-                let actual_template =
-                    GitignoreTemplateManager::generate_locally(
-                        &template_dir,
-                        &template_names,
-                    );
+                let expected_template = QualifiedString {
+                    value: helper::load_expectation_file_as_string(
+                        "local_rust_python_template",
+                    ),
+                    kind: StringKind::Local,
+                };
+                let actual_template = generator.generate(&template_names);
+
+                assert!(actual_template.is_ok());
+
+                let actual_template = actual_template.unwrap();
+                assert_eq!(actual_template, expected_template);
+            }
+
+            #[test]
+            #[parallel]
+            fn it_generates_empty_template_when_no_template_names() {
+                let template_dir = helper::get_resource_path("templates");
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+
+                let expected_template = QualifiedString {
+                    value: String::new(),
+                    kind: StringKind::Local,
+                };
+                let actual_template = generator.generate(&[]);
 
                 assert!(actual_template.is_ok());
 
@@ -81,9 +106,12 @@ mod gitignore_template_generator {
             use super::*;
 
             #[test]
+            #[parallel]
             fn it_fails_when_unsupported_template_names() {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust unknown");
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
 
                 let expected_error = ProgramExit {
                     message: format!(
@@ -95,10 +123,7 @@ mod gitignore_template_generator {
                     styled_message: None,
                     kind: ExitKind::Error,
                 };
-                let actual_error = GitignoreTemplateManager::generate_locally(
-                    &template_dir,
-                    &template_names,
-                );
+                let actual_error = generator.generate(&template_names);
 
                 assert!(actual_error.is_err());
 
@@ -107,9 +132,12 @@ mod gitignore_template_generator {
             }
 
             #[test]
+            #[parallel]
             fn it_propagates_fs_error_if_any_occurred() {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("dummy");
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
 
                 let expected_error = ProgramExit {
                     message: format!(
@@ -120,10 +148,7 @@ mod gitignore_template_generator {
                     styled_message: None,
                     kind: ExitKind::Error,
                 };
-                let actual_error = GitignoreTemplateManager::generate_locally(
-                    &template_dir,
-                    &template_names,
-                );
+                let actual_error = generator.generate(&template_names);
 
                 assert!(actual_error.is_err());
 
@@ -133,7 +158,7 @@ mod gitignore_template_generator {
         }
     }
 
-    mod generate_locally_with_template_check {
+    mod generate_with_template_check {
         use super::*;
 
         mod success {
@@ -144,6 +169,8 @@ mod gitignore_template_generator {
             fn it_generates_template_from_local_fs_using_env_var() {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust");
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
                 unsafe {
                     std::env::set_var(
                         constant::template_manager::HOME_ENV_VAR,
@@ -151,41 +178,43 @@ mod gitignore_template_generator {
                     );
                 }
 
-                let expected_template = helper::load_expectation_file_as_string(
-                    "local_rust_python_template",
-                );
+                let expected_template = QualifiedString {
+                    value: helper::load_expectation_file_as_string(
+                        "local_rust_python_template",
+                    ),
+                    kind: StringKind::Local,
+                };
                 let actual_template =
-                    GitignoreTemplateManager::generate_locally_with_template_check(
-                        &template_dir,
-                        &template_names,
-                    );
-
-                assert!(actual_template.is_ok());
-
-                let actual_template = actual_template.unwrap();
-                assert_eq!(actual_template, expected_template);
+                    generator.generate_with_template_check(&template_names);
 
                 unsafe {
                     std::env::remove_var(
                         constant::template_manager::HOME_ENV_VAR,
                     );
                 }
+
+                assert!(actual_template.is_ok());
+
+                let actual_template = actual_template.unwrap();
+                assert_eq!(actual_template, expected_template);
             }
 
             #[test]
-            #[serial]
+            #[parallel]
             fn it_generates_template_from_local_fs_using_given_dir() {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust");
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
 
-                let expected_template = helper::load_expectation_file_as_string(
-                    "local_rust_python_template",
-                );
+                let expected_template = QualifiedString {
+                    value: helper::load_expectation_file_as_string(
+                        "local_rust_python_template",
+                    ),
+                    kind: StringKind::Local,
+                };
                 let actual_template =
-                    GitignoreTemplateManager::generate_locally_with_template_check(
-                        &template_dir,
-                        &template_names,
-                    );
+                    generator.generate_with_template_check(&template_names);
 
                 assert!(actual_template.is_ok());
 
@@ -198,10 +227,12 @@ mod gitignore_template_generator {
             use super::*;
 
             #[test]
-            #[serial]
+            #[parallel]
             fn it_fails_with_detailed_msg_when_unsupported_template_names() {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust unknown");
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
 
                 let expected_error = ProgramExit {
                     message:
@@ -211,10 +242,8 @@ mod gitignore_template_generator {
                     styled_message: None,
                     kind: ExitKind::Error,
                 };
-                let actual_error = GitignoreTemplateManager::generate_locally_with_template_check(
-                    &template_dir,
-                    &template_names,
-                );
+                let actual_error =
+                    generator.generate_with_template_check(&template_names);
 
                 assert!(actual_error.is_err());
 
@@ -223,13 +252,15 @@ mod gitignore_template_generator {
             }
 
             #[test]
-            #[serial]
+            #[parallel]
             fn it_propagates_fs_error_if_any_occurred() {
                 let template_dir = helper::get_resource_path("templates/dummy");
                 let template_names = make_string_vec("foo");
                 let file_path = format!("{template_dir}/foo.txt");
                 let file_path = Path::new(&file_path);
                 let file = File::create(file_path).unwrap();
+                let generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
 
                 let mut perms = file.metadata().unwrap().permissions();
                 perms.set_mode(0o264);
@@ -244,10 +275,8 @@ mod gitignore_template_generator {
                     styled_message: None,
                     kind: ExitKind::Error,
                 };
-                let actual_error = GitignoreTemplateManager::generate_locally_with_template_check(
-                    &template_dir,
-                    &template_names,
-                );
+                let actual_error =
+                    generator.generate_with_template_check(&template_names);
 
                 assert!(actual_error.is_err());
 
@@ -257,7 +286,118 @@ mod gitignore_template_generator {
         }
     }
 
-    mod generate_from_api {
+    mod list {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            #[serial]
+            fn it_lists_templates_from_local_fs_using_env_var() {
+                let template_dir = helper::get_resource_path("templates");
+                let lister =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                unsafe {
+                    std::env::set_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
+                }
+
+                let expected_list = QualifiedString {
+                    value: "python\nrust".to_string(),
+                    kind: StringKind::Local,
+                };
+                let actual_list = lister.list();
+
+                unsafe {
+                    std::env::remove_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                    );
+                }
+
+                assert!(actual_list.is_ok());
+
+                let actual_list = actual_list.unwrap();
+                assert_eq!(actual_list, expected_list);
+            }
+
+            #[test]
+            #[parallel]
+            fn it_lists_templates_from_local_fs_using_given_dir() {
+                let template_dir = helper::get_resource_path("templates");
+                let lister =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+
+                let expected_list = QualifiedString {
+                    value: "python\nrust".to_string(),
+                    kind: StringKind::Local,
+                };
+                let actual_list = lister.list();
+
+                assert!(actual_list.is_ok());
+
+                let actual_list = actual_list.unwrap();
+                assert_eq!(actual_list, expected_list);
+            }
+
+            #[test]
+            #[parallel]
+            fn it_returns_empty_string_when_inexistent_dir() {
+                let template_dir = helper::get_resource_path("inexistent");
+                let lister =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+
+                let expected_list = QualifiedString {
+                    value: String::new(),
+                    kind: StringKind::Local,
+                };
+                let actual_list = lister.list();
+
+                assert!(actual_list.is_ok());
+
+                let actual_list = actual_list.unwrap();
+                assert_eq!(actual_list, expected_list);
+            }
+        }
+
+        mod failure {
+            use super::*;
+
+            #[test]
+            #[parallel]
+            fn it_propagates_fs_error_if_any_occurred() {
+                let template_dir =
+                    helper::get_resource_path("templates/python.txt");
+                let lister =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+
+                let expected_error = ProgramExit {
+                    message: format!(
+                        "{}: Not a directory (os error 20)",
+                        constant::error_messages::LOCAL_LISTING
+                    ),
+                    exit_status: constant::exit_status::GENERIC,
+                    styled_message: None,
+                    kind: ExitKind::Error,
+                };
+                let actual_error = lister.list();
+
+                assert!(actual_error.is_err());
+
+                let actual_error = actual_error.unwrap_err();
+                assert_eq!(actual_error, expected_error);
+            }
+        }
+    }
+}
+
+#[parallel]
+mod remote_gitignore_template_manager {
+    use super::*;
+
+    mod generate {
         use super::*;
 
         mod success {
@@ -270,14 +410,18 @@ mod gitignore_template_generator {
                 let http_client = MockHttpClient {
                     response: Ok(String::from(generated_template)),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     Some(constant::template_manager::GENERATOR_URI),
-                    &template_names,
+                    Some(constant::template_manager::LISTER_URI),
                 );
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(generated_template));
+
+                let actual = generator.generate(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::from(generated_template),
+                        kind: StringKind::Remote,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -289,16 +433,43 @@ mod gitignore_template_generator {
                 let http_client = MockHttpClient {
                     response: Ok(String::from(generated_template)),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     None,
-                    &template_names,
+                    Some(constant::template_manager::LISTER_URI),
                 );
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(generated_template));
+
+                let actual = generator.generate(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::from(generated_template),
+                        kind: StringKind::Remote,
+                    });
 
                 assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_generates_empty_template_when_no_template_names() {
+                let http_client = MockHttpClient {
+                    response: Ok(String::from("all good")),
+                };
+                let generator = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    None,
+                    Some(constant::template_manager::LISTER_URI),
+                );
+
+                let expected_template = QualifiedString {
+                    value: String::new(),
+                    kind: StringKind::Remote,
+                };
+                let actual_template = generator.generate(&[]);
+
+                assert!(actual_template.is_ok());
+
+                let actual_template = actual_template.unwrap();
+                assert_eq!(actual_template, expected_template);
             }
         }
 
@@ -317,25 +488,27 @@ mod gitignore_template_generator {
                         kind: ExitKind::Error,
                     }),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     Some(constant::template_manager::GENERATOR_URI),
-                    &template_names,
+                    Some(constant::template_manager::LISTER_URI),
                 );
-                let expected: Result<String, ProgramExit> = Err(ProgramExit {
-                    message: String::from(error_message),
-                    exit_status: constant::exit_status::GENERIC,
-                    styled_message: None,
-                    kind: ExitKind::Error,
-                });
+
+                let actual = generator.generate(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: String::from(error_message),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
 
                 assert_eq!(actual, expected);
             }
         }
     }
 
-    mod generate_from_api_with_template_check {
+    mod generate_with_template_check {
         use super::*;
 
         mod success {
@@ -361,15 +534,19 @@ mod gitignore_template_generator {
                         ),
                     ]),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api_with_template_check(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
-                    &template_names,
                 );
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(generated_template));
+
+                let actual =
+                    generator.generate_with_template_check(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::from(generated_template),
+                        kind: StringKind::Remote,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -394,15 +571,19 @@ mod gitignore_template_generator {
                         ),
                     ]),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api_with_template_check(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     None,
                     Some(constant::template_manager::LISTER_URI),
-                    &template_names,
                 );
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(generated_template));
+
+                let actual =
+                    generator.generate_with_template_check(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::from(generated_template),
+                        kind: StringKind::Remote,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -427,15 +608,19 @@ mod gitignore_template_generator {
                         ),
                     ]),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api_with_template_check(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     Some(constant::template_manager::GENERATOR_URI),
                     None,
-                    &template_names,
                 );
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(generated_template));
+
+                let actual =
+                    generator.generate_with_template_check(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::from(generated_template),
+                        kind: StringKind::Remote,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -460,15 +645,19 @@ mod gitignore_template_generator {
                         ),
                     ]),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api_with_template_check(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     None,
                     None,
-                    &template_names,
                 );
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(generated_template));
+
+                let actual =
+                    generator.generate_with_template_check(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::from(generated_template),
+                        kind: StringKind::Remote,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -502,19 +691,21 @@ mod gitignore_template_generator {
                         ),
                     ]),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api_with_template_check(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
-                    &template_names,
                 );
-                let expected: Result<String, ProgramExit> = Err(ProgramExit {
-                    message: String::from(error_message),
-                    exit_status: constant::exit_status::GENERIC,
-                    styled_message: None,
-                    kind: ExitKind::Error,
-                });
+
+                let actual =
+                    generator.generate_with_template_check(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: String::from(error_message),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -545,19 +736,21 @@ mod gitignore_template_generator {
                         ),
                     ]),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api_with_template_check(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
-                    &template_names,
                 );
-                let expected: Result<String, ProgramExit> = Err(ProgramExit {
-                    message: String::from(error_message),
-                    exit_status: constant::exit_status::GENERIC,
-                    styled_message: None,
-                    kind: ExitKind::Error,
-                });
+
+                let actual =
+                    generator.generate_with_template_check(&template_names);
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: String::from(error_message),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -583,123 +776,32 @@ mod gitignore_template_generator {
                         ),
                     ]),
                 };
-
-                let actual = GitignoreTemplateManager::generate_from_api_with_template_check(
+                let generator = RemoteGitignoreTemplateManager::new(
                     &http_client,
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
-                    &template_names,
                 );
+
+                let actual =
+                    generator.generate_with_template_check(&template_names);
                 let expected_error_message = String::from(
                     "Following template names are not supported: pyth.\n",
                 ) + "For the list of available template names, try "
                     + "'--list'.";
-                let expected: Result<String, ProgramExit> = Err(ProgramExit {
-                    message: expected_error_message,
-                    exit_status: constant::exit_status::GENERIC,
-                    styled_message: None,
-                    kind: ExitKind::Error,
-                });
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: expected_error_message,
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
 
                 assert_eq!(actual, expected);
             }
         }
     }
 
-    mod list_locally {
-        use super::*;
-
-        mod success {
-            use super::*;
-
-            #[test]
-            #[serial]
-            fn it_lists_templates_from_local_fs_using_env_var() {
-                let template_dir = helper::get_resource_path("templates");
-                unsafe {
-                    std::env::set_var(
-                        constant::template_manager::HOME_ENV_VAR,
-                        &template_dir,
-                    );
-                }
-
-                let expected_list = "python\nrust";
-                let actual_list =
-                    GitignoreTemplateManager::list_locally(&template_dir);
-
-                assert!(actual_list.is_ok());
-
-                let actual_list = actual_list.unwrap();
-                assert_eq!(actual_list, expected_list);
-
-                unsafe {
-                    std::env::remove_var(
-                        constant::template_manager::HOME_ENV_VAR,
-                    );
-                }
-            }
-
-            #[test]
-            #[serial]
-            fn it_lists_templates_from_local_fs_using_given_dir() {
-                let template_dir = helper::get_resource_path("templates");
-
-                let expected_list = "python\nrust";
-                let actual_list =
-                    GitignoreTemplateManager::list_locally(&template_dir);
-
-                assert!(actual_list.is_ok());
-
-                let actual_list = actual_list.unwrap();
-                assert_eq!(actual_list, expected_list);
-            }
-
-            #[test]
-            #[serial]
-            fn it_returns_empty_string_when_inexistent_dir() {
-                let template_dir = helper::get_resource_path("inexistent");
-
-                let expected_list = "";
-                let actual_list =
-                    GitignoreTemplateManager::list_locally(&template_dir);
-
-                assert!(actual_list.is_ok());
-
-                let actual_list = actual_list.unwrap();
-                assert_eq!(actual_list, expected_list);
-            }
-        }
-
-        mod failure {
-            use super::*;
-
-            #[test]
-            #[serial]
-            fn it_propagates_fs_error_if_any_occurred() {
-                let template_dir =
-                    helper::get_resource_path("templates/python.txt");
-
-                let expected_error = ProgramExit {
-                    message: format!(
-                        "{}: Not a directory (os error 20)",
-                        constant::error_messages::LOCAL_LISTING
-                    ),
-                    exit_status: constant::exit_status::GENERIC,
-                    styled_message: None,
-                    kind: ExitKind::Error,
-                };
-                let actual_error =
-                    GitignoreTemplateManager::list_locally(&template_dir);
-
-                assert!(actual_error.is_err());
-
-                let actual_error = actual_error.unwrap_err();
-                assert_eq!(actual_error, expected_error);
-            }
-        }
-    }
-
-    mod list_from_api {
+    mod list {
         use super::*;
 
         mod success {
@@ -711,13 +813,18 @@ mod gitignore_template_generator {
                 let http_client = MockHttpClient {
                     response: Ok(String::from(template_list)),
                 };
-
-                let actual = GitignoreTemplateManager::list_from_api(
+                let lister = RemoteGitignoreTemplateManager::new(
                     &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(template_list));
+
+                let actual = lister.list();
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::from(template_list),
+                        kind: StringKind::Remote,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -728,11 +835,18 @@ mod gitignore_template_generator {
                 let http_client = MockHttpClient {
                     response: Ok(String::from(template_list)),
                 };
+                let lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    None,
+                );
 
-                let actual =
-                    GitignoreTemplateManager::list_from_api(&http_client, None);
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(template_list));
+                let actual = lister.list();
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::from(template_list),
+                        kind: StringKind::Remote,
+                    });
 
                 assert_eq!(actual, expected);
             }
@@ -752,17 +866,554 @@ mod gitignore_template_generator {
                         kind: ExitKind::Error,
                     }),
                 };
-
-                let actual = GitignoreTemplateManager::list_from_api(
+                let lister = RemoteGitignoreTemplateManager::new(
                     &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
-                let expected: Result<String, ProgramExit> = Err(ProgramExit {
-                    message: String::from(error_message),
-                    exit_status: constant::exit_status::GENERIC,
-                    styled_message: None,
-                    kind: ExitKind::Error,
-                });
+
+                let actual = lister.list();
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: String::from(error_message),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
+
+                assert_eq!(actual, expected);
+            }
+        }
+    }
+}
+
+#[parallel]
+mod gitignore_template_manager {
+    use super::*;
+
+    mod generate {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            fn it_generates_template_from_all_provided_managers() {
+                let template_dir = helper::get_resource_path("templates");
+                let generator_url = format!(
+                    "{}/python",
+                    constant::template_manager::GENERATOR_URI
+                );
+                let http_client = MockEndpointHttpClient {
+                    response: HashMap::from([
+                        (generator_url.as_str(), Ok(String::from("all good"))),
+                        (
+                            constant::template_manager::LISTER_URI,
+                            Ok(String::from("python")),
+                        ),
+                    ]),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_generator = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_generator];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: helper::load_expectation_file_as_string(
+                            "local_remote_python_rust_template",
+                        ),
+                        kind: StringKind::Mixed,
+                    });
+                let actual =
+                    generator.generate(&make_string_vec("python rust"));
+
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_generates_empty_template_when_no_managers() {
+                let generator = GitignoreTemplateManager::new(&[]);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: String::new(),
+                        kind: StringKind::Mixed,
+                    });
+                let actual =
+                    generator.generate(&make_string_vec("python rust"));
+
+                assert_eq!(actual, expected);
+            }
+        }
+
+        mod failure {
+            use super::*;
+
+            #[test]
+            fn it_fails_when_unsupported_template_names_from_all_managers() {
+                let template_dir = helper::get_resource_path("templates");
+                let generator_url = format!(
+                    "{}/rust",
+                    constant::template_manager::GENERATOR_URI
+                );
+                let http_client = MockEndpointHttpClient {
+                    response: HashMap::from([
+                        (generator_url.as_str(), Ok(String::from("all good"))),
+                        (
+                            constant::template_manager::LISTER_URI,
+                            Ok(String::from("rust")),
+                        ),
+                    ]),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_lister];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: constant::error_messages::UNSUPPORTED_TEMPLATE
+                            .to_string(),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
+                let actual = generator.generate(&make_string_vec("go"));
+
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_propagates_error_from_remote_manager_if_any() {
+                let template_dir = helper::get_resource_path("templates");
+                let http_client = MockHttpClient {
+                    response: Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    }),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_lister];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
+                let actual =
+                    generator.generate(&make_string_vec("rust python"));
+
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_propagates_error_from_local_manager_if_any() {
+                let template_dir =
+                    helper::get_resource_path("templates/python.txt");
+                let http_client = MockHttpClient {
+                    response: Ok(String::from("all good")),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_lister];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> = Err(
+                    ProgramExit {
+                        message: "An error occurred while listing templates from local file system: Not a directory (os error 20)".to_string(),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    },
+                );
+                let actual =
+                    generator.generate(&make_string_vec("rust python"));
+
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_combines_errors_from_all_managers_if_any() {
+                let template_dir =
+                    helper::get_resource_path("templates/python.txt");
+                let http_client = MockHttpClient {
+                    response: Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    }),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_lister];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> = Err(
+                    ProgramExit {
+                        message: "An error occurred while listing templates from local file system: Not a directory (os error 20)\nall bad".to_string(),
+                        exit_status: constant::exit_status::GENERIC * 2,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    },
+                );
+                let actual =
+                    generator.generate(&make_string_vec("rust python"));
+
+                assert_eq!(actual, expected);
+            }
+        }
+    }
+
+    mod generate_with_template_check {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            fn it_generates_template_from_all_provided_managers() {
+                let template_dir = helper::get_resource_path("templates");
+                let generator_url = format!(
+                    "{}/python,rust",
+                    constant::template_manager::GENERATOR_URI
+                );
+                let http_client = MockEndpointHttpClient {
+                    response: HashMap::from([
+                        (generator_url.as_str(), Ok(String::from("all good"))),
+                        (
+                            constant::template_manager::LISTER_URI,
+                            Ok(String::from("python\nrust")),
+                        ),
+                    ]),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_generator = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_generator];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: helper::load_expectation_file_as_string(
+                            "local_remote_python_rust_template",
+                        ),
+                        kind: StringKind::Mixed,
+                    });
+                let actual = generator.generate_with_template_check(
+                    &make_string_vec("python rust"),
+                );
+
+                assert_eq!(actual, expected);
+            }
+        }
+
+        mod failure {
+            use super::*;
+
+            #[test]
+            fn it_propagates_error_from_remote_manager_if_any() {
+                let template_dir = helper::get_resource_path("templates");
+                let http_client = MockHttpClient {
+                    response: Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    }),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_lister];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
+                let actual = generator.generate_with_template_check(
+                    &make_string_vec("rust python"),
+                );
+
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_propagates_error_from_local_manager_if_any() {
+                let template_dir = helper::get_resource_path("templates");
+                let http_client = MockHttpClient {
+                    response: Ok(String::from("all good")),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_lister];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> = Err(
+                    ProgramExit {
+                        message: "Following template names are not supported: pyth.\nFor the list of available template names, try '--list'.".to_string(),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    },
+                );
+                let actual = generator.generate_with_template_check(
+                    &make_string_vec("rust pyth"),
+                );
+
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_combines_errors_from_all_managers_if_any() {
+                let template_dir =
+                    helper::get_resource_path("templates/python.txt");
+                let http_client = MockHttpClient {
+                    response: Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    }),
+                };
+
+                let local_generator =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_generator, &remote_lister];
+                let generator = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: format!(
+                            "{}: Not a directory (os error 20)\nall bad",
+                            constant::error_messages::LOCAL_LISTING
+                        ),
+                        exit_status: constant::exit_status::GENERIC * 2,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
+                let actual = generator.generate_with_template_check(
+                    &make_string_vec("rust python"),
+                );
+
+                assert_eq!(actual, expected);
+            }
+        }
+    }
+
+    mod list {
+        use super::*;
+
+        mod success {
+            use super::*;
+
+            #[test]
+            fn it_lists_templates_from_all_provided_managers() {
+                let template_dir = helper::get_resource_path("templates");
+                let http_client = MockHttpClient {
+                    response: Ok(String::from("go\ncpp\nwo")),
+                };
+
+                let local_lister =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_lister, &remote_lister];
+                let lister = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Ok(QualifiedString {
+                        value: "cpp\ngo\n*python\n*rust\nwo".to_string(),
+                        kind: StringKind::Mixed,
+                    });
+                let actual = lister.list();
+
+                assert_eq!(actual, expected);
+            }
+        }
+
+        mod failure {
+            use super::*;
+
+            #[test]
+            fn it_propagates_error_from_remote_manager_if_any() {
+                let template_dir = helper::get_resource_path("templates");
+                let http_client = MockHttpClient {
+                    response: Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    }),
+                };
+
+                let local_lister =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_lister, &remote_lister];
+                let lister = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
+                let actual = lister.list();
+
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_propagates_error_from_local_manager_if_any() {
+                let template_dir =
+                    helper::get_resource_path("templates/python.txt");
+                let http_client = MockHttpClient {
+                    response: Ok(String::from("go\ncpp")),
+                };
+
+                let local_lister =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_lister, &remote_lister];
+                let lister = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: format!(
+                            "{}: Not a directory (os error 20)",
+                            constant::error_messages::LOCAL_LISTING
+                        ),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
+                let actual = lister.list();
+
+                assert_eq!(actual, expected);
+            }
+
+            #[test]
+            fn it_combines_errors_from_all_managers_if_any() {
+                let template_dir =
+                    helper::get_resource_path("templates/python.txt");
+                let http_client = MockHttpClient {
+                    response: Err(ProgramExit {
+                        message: String::from("all bad"),
+                        exit_status: constant::exit_status::GENERIC,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    }),
+                };
+
+                let local_lister =
+                    LocalGitignoreTemplateManager::new(Some(&template_dir));
+                let remote_lister = RemoteGitignoreTemplateManager::new(
+                    &http_client,
+                    Some(constant::template_manager::GENERATOR_URI),
+                    Some(constant::template_manager::LISTER_URI),
+                );
+                let manager_list: [&dyn TemplateGenerator; 2] =
+                    [&local_lister, &remote_lister];
+                let lister = GitignoreTemplateManager::new(&manager_list);
+
+                let expected: Result<QualifiedString, ProgramExit> =
+                    Err(ProgramExit {
+                        message: format!(
+                            "{}: Not a directory (os error 20)\nall bad",
+                            constant::error_messages::LOCAL_LISTING
+                        ),
+                        exit_status: constant::exit_status::GENERIC * 2,
+                        styled_message: None,
+                        kind: ExitKind::Error,
+                    });
+                let actual = lister.list();
 
                 assert_eq!(actual, expected);
             }

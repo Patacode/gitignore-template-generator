@@ -181,7 +181,7 @@ stored on local file system.
 When generating a gitignore template, the binary crate will fetch for
 templates in the directory pointed to by the environment variable
 `GITIGNORE_TEMPLATE_GENERATOR_HOME`. If not set, it will fall back to
-`$HOME/.gitignore_template_generator`.
+`$HOME/.gitignore_template_generator/templates`.
 
 If pointed directory does not exist, the binary crate will simply consider it
 as an empty database, not supporting any template names.

@@ -4,7 +4,7 @@
 
 use std::{borrow::Cow, ffi::OsString, fs};
 
-use crate::constant;
+use crate::{constant, core::QualifiedString};
 
 pub struct CliOptionName {
     pub short: char,
@@ -180,4 +180,14 @@ pub fn capitalize(s: &str) -> String {
         None => String::new(),
         Some(first) => first.to_uppercase().collect::<String>() + c.as_str(),
     }
+}
+
+pub fn insert_at(
+    l: &mut Vec<QualifiedString>,
+    idx: usize,
+    val: QualifiedString,
+) {
+    let mut tail = l.split_off(idx);
+    l.push(val);
+    l.append(&mut tail);
 }
