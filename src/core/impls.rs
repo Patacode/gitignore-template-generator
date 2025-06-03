@@ -481,10 +481,13 @@ impl TemplateLister for LocalGitignoreTemplateManager<'_> {
 
         let directory_handler = DirectoryHandler::new(&template_dir);
         match directory_handler.list_files() {
-            Ok(template_names) => Ok(QualifiedString {
-                value: template_names.join("\n"),
-                kind: StringKind::Local,
-            }),
+            Ok(mut template_names) => {
+                template_names.sort();
+                Ok(QualifiedString {
+                    value: template_names.join("\n"),
+                    kind: StringKind::Local,
+                })
+            },
             Err(error) => match error.kind() {
                 ErrorKind::NotFound => Ok(QualifiedString {
                     value: String::new(),
