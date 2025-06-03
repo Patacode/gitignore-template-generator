@@ -169,8 +169,6 @@ It's the default, see [below section](#usage) for more infos.
 
 ### Local templating
 
-*Work in progress. Coming in next release*
-
 - **Feature flag**: `local_templating`
 - **Default**: `no`
 - **Dependency**: `/`
@@ -193,23 +191,32 @@ insufficient privilege...), error propagation is expected to be the same as
 well.
 
 If combined with [remote templating](#remote-templating), local result will
-be merged into remote result, and local template names will be prefixed with a
-star (`*`) in [-l --list](#-l-list) output. As well, robust template names check
+be merged into remote result, titled with `### *<name> ###`, where
+`<name>` corresponds to the template name (i.e. filename) capitalized, and
+local template names will be prefixed with a star (`*`) in
+[-l --list](#-l-list) output. As well, robust template names check
 will additionally include local template list.
 
 With this feature enabled, the expected workflow is the following:
 
-1. Fetch from remote any *valid* remote template names (i.e. supported by the
+1. Fetch from local any *valid* templates (i.e. stored on your local file
+    system)
+2. Fetch from remote any remaining *valid* templates (i.e. supported by the
     templating service)
-2. Fetch from local any remaining template names
 3. If any error occurred, either remotely or locally, they will all be
     propagated. This includes error messages to `stderr` and script's return value,
-    which, for the latter, will be the sum of remote and local execution status.
+    which, for the latter, will be the sum of remote and local execution status
 
 As remote fetching will only be done for *valid* template names (i.e. supported
 by the templating service), even without the [-c --check](#-c-check) option
 enabled, it allows for a more granular error message in case no matched
 templates were found, neither locally, nor remotely.
+
+If you have a local template with same name as a remote one, both will be
+merged into final output, with all local templates being defined first.
+
+Local and remote templates will be grouped in two sections being named
+`## LOCAL` and `## REMOTE` respectively.
 
 Here is an example where remote service is operational but none of the
 provided template names, `foo` and `bar` in this case, were matched:
@@ -226,6 +233,12 @@ One or more provided template names are not supported.
 To enable robust template names check, retry with '--check'.
 For the list of available template names, try '--list'.
 ```
+
+Note that if this feature is enabled, during template generation, template
+names will now be fed by lexicographical order to the template manager service,
+instead of in the order in which they were provided. This is due to the
+pre-filtering applied on supported template names to fetch correct ones from
+local and remote manager.
 
 ## General rules
 
