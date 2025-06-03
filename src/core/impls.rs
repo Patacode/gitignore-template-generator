@@ -433,8 +433,20 @@ impl TemplateGenerator for GitignoreTemplateManager<'_> {
             let template_results: Vec<Result<QualifiedString, ProgramExit>> =
                 self.template_managers
                     .iter()
-                    .map(|template_manager| {
-                        template_manager.generate(template_names)
+                    .map(|tpl_mgr| {
+                        match tpl_mgr.list() {
+                            Ok(list) => {
+                                let templates_to_process: Vec<String> = list
+                                    .value
+                                    .lines()
+                                    .filter(|line| template_names.contains(&line.to_string()))
+                                    .map(|line| line.to_string())
+                                    .collect();
+
+                                tpl_mgr.generate(&templates_to_process)
+                            },
+                            Err(error) => Err(error),
+                        }
                     })
                     .collect();
 
