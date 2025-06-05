@@ -2,16 +2,28 @@
 use std::{fs, path::Path};
 use std::{thread, time::Duration};
 
+#[cfg(feature = "local_templating")]
+use gitignore_template_generator::test_helper::{
+    EnvTestContext, create_env_test_context, set_env_var,
+};
 use gitignore_template_generator::{
     constant,
     constant::{error_messages, exit_status, template_manager},
     helper::*,
 };
 use mockito::Server;
+#[cfg(feature = "local_templating")]
+use rstest::*;
 use serial_test::parallel;
 #[cfg(feature = "local_templating")]
 use serial_test::serial;
 use test_bin::get_test_bin;
+
+#[cfg(feature = "local_templating")]
+#[fixture]
+fn ctx() -> EnvTestContext {
+    create_env_test_context()
+}
 
 mod success {
     use super::*;
@@ -21,21 +33,21 @@ mod success {
 
         cfg_if::cfg_if! {
             if #[cfg(feature = "local_templating")] {
-                #[test]
+                #[rstest]
                 #[serial]
-                fn it_outputs_empty_output_message_when_empty_template_list() {
+                fn it_outputs_empty_output_message_when_empty_template_list(
+                    _ctx: EnvTestContext
+                ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates/empty");
                     if !Path::new(&template_dir).exists() {
                         fs::create_dir(&template_dir).expect("Error creating empty directory");
                     }
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     let mut mock_server = Server::new();
                     let mock_server_base_url = mock_server.url();
@@ -58,12 +70,6 @@ mod success {
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     template_lister_mock.assert();
 
@@ -112,18 +118,18 @@ mod success {
 
         cfg_if::cfg_if! {
             if #[cfg(feature = "local_templating")] {
-                #[test]
+                #[rstest]
                 #[serial]
-                fn it_outputs_template_when_successful_custom_generator() {
+                fn it_outputs_template_when_successful_custom_generator(
+                    _ctx: EnvTestContext
+                ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     let mut mock_server = Server::new();
                     let mock_server_base_url = mock_server.url();
@@ -154,12 +160,6 @@ mod success {
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     template_lister_mock.assert();
                     template_generator_mock.assert();
@@ -207,18 +207,18 @@ mod success {
 
         cfg_if::cfg_if! {
             if #[cfg(feature = "local_templating")] {
-                #[test]
+                #[rstest]
                 #[serial]
-                fn it_outputs_template_list_when_successful_custom_lister() {
+                fn it_outputs_template_list_when_successful_custom_lister(
+                    _ctx: EnvTestContext
+                ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     let mut mock_server = Server::new();
                     let mock_server_base_url = mock_server.url();
@@ -243,12 +243,6 @@ mod success {
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     template_lister_mock.assert();
 
@@ -295,18 +289,16 @@ mod success {
 
         cfg_if::cfg_if! {
             if #[cfg(feature = "local_templating")] {
-                #[test]
+                #[rstest]
                 #[serial]
-                fn it_outputs_available_template_list() {
+                fn it_outputs_available_template_list(_ctx: EnvTestContext) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     let mut mock_server = Server::new();
                     let mock_server_base_url = mock_server.url();
@@ -329,12 +321,6 @@ mod success {
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     template_generator_mock.assert();
 
