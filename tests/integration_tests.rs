@@ -1,9 +1,19 @@
+#[cfg(feature = "local_templating")]
+use gitignore_template_generator::test_helper::{
+    EnvTestContext, create_env_test_context, set_env_var,
+};
 use gitignore_template_generator::{constant, helper::*};
 use rstest::*;
 use serial_test::parallel;
 #[cfg(feature = "local_templating")]
 use serial_test::serial;
 use test_bin::get_test_bin;
+
+#[cfg(feature = "local_templating")]
+#[fixture]
+fn ctx() -> EnvTestContext {
+    create_env_test_context()
+}
 
 mod success {
     use super::*;
@@ -18,18 +28,17 @@ mod success {
                 #[case("rust", "local_remote_rust_template")]
                 #[case("rust python", "local_real_remote_python_rust_template")]
                 fn it_outputs_gitignore_templates_from_api(
+                    _ctx: EnvTestContext,
                     #[case] pos_args: &str,
                     #[case] expectation_file_name: &str,
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     cli_tool.args(parse_pos_args(pos_args));
                     let result = cli_tool
@@ -39,12 +48,6 @@ mod success {
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
                         load_expectation_file_as_string(expectation_file_name);
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -136,18 +139,18 @@ mod success {
 
         cfg_if::cfg_if! {
             if #[cfg(feature = "local_templating")] {
-                #[test]
+                #[rstest]
                 #[serial]
-                fn it_outputs_available_template_list_from_api_with_list_option() {
+                fn it_outputs_available_template_list_from_api_with_list_option(
+                    _ctx: EnvTestContext,
+                ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     cli_tool.arg(format!("-{}", constant::cli_options::LIST.short));
                     let result = cli_tool
@@ -157,12 +160,6 @@ mod success {
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
                         load_expectation_file_as_string("local_remote_template_list");
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -190,18 +187,18 @@ mod success {
 
         cfg_if::cfg_if! {
             if #[cfg(feature = "local_templating")] {
-                #[test]
+                #[rstest]
                 #[serial]
-                fn it_outputs_gitignore_templates_from_api_with_check_option() {
+                fn it_outputs_gitignore_templates_from_api_with_check_option(
+                    _ctx: EnvTestContext,
+                ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     cli_tool.args(parse_pos_args("rust python --check"));
                     let result = cli_tool
@@ -211,12 +208,6 @@ mod success {
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
                         load_expectation_file_as_string("local_real_remote_python_rust_template");
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -244,18 +235,18 @@ mod success {
 
         cfg_if::cfg_if! {
             if #[cfg(feature = "local_templating")] {
-                #[test]
+                #[rstest]
                 #[serial]
-                fn it_outputs_gitignore_templates_from_api_with_timeout_option() {
+                fn it_outputs_gitignore_templates_from_api_with_timeout_option(
+                    _ctx: EnvTestContext,
+                ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     cli_tool.args(parse_pos_args("rust python --timeout 5"));
                     let result = cli_tool
@@ -265,12 +256,6 @@ mod success {
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
                         load_expectation_file_as_string("local_real_remote_python_rust_template");
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -298,18 +283,18 @@ mod success {
 
         cfg_if::cfg_if! {
             if #[cfg(feature = "local_templating")] {
-                #[test]
+                #[rstest]
                 #[serial]
-                fn it_outputs_gitignore_templates_from_api_with_timeout_unit_option() {
+                fn it_outputs_gitignore_templates_from_api_with_timeout_unit_option(
+                    _ctx: EnvTestContext,
+                ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     cli_tool.args(parse_pos_args(
                         "rust python --timeout 5000 --timeout-unit millisecond",
@@ -321,12 +306,6 @@ mod success {
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
                         load_expectation_file_as_string("local_real_remote_python_rust_template");
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -370,18 +349,17 @@ mod failure {
                 #[case("rust python,java", "ansi_comma_pos_args_error")]
                 #[case("foo", "local_remote_template_not_found_error")]
                 fn it_outputs_error_and_fails_when_invalid_pos_args(
+                    _ctx: EnvTestContext,
                     #[case] pos_args: &str,
                     #[case] expectation_file_name: &str,
                 ) {
                     let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
-                    unsafe {
-                        std::env::set_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                            &template_dir,
-                        );
-                    }
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
 
                     cli_tools.args(parse_pos_args(pos_args));
                     let result = cli_tools
@@ -394,12 +372,6 @@ mod failure {
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(constant::exit_status::GENERIC);
-
-                    unsafe {
-                        std::env::remove_var(
-                            constant::template_manager::HOME_ENV_VAR,
-                        );
-                    }
 
                     assert_eq!(actual_status_code, expected_status_code);
                     assert_eq!(actual_output, expected_output);
@@ -466,18 +438,18 @@ mod failure {
 
             cfg_if::cfg_if! {
                 if #[cfg(feature = "local_templating")] {
-                    #[test]
+                    #[rstest]
                     #[serial]
-                    fn it_outputs_error_and_fails_when_inexistent_templates() {
+                    fn it_outputs_error_and_fails_when_inexistent_templates(
+                        _ctx: EnvTestContext,
+                    ) {
                         let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
                         let template_dir = get_resource_path("templates");
 
-                        unsafe {
-                            std::env::set_var(
-                                constant::template_manager::HOME_ENV_VAR,
-                                &template_dir,
-                            );
-                        }
+                        set_env_var(
+                            constant::template_manager::HOME_ENV_VAR,
+                            &template_dir,
+                        );
 
                         cli_tools.args(parse_pos_args("rust pyth foo --check"));
                         let result = cli_tools
@@ -491,12 +463,6 @@ mod failure {
 
                         let actual_status_code = result.status.code();
                         let expected_status_code = Some(constant::exit_status::GENERIC);
-
-                        unsafe {
-                            std::env::remove_var(
-                                constant::template_manager::HOME_ENV_VAR,
-                            );
-                        }
 
                         assert_eq!(actual_status_code, expected_status_code);
                         assert_eq!(actual_output, expected_output);

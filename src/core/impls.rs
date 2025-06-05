@@ -363,7 +363,9 @@ impl TemplateGenerator for GitignoreTemplateManager<'_> {
                     let templates_to_process: Vec<String> = supported_templates
                         .value
                         .lines()
-                        .filter(|line| template_names.contains(&line.to_string()))
+                        .filter(|line| {
+                            template_names.contains(&line.to_string())
+                        })
                         .map(|line| line.to_string())
                         .collect();
 
@@ -429,20 +431,20 @@ impl TemplateGenerator for GitignoreTemplateManager<'_> {
             let template_results: Vec<Result<QualifiedString, ProgramExit>> =
                 self.template_managers
                     .iter()
-                    .map(|tpl_mgr| {
-                        match tpl_mgr.list() {
-                            Ok(list) => {
-                                let templates_to_process: Vec<String> = list
-                                    .value
-                                    .lines()
-                                    .filter(|line| template_names.contains(&line.to_string()))
-                                    .map(|line| line.to_string())
-                                    .collect();
+                    .map(|tpl_mgr| match tpl_mgr.list() {
+                        Ok(list) => {
+                            let templates_to_process: Vec<String> = list
+                                .value
+                                .lines()
+                                .filter(|line| {
+                                    template_names.contains(&line.to_string())
+                                })
+                                .map(|line| line.to_string())
+                                .collect();
 
-                                tpl_mgr.generate(&templates_to_process)
-                            },
-                            Err(error) => Err(error),
+                            tpl_mgr.generate(&templates_to_process)
                         }
+                        Err(error) => Err(error),
                     })
                     .collect();
 
@@ -487,7 +489,7 @@ impl TemplateLister for LocalGitignoreTemplateManager<'_> {
                     value: template_names.join("\n"),
                     kind: StringKind::Local,
                 })
-            },
+            }
             Err(error) => match error.kind() {
                 ErrorKind::NotFound => Ok(QualifiedString {
                     value: String::new(),

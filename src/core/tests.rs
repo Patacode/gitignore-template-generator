@@ -5,7 +5,8 @@ use std::{
     path::Path,
 };
 
-use serial_test::{parallel, serial};
+use rstest::{fixture, rstest};
+use serial_test::serial;
 
 use super::*;
 use crate::{
@@ -15,9 +16,16 @@ use crate::{
     },
     helper::{self, make_string_vec},
     http_client::{MockEndpointHttpClient, MockHttpClient},
+    test_helper::{EnvTestContext, create_env_test_context, set_env_var},
 };
 
+#[fixture]
+fn ctx() -> EnvTestContext {
+    create_env_test_context()
+}
+
 mod local_gitignore_template_manager {
+
     use super::*;
 
     mod generate {
@@ -26,43 +34,38 @@ mod local_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
+            #[rstest]
             #[serial]
-            fn it_generates_template_from_local_fs_using_env_var() {
+            fn it_generates_template_from_local_fs_using_env_var(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust");
-                unsafe {
-                    std::env::set_var(
-                        constant::template_manager::HOME_ENV_VAR,
-                        &template_dir,
-                    );
-                }
+
+                set_env_var(
+                    constant::template_manager::HOME_ENV_VAR,
+                    &template_dir,
+                );
+
                 let generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
 
-                let expected_template = QualifiedString {
+                let expected_template = Ok(QualifiedString {
                     value: helper::load_expectation_file_as_string(
                         "local_rust_python_template",
                     ),
                     kind: StringKind::Local,
-                };
+                });
                 let actual_template = generator.generate(&template_names);
 
-                unsafe {
-                    std::env::remove_var(
-                        constant::template_manager::HOME_ENV_VAR,
-                    );
-                }
-
-                assert!(actual_template.is_ok());
-
-                let actual_template = actual_template.unwrap();
                 assert_eq!(actual_template, expected_template);
             }
 
-            #[test]
-            #[parallel]
-            fn it_generates_template_from_local_fs_using_given_dir() {
+            #[rstest]
+            #[serial]
+            fn it_generates_template_from_local_fs_using_given_dir(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust");
                 let generator =
@@ -82,9 +85,11 @@ mod local_gitignore_template_manager {
                 assert_eq!(actual_template, expected_template);
             }
 
-            #[test]
-            #[parallel]
-            fn it_generates_empty_template_when_no_template_names() {
+            #[rstest]
+            #[serial]
+            fn it_generates_empty_template_when_no_template_names(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
@@ -105,9 +110,9 @@ mod local_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
-            #[parallel]
-            fn it_fails_when_unsupported_template_names() {
+            #[rstest]
+            #[serial]
+            fn it_fails_when_unsupported_template_names(_ctx: EnvTestContext) {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust unknown");
                 let generator =
@@ -131,9 +136,9 @@ mod local_gitignore_template_manager {
                 assert_eq!(actual_error, expected_error);
             }
 
-            #[test]
-            #[parallel]
-            fn it_propagates_fs_error_if_any_occurred() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_fs_error_if_any_occurred(_ctx: EnvTestContext) {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("dummy");
                 let generator =
@@ -164,19 +169,20 @@ mod local_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
+            #[rstest]
             #[serial]
-            fn it_generates_template_from_local_fs_using_env_var() {
+            fn it_generates_template_from_local_fs_using_env_var(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust");
                 let generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
-                unsafe {
-                    std::env::set_var(
-                        constant::template_manager::HOME_ENV_VAR,
-                        &template_dir,
-                    );
-                }
+
+                set_env_var(
+                    constant::template_manager::HOME_ENV_VAR,
+                    &template_dir,
+                );
 
                 let expected_template = QualifiedString {
                     value: helper::load_expectation_file_as_string(
@@ -187,21 +193,17 @@ mod local_gitignore_template_manager {
                 let actual_template =
                     generator.generate_with_template_check(&template_names);
 
-                unsafe {
-                    std::env::remove_var(
-                        constant::template_manager::HOME_ENV_VAR,
-                    );
-                }
-
                 assert!(actual_template.is_ok());
 
                 let actual_template = actual_template.unwrap();
                 assert_eq!(actual_template, expected_template);
             }
 
-            #[test]
-            #[parallel]
-            fn it_generates_template_from_local_fs_using_given_dir() {
+            #[rstest]
+            #[serial]
+            fn it_generates_template_from_local_fs_using_given_dir(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust");
                 let generator =
@@ -226,9 +228,11 @@ mod local_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
-            #[parallel]
-            fn it_fails_with_detailed_msg_when_unsupported_template_names() {
+            #[rstest]
+            #[serial]
+            fn it_fails_with_detailed_msg_when_unsupported_template_names(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let template_names = make_string_vec("python rust unknown");
                 let generator =
@@ -251,9 +255,9 @@ mod local_gitignore_template_manager {
                 assert_eq!(actual_error, expected_error);
             }
 
-            #[test]
-            #[parallel]
-            fn it_propagates_fs_error_if_any_occurred() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_fs_error_if_any_occurred(_ctx: EnvTestContext) {
                 let template_dir = helper::get_resource_path("templates/dummy");
                 let template_names = make_string_vec("foo");
                 let file_path = format!("{template_dir}/foo.txt");
@@ -292,40 +296,36 @@ mod local_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
+            #[rstest]
             #[serial]
-            fn it_lists_templates_from_local_fs_using_env_var() {
+            fn it_lists_templates_from_local_fs_using_env_var(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let lister =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
-                unsafe {
-                    std::env::set_var(
-                        constant::template_manager::HOME_ENV_VAR,
-                        &template_dir,
-                    );
-                }
+
+                set_env_var(
+                    constant::template_manager::HOME_ENV_VAR,
+                    &template_dir,
+                );
 
                 let expected_list = QualifiedString {
                     value: "python\nrust".to_string(),
                     kind: StringKind::Local,
                 };
                 let actual_list = lister.list();
-
-                unsafe {
-                    std::env::remove_var(
-                        constant::template_manager::HOME_ENV_VAR,
-                    );
-                }
-
                 assert!(actual_list.is_ok());
 
                 let actual_list = actual_list.unwrap();
                 assert_eq!(actual_list, expected_list);
             }
 
-            #[test]
-            #[parallel]
-            fn it_lists_templates_from_local_fs_using_given_dir() {
+            #[rstest]
+            #[serial]
+            fn it_lists_templates_from_local_fs_using_given_dir(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let lister =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
@@ -342,9 +342,11 @@ mod local_gitignore_template_manager {
                 assert_eq!(actual_list, expected_list);
             }
 
-            #[test]
-            #[parallel]
-            fn it_returns_empty_string_when_inexistent_dir() {
+            #[rstest]
+            #[serial]
+            fn it_returns_empty_string_when_inexistent_dir(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("inexistent");
                 let lister =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
@@ -365,9 +367,9 @@ mod local_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
-            #[parallel]
-            fn it_propagates_fs_error_if_any_occurred() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_fs_error_if_any_occurred(_ctx: EnvTestContext) {
                 let template_dir =
                     helper::get_resource_path("templates/python.txt");
                 let lister =
@@ -393,7 +395,6 @@ mod local_gitignore_template_manager {
     }
 }
 
-#[parallel]
 mod remote_gitignore_template_manager {
     use super::*;
 
@@ -403,7 +404,7 @@ mod remote_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
+            #[rstest]
             fn it_generates_template_using_provided_client() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -426,7 +427,7 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
+            #[rstest]
             fn it_works_with_none_endpoint_uri() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -449,7 +450,7 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
+            #[rstest]
             fn it_generates_empty_template_when_no_template_names() {
                 let http_client = MockHttpClient {
                     response: Ok(String::from("all good")),
@@ -476,7 +477,7 @@ mod remote_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
+            #[rstest]
             fn it_propagates_error_from_client_if_any() {
                 let template_names = make_string_vec("rust pyth");
                 let error_message = "all bad";
@@ -514,7 +515,7 @@ mod remote_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
+            #[rstest]
             fn it_generates_template_using_provided_client() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -551,7 +552,7 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
+            #[rstest]
             fn it_works_with_none_generator_endpoint_uri() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -588,7 +589,7 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
+            #[rstest]
             fn it_works_with_none_lister_endpoint_uri() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -625,7 +626,7 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
+            #[rstest]
             fn it_works_with_none_lister_and_generator_endpoint_uris() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -666,7 +667,7 @@ mod remote_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
+            #[rstest]
             fn it_propagates_error_from_generator_client_if_any() {
                 let template_names = make_string_vec("rust python");
                 let error_message = "all bad";
@@ -710,7 +711,7 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
+            #[rstest]
             fn it_propagates_error_from_lister_client_if_any() {
                 let template_names = make_string_vec("rust python");
                 let error_message = "all bad";
@@ -755,7 +756,7 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
+            #[rstest]
             fn it_returns_inexistent_template_error() {
                 let template_names = make_string_vec("rust pyth");
                 let generated_template = "all good";
@@ -807,7 +808,7 @@ mod remote_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
+            #[rstest]
             fn it_lists_template_using_provided_client() {
                 let template_list = "rust\npython";
                 let http_client = MockHttpClient {
@@ -829,7 +830,7 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
+            #[rstest]
             fn it_works_with_none_endpoint_uri() {
                 let template_list = "rust\npython";
                 let http_client = MockHttpClient {
@@ -855,7 +856,7 @@ mod remote_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
+            #[rstest]
             fn it_propagates_error_from_client_if_any() {
                 let error_message = "all bad";
                 let http_client = MockHttpClient {
@@ -887,7 +888,6 @@ mod remote_gitignore_template_manager {
     }
 }
 
-#[parallel]
 mod gitignore_template_manager {
     use super::*;
 
@@ -897,8 +897,11 @@ mod gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
-            fn it_generates_template_from_all_provided_managers() {
+            #[rstest]
+            #[serial]
+            fn it_generates_template_from_all_provided_managers(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let generator_url = format!(
                     "{}/python",
@@ -938,8 +941,11 @@ mod gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
-            fn it_generates_empty_template_when_no_managers() {
+            #[rstest]
+            #[serial]
+            fn it_generates_empty_template_when_no_managers(
+                _ctx: EnvTestContext,
+            ) {
                 let generator = GitignoreTemplateManager::new(&[]);
 
                 let expected: Result<QualifiedString, ProgramExit> =
@@ -957,8 +963,11 @@ mod gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
-            fn it_fails_when_unsupported_template_names_from_all_managers() {
+            #[rstest]
+            #[serial]
+            fn it_fails_when_unsupported_template_names_from_all_managers(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let generator_url = format!(
                     "{}/rust",
@@ -998,8 +1007,11 @@ mod gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
-            fn it_propagates_error_from_remote_manager_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_error_from_remote_manager_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let http_client = MockHttpClient {
                     response: Err(ProgramExit {
@@ -1034,8 +1046,11 @@ mod gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
-            fn it_propagates_error_from_local_manager_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_error_from_local_manager_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir =
                     helper::get_resource_path("templates/python.txt");
                 let http_client = MockHttpClient {
@@ -1067,8 +1082,11 @@ mod gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
-            fn it_combines_errors_from_all_managers_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_combines_errors_from_all_managers_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir =
                     helper::get_resource_path("templates/python.txt");
                 let http_client = MockHttpClient {
@@ -1113,8 +1131,11 @@ mod gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
-            fn it_generates_template_from_all_provided_managers() {
+            #[rstest]
+            #[serial]
+            fn it_generates_template_from_all_provided_managers(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let generator_url = format!(
                     "{}/python,rust",
@@ -1159,8 +1180,11 @@ mod gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
-            fn it_propagates_error_from_remote_manager_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_error_from_remote_manager_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let http_client = MockHttpClient {
                     response: Err(ProgramExit {
@@ -1196,8 +1220,11 @@ mod gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
-            fn it_propagates_error_from_local_manager_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_error_from_local_manager_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let http_client = MockHttpClient {
                     response: Ok(String::from("all good")),
@@ -1229,8 +1256,11 @@ mod gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
-            fn it_combines_errors_from_all_managers_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_combines_errors_from_all_managers_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir =
                     helper::get_resource_path("templates/python.txt");
                 let http_client = MockHttpClient {
@@ -1278,8 +1308,11 @@ mod gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[test]
-            fn it_lists_templates_from_all_provided_managers() {
+            #[rstest]
+            #[serial]
+            fn it_lists_templates_from_all_provided_managers(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let http_client = MockHttpClient {
                     response: Ok(String::from("go\ncpp\nwo")),
@@ -1310,8 +1343,11 @@ mod gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[test]
-            fn it_propagates_error_from_remote_manager_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_error_from_remote_manager_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir = helper::get_resource_path("templates");
                 let http_client = MockHttpClient {
                     response: Err(ProgramExit {
@@ -1345,8 +1381,11 @@ mod gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
-            fn it_propagates_error_from_local_manager_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_propagates_error_from_local_manager_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir =
                     helper::get_resource_path("templates/python.txt");
                 let http_client = MockHttpClient {
@@ -1379,8 +1418,11 @@ mod gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[test]
-            fn it_combines_errors_from_all_managers_if_any() {
+            #[rstest]
+            #[serial]
+            fn it_combines_errors_from_all_managers_if_any(
+                _ctx: EnvTestContext,
+            ) {
                 let template_dir =
                     helper::get_resource_path("templates/python.txt");
                 let http_client = MockHttpClient {
