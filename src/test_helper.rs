@@ -7,18 +7,23 @@ pub struct EnvTestContext {
 impl Drop for EnvTestContext {
     fn drop(&mut self) {
         if self.original_value.is_none() {
-            return;
+            println!(
+                "{} env var wasn't set. Removing it...",
+                constant::template_manager::HOME_ENV_VAR
+            );
+            remove_env_var(constant::template_manager::HOME_ENV_VAR);
+            println!("Removed!");
+        } else {
+            println!(
+                "{} env var was set. Resetting it...",
+                constant::template_manager::HOME_ENV_VAR
+            );
+            set_env_var(
+                constant::template_manager::HOME_ENV_VAR,
+                self.original_value.as_mut().unwrap(),
+            );
+            println!("Reset!");
         }
-
-        println!(
-            "{} env var was set. Resetting it...",
-            constant::template_manager::HOME_ENV_VAR
-        );
-        set_env_var(
-            constant::template_manager::HOME_ENV_VAR,
-            self.original_value.as_mut().unwrap(),
-        );
-        println!("Reset!");
 
         println!("Test context dropped");
     }
