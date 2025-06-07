@@ -6,7 +6,7 @@ use std::{
 };
 
 use rstest::{fixture, rstest};
-use serial_test::{serial, parallel};
+use serial_test::{parallel, serial};
 
 use super::*;
 use crate::{
