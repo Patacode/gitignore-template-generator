@@ -25,13 +25,42 @@ mod success {
             if #[cfg(feature = "local_templating")] {
                 #[rstest]
                 #[serial]
-                #[case("rust", "local_remote_rust_template")]
-                #[case("rust python", "local_real_remote_python_rust_template")]
-                fn it_outputs_gitignore_templates_from_api(
+                fn it_outputs_gitignore_templates_from_api_with_one_template(
                     _ctx: EnvTestContext,
-                    #[case] pos_args: &str,
-                    #[case] expectation_file_name: &str,
                 ) {
+                    let pos_args = "rust";
+                    let expectation_file_name = "local_remote_rust_template";
+
+                    let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
+                    let template_dir = get_resource_path("templates");
+
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
+
+                    cli_tool.args(parse_pos_args(pos_args));
+                    let result = cli_tool
+                        .output()
+                        .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
+
+                    let actual_output = parse_bytes(&result.stdout);
+                    let expected_output =
+                        load_expectation_file_as_string(expectation_file_name);
+
+                    assert!(result.status.success());
+                    assert_eq!(actual_output, expected_output);
+                }
+
+                #[rstest]
+                #[serial]
+                fn it_outputs_gitignore_templates_from_api_with_two_templates(
+                    _ctx: EnvTestContext,
+                ) {
+                    let pos_args = "rust python";
+                    let expectation_file_name =
+                        "local_real_remote_python_rust_template";
+
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
@@ -345,14 +374,77 @@ mod failure {
             if #[cfg(feature = "local_templating")] {
                 #[rstest]
                 #[serial]
-                #[case("", "ansi_no_pos_args_error")]
-                #[case("rust python,java", "ansi_comma_pos_args_error")]
-                #[case("foo", "local_remote_template_not_found_error")]
-                fn it_outputs_error_and_fails_when_invalid_pos_args(
+                fn it_outputs_error_and_fails_when_no_pos_args(
                     _ctx: EnvTestContext,
-                    #[case] pos_args: &str,
-                    #[case] expectation_file_name: &str,
                 ) {
+                    let pos_args = "";
+                    let expectation_file_name = "ansi_no_pos_args_error";
+
+                    let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
+                    let template_dir = get_resource_path("templates");
+
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
+
+                    cli_tools.args(parse_pos_args(pos_args));
+                    let result = cli_tools
+                        .output()
+                        .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
+
+                    let actual_output = parse_bytes(&result.stderr);
+                    let expected_output =
+                        load_expectation_file_as_string(expectation_file_name) + "\n";
+
+                    let actual_status_code = result.status.code();
+                    let expected_status_code = Some(constant::exit_status::GENERIC);
+
+                    assert_eq!(actual_status_code, expected_status_code);
+                    assert_eq!(actual_output, expected_output);
+                }
+
+                #[rstest]
+                #[serial]
+                fn it_outputs_error_and_fails_when_comma_in_pos_args(
+                    _ctx: EnvTestContext,
+                ) {
+                    let pos_args = "rust python,java";
+                    let expectation_file_name = "ansi_comma_pos_args_error";
+
+                    let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
+                    let template_dir = get_resource_path("templates");
+
+                    set_env_var(
+                        constant::template_manager::HOME_ENV_VAR,
+                        &template_dir,
+                    );
+
+                    cli_tools.args(parse_pos_args(pos_args));
+                    let result = cli_tools
+                        .output()
+                        .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
+
+                    let actual_output = parse_bytes(&result.stderr);
+                    let expected_output =
+                        load_expectation_file_as_string(expectation_file_name) + "\n";
+
+                    let actual_status_code = result.status.code();
+                    let expected_status_code = Some(constant::exit_status::GENERIC);
+
+                    assert_eq!(actual_status_code, expected_status_code);
+                    assert_eq!(actual_output, expected_output);
+                }
+
+                #[rstest]
+                #[serial]
+                fn it_outputs_error_and_fails_when_template_not_found(
+                    _ctx: EnvTestContext,
+                ) {
+                    let pos_args = "foo";
+                    let expectation_file_name =
+                        "local_remote_template_not_found_error";
+
                     let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
                     let template_dir = get_resource_path("templates");
 
