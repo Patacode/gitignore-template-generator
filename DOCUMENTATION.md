@@ -200,12 +200,12 @@ will additionally include local template list.
 With this feature enabled, the expected workflow is the following:
 
 1. Fetch from local any *valid* templates (i.e. stored on your local file
-    system)
+   system)
 2. Fetch from remote any remaining *valid* templates (i.e. supported by the
-    templating service)
+   templating service)
 3. If any error occurred, either remotely or locally, they will all be
-    propagated. This includes error messages to `stderr` and script's return value,
-    which, for the latter, will be the sum of remote and local execution status
+   propagated. This includes error messages to `stderr` and script's return value,
+   which, for the latter, will be the sum of remote and local execution status
 
 As remote fetching will only be done for *valid* template names (i.e. supported
 by the templating service), even without the [-c --check](#-c-check) option

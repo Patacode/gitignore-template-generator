@@ -60,7 +60,7 @@ pub trait TemplateGenerator: TemplateLister {
     /// # Arguments
     ///
     /// * `template_names` - The template names to be used to generate the
-    ///     actual template.
+    ///   actual template.
     ///
     /// # Returns
     ///
@@ -82,7 +82,7 @@ pub trait TemplateGenerator: TemplateLister {
     /// # Arguments
     ///
     /// * `template_names` - The template names to be used to generate the
-    ///     actual template.
+    ///   actual template.
     ///
     /// # Returns
     ///

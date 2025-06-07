@@ -44,8 +44,8 @@ cfg_if::cfg_if! {
 
                     let remote_manager = RemoteGitignoreTemplateManager::new(
                         &http_client,
-                        Some(&generator_uri),
-                        Some(&lister_uri),
+                        Some(generator_uri),
+                        Some(lister_uri),
                     );
 
                     let default_template_dir = format!("{home_path}/{}/templates", constant::template_manager::DEFAULT_HOME);
@@ -56,9 +56,9 @@ cfg_if::cfg_if! {
                     if parsed_cli_args.show_list {
                         manager.list()
                     } else if parsed_cli_args.check_template_names {
-                        manager.generate_with_template_check(&template_names)
+                        manager.generate_with_template_check(template_names)
                     } else {
-                        manager.generate(&template_names)
+                        manager.generate(template_names)
                     }
                 },
                 Err(error) => Err(ProgramExit {

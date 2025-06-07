@@ -120,12 +120,12 @@ impl ArgsParser for ClapArgsParser {
     /// Parses given cli args and perform basic error handling.
     ///
     /// * If the underlying [`ProgramExit`] contains a
-    ///     [`ProgramExit::styled_message`], it will be printed instead of
-    ///     [`ProgramExit::message`].
+    ///   [`ProgramExit::styled_message`], it will be printed instead of
+    ///   [`ProgramExit::message`].
     /// * Will exit using [`ProgramExit::exit_status`] if any
-    ///     [`ProgramExit`] received.
+    ///   [`ProgramExit`] received.
     /// * Will print to stderr on error, to stdout on early exit (i.e. version,
-    ///     author, help options)
+    ///   author, help options)
     ///
     /// See [`ArgsParser::parse`] for more infos.
     fn parse(&self, args: impl IntoIterator<Item = OsString>) -> Args {

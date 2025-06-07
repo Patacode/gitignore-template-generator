@@ -58,7 +58,7 @@ impl<'a> GitignoreTemplateManager<'a> {
     }
 
     fn explode_and_merge_template_results(
-        template_results: &Vec<Result<QualifiedString, ProgramExit>>,
+        template_results: &[Result<QualifiedString, ProgramExit>],
     ) -> Result<QualifiedString, Vec<ProgramExit>> {
         let mut result: String = String::new();
         let mut errors: Vec<ProgramExit> = Vec::new();
@@ -98,20 +98,20 @@ impl<'a> GitignoreTemplateManager<'a> {
     }
 
     fn map_lines_to_qstrs(
-        value: &String,
+        value: &str,
         kind: StringKind,
     ) -> Vec<QualifiedString> {
         value
             .lines()
             .map(|tt| QualifiedString {
                 value: tt.to_string(),
-                kind: kind,
+                kind,
             })
             .collect()
     }
 
     fn smap_lines_to_qstrs(
-        value: &String,
+        value: &str,
         kind: StringKind,
         skip: usize,
     ) -> Vec<QualifiedString> {
@@ -120,13 +120,13 @@ impl<'a> GitignoreTemplateManager<'a> {
             .skip(skip)
             .map(|tt| QualifiedString {
                 value: tt.to_string(),
-                kind: kind,
+                kind,
             })
             .collect()
     }
 
     fn explode_and_merge_list_results(
-        list_results: &Vec<Result<QualifiedString, ProgramExit>>,
+        list_results: &[Result<QualifiedString, ProgramExit>],
     ) -> Result<Vec<QualifiedString>, Vec<ProgramExit>> {
         let mut lines_res: Vec<QualifiedString> = Vec::new();
         let mut errors: Vec<ProgramExit> = Vec::new();
@@ -206,10 +206,10 @@ impl<'a> GitignoreTemplateManager<'a> {
         for error in errors {
             final_exit_status += error.exit_status;
             final_message.push_str(&error.message);
-            final_message.push_str("\n");
+            final_message.push('\n');
             if let Some(styled_message) = &error.styled_message {
-                final_styled_message.push_str(&styled_message);
-                final_styled_message.push_str("\n");
+                final_styled_message.push_str(styled_message);
+                final_styled_message.push('\n');
             }
         }
 
@@ -227,14 +227,12 @@ impl<'a> GitignoreTemplateManager<'a> {
         }
     }
 
-    fn postprocess_template_list_result(
-        template_list_result: &String,
-    ) -> String {
+    fn postprocess_template_list_result(template_list_result: &str) -> String {
         template_list_result
             .lines()
             .map(|line| {
-                if line.starts_with("*") {
-                    &line[1..]
+                if let Some(stripped) = line.strip_prefix("*") {
+                    stripped
                 } else {
                     line
                 }
