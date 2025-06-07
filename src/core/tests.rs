@@ -6,7 +6,7 @@ use std::{
 };
 
 use rstest::{fixture, rstest};
-use serial_test::serial;
+use serial_test::{serial, parallel};
 
 use super::*;
 use crate::{
@@ -404,7 +404,8 @@ mod remote_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_generates_template_using_provided_client() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -427,7 +428,8 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_works_with_none_endpoint_uri() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -450,7 +452,8 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_generates_empty_template_when_no_template_names() {
                 let http_client = MockHttpClient {
                     response: Ok(String::from("all good")),
@@ -477,7 +480,8 @@ mod remote_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_propagates_error_from_client_if_any() {
                 let template_names = make_string_vec("rust pyth");
                 let error_message = "all bad";
@@ -515,7 +519,8 @@ mod remote_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_generates_template_using_provided_client() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -552,7 +557,8 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_works_with_none_generator_endpoint_uri() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -589,7 +595,8 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_works_with_none_lister_endpoint_uri() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -626,7 +633,8 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_works_with_none_lister_and_generator_endpoint_uris() {
                 let template_names = make_string_vec("rust python");
                 let generated_template = "all good";
@@ -667,7 +675,8 @@ mod remote_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_propagates_error_from_generator_client_if_any() {
                 let template_names = make_string_vec("rust python");
                 let error_message = "all bad";
@@ -711,7 +720,8 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_propagates_error_from_lister_client_if_any() {
                 let template_names = make_string_vec("rust python");
                 let error_message = "all bad";
@@ -756,7 +766,8 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_returns_inexistent_template_error() {
                 let template_names = make_string_vec("rust pyth");
                 let generated_template = "all good";
@@ -808,7 +819,8 @@ mod remote_gitignore_template_manager {
         mod success {
             use super::*;
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_lists_template_using_provided_client() {
                 let template_list = "rust\npython";
                 let http_client = MockHttpClient {
@@ -830,7 +842,8 @@ mod remote_gitignore_template_manager {
                 assert_eq!(actual, expected);
             }
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_works_with_none_endpoint_uri() {
                 let template_list = "rust\npython";
                 let http_client = MockHttpClient {
@@ -856,7 +869,8 @@ mod remote_gitignore_template_manager {
         mod failure {
             use super::*;
 
-            #[rstest]
+            #[test]
+            #[parallel]
             fn it_propagates_error_from_client_if_any() {
                 let error_message = "all bad";
                 let http_client = MockHttpClient {
