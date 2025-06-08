@@ -81,8 +81,9 @@ $ gitignore-template-generator rust python java
 # ...
 ```
 
-Result is printed to `stdout`, so you can easily redirect or pipe it if needed.
-Any error will be printed to `stderr`.
+Each generated template is trimmed, merged into one, and printed to `stdout`,
+so you can easily redirect or pipe it if needed. Any error will be
+printed to `stderr`.
 
 Behind the scene, it calls the template generator service as pointed to by
 the [-g --generator-uri](#-g-generator-uri) option.
@@ -124,20 +125,25 @@ your needs.
 
 By default, you have the `clap` CLI parser along with `ureq` HTTP client crates,
 with simple API binding to `toptal` gitignore template generation service
-(see [below section](#usage) for more infos).
+(see [above usage section](#usage) for more infos).
 
 The default crate's flavor might be too feature-rich for your use case, or
-you might feel it lacks features. To customize its flavor, here are the
+you might feel it lacks features. To customize its behavior, here are the
 available features you can opt in or out:
 
 - [Cli](#cli)
 - [Remote templating](#remote-templating)
 - [Local templating](#local-templating)
 
-The `cli` and `remote_templating` features are there by default and
-`local_templating` can be enabled on-demand.
+Be noted that:
 
-Either `remote_templating` or `local_templating` must be enabled at any time.
+- The `cli` and `remote_templating` features are enabled by default
+- The `local_templating` feature can be enabled on-demand
+- Either `remote_templating` or `local_templating` must be enabled at any time
+- Enabled features will be listed on last line of [-h --help](#-h-help) output:
+  ```text
+  Features: cli, remote_templating
+  ```
 
 ### Cli
 
@@ -149,10 +155,10 @@ Either `remote_templating` or `local_templating` must be enabled at any time.
 
 This feature allows the use of `clap` as a CLI parser.
 
-It makes the crate much heavier but allows for a fully-fledged experience
+It makes the crate much heavier but allows for a full-fledged experience
 with it.
 
-It's the default, see [below section](#usage) for more infos.
+It's the default, see [above usage section](#usage) for more infos.
 
 ### Remote templating
 
@@ -165,7 +171,7 @@ It's the default, see [below section](#usage) for more infos.
 This feature allows to generate gitignore templates through HTTP using a remote
 API.
 
-It's the default, see [below section](#usage) for more infos.
+It's the default, see [above usage section](#usage) for more infos.
 
 ### Local templating
 
@@ -173,10 +179,15 @@ It's the default, see [below section](#usage) for more infos.
 - **Default**: `no`
 - **Dependency**: `/`
 
-This feature allows to generate gitignore templates using template files
+This feature allows to generate gitignore templates using *template files*
 stored on local file system.
 
-When generating a gitignore template, the binary crate will fetch for
+These *templates files* are regular text files prefixed with the `.txt` file
+extension. If not prefixed with expected file extension, they will not be
+considered.
+
+When generating a gitignore template (e.g.
+`gitignore-template-generator rust python`), the binary crate will fetch for
 templates in the directory pointed to by the environment variable
 `GITIGNORE_TEMPLATE_GENERATOR_HOME`. If not set, it will fall back to
 `$HOME/.gitignore_template_generator/templates`.
@@ -184,61 +195,95 @@ templates in the directory pointed to by the environment variable
 If pointed directory does not exist, the binary crate will simply consider it
 as an empty database, not supporting any template names.
 
-Apart from this extra search in local file system, behavior is expected to be
-the same as for remote template generation: unsupported template names will
-result in same error, and if any other error occurred (e.g. filesystem error,
-insufficient privilege...), error propagation is expected to be the same as
-well.
+Each template generated from your local file system will be trimmed, titled
+with `### <name> ###`, where `<name>` corresponds to
+its name in capitalized form, sorted by alphabetic order, merged into one,
+and printed to `stdout`.
 
-If combined with [remote templating](#remote-templating), local result will
-be merged into remote result, titled with `### *<name> ###`, where
-`<name>` corresponds to the template name (i.e. filename) capitalized, and
-local template names will be prefixed with a star (`*`) in
-[-l --list](#-l-list) output. As well, robust template names check
-will additionally include local template list.
+If unsupported template names are provided, or any other error occurred (e.g.
+filesystem error, insufficient privilege...), error will be propagated and
+printed to `stderr`.
 
-With this feature enabled, the expected workflow is the following:
+#### With remote templating
 
-1. Fetch from local any *valid* templates (i.e. stored on your local file
-   system)
-2. Fetch from remote any remaining *valid* templates (i.e. supported by the
-   templating service)
-3. If any error occurred, either remotely or locally, they will all be
-   propagated. This includes error messages to `stderr` and script's return value,
-   which, for the latter, will be the sum of remote and local execution status
-
-As remote fetching will only be done for *valid* template names (i.e. supported
-by the templating service), even without the [-c --check](#-c-check) option
-enabled, it allows for a more granular error message in case no matched
-templates were found, neither locally, nor remotely.
-
-If you have a local template with same name as a remote one, both will be
-merged into final output, with all local templates being defined first.
-
-Local and remote templates will be grouped in two sections being named
-`## LOCAL` and `## REMOTE` respectively.
-
-Here is an example where remote service is operational but none of the
-provided template names, `foo` and `bar` in this case, were matched:
+When this feature is combined with [remote templating](#remote-templating),
+locally-generated templates will be merged into remotely-generated ones,
+grouped into two sections named `## LOCAL\n\n` and `## REMOTE\n\n` respectively,
+with local templates always being defined first, and prefixed with a star (`*`).
+Here is an example where `foo` would be a local template and `bar` a remote
+one:
 
 ```text
-$ echo $GITIGNORE_TEMPLATE_GENERATOR_HOME
-$HOME/.gitignore_template_generator/templates
-$ ls $HOME/.gitignore_template_generator/templates
-rust
-python
-java
 $ gitignore-template-generator foo bar
+## LOCAL
+
+### *Foo ###
+Foo template
+
+## REMOTE
+
+### Bar ###
+Bar template
+```
+
+In [-l --list](#-l-list) output, their name will also be prefixed with a
+star (`*`). Taking the same example scenario as above, here would be the
+expected output:
+
+```text
+$ gitignore-template-generator --list
+*foo
+bar
+```
+
+Additionally, robust template names check enabled through the
+[-c --check](#-c-check) option, will now include both local and remote
+templates.
+
+Here is the expected workflow when generating a gitignore template with both
+remote and local templating enabled:
+
+1. Fetch the list of local and remote templates
+2. Generate from local any *valid* templates (i.e. present in fetched list,
+   thus stored on your local file system)
+3. Generate from remote any remaining *valid* templates (i.e. present in
+   fetched list, thus supported by the templating service)
+4. Propagate any errors that occurred, either remotely or locally. This includes
+   error messages to `stderr` and script's return value,
+   which, for the former, will be the concatenation with plus sign (`+`) of all
+   the errors that occurred, and for the latter, will be the sum of remote and
+   local execution status
+
+A slight overhead is to be expected as local and remote template lists need
+to be fetched upfront in order to determine from which data source (i.e. local
+file system or remote server) each template has to be generated.
+
+But this allows for a more granular error message in case no matched
+templates were found, neither locally, nor remotely:
+
+```text
+$ gitignore-template-generator unknown
 One or more provided template names are not supported.
 To enable robust template names check, retry with '--check'.
 For the list of available template names, try '--list'.
 ```
 
-Note that if this feature is enabled, during template generation, template
-names will now be fed by lexicographical order to the template manager service,
-instead of in the order in which they were provided. This is due to the
-pre-filtering applied on supported template names to fetch correct ones from
-local and remote manager.
+If you have a local template with the same name as a remote one, both will be
+merged into final output. Here is an example where it exists a template named
+`bar` in both local and remote source:
+
+```text
+$ gitignore-template-generator bar
+## LOCAL
+
+### *Bar ###
+Local bar template
+
+## REMOTE
+
+### Bar ###
+Remote bar template
+```
 
 ## General rules
 
