@@ -52,9 +52,9 @@ It supports a variety of CLI options and feature flags to
 customize its behavior with finer control. Have a look at the [official crate documentation](https://docs.rs/gitignore-template-generator/0.13.2/gitignore_template_generator)
 for more details.
 
-You might be interested in the [local templating](DOCUMENTATION.md#local-templating)
-feature—which allows you to generate gitignore templates from your local file
-system—for example.
+You might be interested in the [local templating](https://docs.rs/gitignore-template-generator/0.13.2/gitignore_template_generator/#local-templating)
+feature for example, which allows you to generate gitignore templates from your
+local file system.
 
 Examples:
 
