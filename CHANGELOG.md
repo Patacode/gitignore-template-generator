@@ -9,7 +9,26 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- Add new methods to list local templates and generate template from local fs
+- Implement new optional local_templating feature flag
+- Print message in case of empty output from manager service
+
+### 📚 Documentation
+
+- [binary] - Prepare and refine doc for upcoming changes regarding feature flags
+- [binary] - Use proper link syntax in reference to cli feature flag section (*Replace [][] by []()*)
+
+### 🧪 Testing
+
+- [core] - mark all local fs-related tests as serial (*To avoid unexpected behavior considering default parallel test execution*)
+- [isolation] - Make use of newly defined fixture and helper functions
+
+### ⚙️ Miscellaneous Tasks
+
+- [readme] - Prepare file with upcoming changes regarding feature flags
+- [gitignore] - Ignore private notes file
 
 ## [0.13.2] - 2025-05-26 <a id="0.13.2"></a>
 
