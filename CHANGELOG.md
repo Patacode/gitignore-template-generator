@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.14.0] - 2025-06-08 <a id="0.14.0"></a>
+
 ### 🚀 Features
 
 - Add new methods to list local templates and generate template from local fs
