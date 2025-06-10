@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.14.1] - 2025-06-10 <a id="0.14.1"></a>
+
 ### 📚 Documentation
 
 - [binary] - Add instructions on how to install crate with feature flags
