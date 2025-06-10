@@ -61,22 +61,6 @@ args = ["-f", "target/doc/gitignore_template_generator/index.html"]
 run_task = [{ name = ["rm-static-doc", "gen-doc"] }]
 
 # cargo
-[tasks.install-git-cliff]
-command = "cargo"
-args = ["install", "git-cliff"]
-
-[tasks.install-cargo-tarpaulin]
-command = "cargo"
-args = ["install", "cargo-tarpaulin"]
-
-[tasks.install-cargo-release]
-command = "cargo"
-args = ["install", "cargo-release"]
-
-[tasks.install-cargo-sort]
-command = "cargo"
-args = ["install", "cargo-sort"]
-
 [tasks.fmt]
 script = """
 cargo +nightly fmt -- --unstable-features
@@ -161,15 +145,6 @@ script = [
 
 
 # front tasks
-[tasks.dev]
-run_task = [
-    { name = "install-git-cliff", fork = true },
-    { name = "install-cargo-release", fork = true },
-    { name = "install-cargo-tarpaulin", fork = true },
-    { name = "install-cargo-sort", fork = true },
-    { name = "build" },
-]
-
 [tasks.fmt-commit]
 dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
 
