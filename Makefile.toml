@@ -130,9 +130,7 @@ args = [
     "--unreleased",
     "-o",
     "CHANGELOG_SNAPSHOT.md",
-    "--verbose",
-    "--workdir",
-    ".",
+    "--verbose"
 ]
 
 [tasks.bump-changelog]
