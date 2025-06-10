@@ -162,4 +162,5 @@ command = "cargo"
 args = ["fmt", "--check", "--", "--unstable-features"]
 
 [tasks.validate] # META TASK
+description = "Test code: unit/isolation/integration tests, lint and format check"
 dependencies = ["test", "lint", "fmt-check"]
