@@ -122,7 +122,20 @@ args = ["commit", "-m", "chore(changelog): update file"]
 command = "git"
 args = ["push"]
 
-[tasks.git-cliff]
+# front tasks
+[tasks.fmt-commit]
+dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
+
+[tasks.full-test]
+dependencies = ["test", "lint", "fmt-check"]
+
+[tasks.changelog-commit]
+dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
+
+# Changelogs
+[tasks.generate-changelog]
+description = "Generate changelogs for unreleased commits in CHANGELOG_SNAPSHOT.md"
+install_crate = "git-cliff"
 command = "git"
 args = [
     "cliff",
@@ -134,25 +147,14 @@ args = [
     ".",
 ]
 
-
-# miscellaneous
 [tasks.bump-changelog]
+description = "Bump sCHANGELOG_SNAPSHOT.md into CHANGELOG.md"
 script = [
     "sed '/./,$!d' CHANGELOG_SNAPSHOT.md | tac | sed '/./,$!d' | tac > tmp && mv tmp CHANGELOG_SNAPSHOT.md",
     "sed -i -e '/@Content/{r CHANGELOG_SNAPSHOT.md' -e 'd}' CHANGELOG.md",
     "rm CHANGELOG_SNAPSHOT.md",
 ]
 
-
-# front tasks
-[tasks.fmt-commit]
-dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
-
-[tasks.full-test]
-dependencies = ["test", "lint", "fmt-check"]
-
 [tasks.changelog]
-dependencies = ["git-cliff", "bump-changelog"]
-
-[tasks.changelog-commit]
-dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
+description = "Generate changelogs for unreleased commits in CHANGELOG.md"
+dependencies = ["generate-changelog", "bump-changelog"]
