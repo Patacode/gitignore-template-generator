@@ -120,6 +120,10 @@ dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
 [tasks.changelog-commit]
 dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
 
+[env]
+MAIN_CHANGELOG_FILE = "CHANGELOG.md"
+SNAPSHOT_CHANGELOG_FILE = "CHANGELOG_SNAPSHOT.md"
+
 # Changelogs
 [tasks.generate-changelog]
 description = "Generate changelogs for unreleased commits in CHANGELOG_SNAPSHOT.md"
@@ -129,7 +133,7 @@ args = [
     "cliff",
     "--unreleased",
     "-o",
-    "CHANGELOG_SNAPSHOT.md",
+    "${SNAPSHOT_CHANGELOG_FILE}",
     "--verbose",
     "--workdir",
     ".",
@@ -139,11 +143,11 @@ args = [
 
 [tasks.bump-changelog]
 description = "Bump sCHANGELOG_SNAPSHOT.md into CHANGELOG.md"
-condition = { files_exist = ["CHANGELOG_SNAPSHOT.md"] }
+condition = { files_exist = ["${SNAPSHOT_CHANGELOG_FILE}"] }
 script = [
-    "sed '/./,$!d' CHANGELOG_SNAPSHOT.md | tac | sed '/./,$!d' | tac > tmp && mv tmp CHANGELOG_SNAPSHOT.md",
-    "sed -e '/@Content/{r CHANGELOG_SNAPSHOT.md' -e 'd}' CHANGELOG.md > tmp && mv tmp CHANGELOG.md",
-    "rm CHANGELOG_SNAPSHOT.md",
+    "sed '/./,$!d' ${SNAPSHOT_CHANGELOG_FILE} | tac | sed '/./,$!d' | tac > tmp && mv tmp ${SNAPSHOT_CHANGELOG_FILE}",
+    "sed -e \"/@Content/{r ${SNAPSHOT_CHANGELOG_FILE}\" -e 'd}' ${MAIN_CHANGELOG_FILE} > tmp && mv tmp ${MAIN_CHANGELOG_FILE}",
+    "rm ${SNAPSHOT_CHANGELOG_FILE}",
 ]
 
 [tasks.changelog] # META TASK
