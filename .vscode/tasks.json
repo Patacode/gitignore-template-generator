@@ -6,7 +6,7 @@
         {
             "label": "Run all tests",
             "type": "shell",
-            "command": "cargo make full-test",
+            "command": "cargo make validate",
             "problemMatcher": []
         },
         {
