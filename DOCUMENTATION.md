@@ -140,10 +140,27 @@ Be noted that:
 - The `cli` and `remote_templating` features are enabled by default
 - The `local_templating` feature can be enabled on-demand
 - Either `remote_templating` or `local_templating` must be enabled at any time
-- Enabled features will be listed on last line of [-h --help](#-h-help) output:
-  ```text
-  Features: cli, remote_templating
-  ```
+
+To install the crate with all the features (default `cli` and `remote_templating` features + optional `local_templating`):
+
+```bash
+cargo install gitignore-template-generator --features local_templating 
+```
+
+With only specific features:
+
+```bash
+# cli and local_templating only
+cargo install gitignore-template-generator --no-default-features --features "cli local_templating" 
+```
+
+Enabled features will be listed on last line of [-h --help](#-h-help) output.
+For example, if both `cli` and `local_templating` are enabled, you would see
+the below at the end:
+
+```text
+Features: cli, local_templating
+```
 
 ### Cli
 
