@@ -141,7 +141,7 @@ args = [
 description = "Bump sCHANGELOG_SNAPSHOT.md into CHANGELOG.md"
 script = [
     "sed '/./,$!d' CHANGELOG_SNAPSHOT.md | tac | sed '/./,$!d' | tac > tmp && mv tmp CHANGELOG_SNAPSHOT.md",
-    "sed -i -e '/@Content/{r CHANGELOG_SNAPSHOT.md' -e 'd}' CHANGELOG.md",
+    "sed -e '/@Content/{r CHANGELOG_SNAPSHOT.md' -e 'd}' CHANGELOG.md > tmp && mv tmp CHANGELOG.md",
     "rm CHANGELOG_SNAPSHOT.md",
 ]
 
