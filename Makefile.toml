@@ -133,6 +133,8 @@ args = [
     "--verbose",
     "--workdir",
     ".",
+    "--strip",
+    "all",
 ]
 
 [tasks.bump-changelog]
