@@ -139,6 +139,7 @@ args = [
 
 [tasks.bump-changelog]
 description = "Bump sCHANGELOG_SNAPSHOT.md into CHANGELOG.md"
+condition = { files_exist = ["CHANGELOG_SNAPSHOT.md"] }
 script = [
     "sed '/./,$!d' CHANGELOG_SNAPSHOT.md | tac | sed '/./,$!d' | tac > tmp && mv tmp CHANGELOG_SNAPSHOT.md",
     "sed -e '/@Content/{r CHANGELOG_SNAPSHOT.md' -e 'd}' CHANGELOG.md > tmp && mv tmp CHANGELOG.md",
