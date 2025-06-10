@@ -66,15 +66,6 @@ script = """
 cargo +nightly fmt -- --unstable-features
 """
 
-[tasks.fmt-check]
-script = """
-cargo +nightly fmt --check -- --unstable-features
-"""
-
-[tasks.lint]
-command = "cargo"
-args = ["clippy", "--all-targets", "--all-features", "--release"]
-
 [tasks.deploy]
 command = "cargo"
 args = ["release", "${BUMP_LEVEL}", "--execute", "--no-confirm", "--no-verify"]
@@ -126,9 +117,6 @@ args = ["push"]
 [tasks.fmt-commit]
 dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
 
-[tasks.full-test]
-dependencies = ["test", "lint", "fmt-check"]
-
 [tasks.changelog-commit]
 dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
 
@@ -155,6 +143,23 @@ script = [
     "rm CHANGELOG_SNAPSHOT.md",
 ]
 
-[tasks.changelog]
+[tasks.changelog] # META TASK
 description = "Generate changelogs for unreleased commits in CHANGELOG.md"
 dependencies = ["generate-changelog", "bump-changelog"]
+
+# Tests
+[tasks.lint]
+description = "Lint code with clippy"
+install_crate = { rustup_component_name = "clippy", binary = "cargo-clippy", test_arg = "--help" }
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--release"]
+
+[tasks.fmt-check]
+description = "Check code format with rustfmt"
+toolchain = "nightly"
+install_crate = { rustup_component_name = "rustfmt", binary = "cargo-fmt", test_arg = "--help" }
+command = "cargo"
+args = ["fmt", "--check", "--", "--unstable-features"]
+
+[tasks.validate] # META TASK
+dependencies = ["test", "lint", "fmt-check"]

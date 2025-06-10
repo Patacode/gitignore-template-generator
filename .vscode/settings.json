@@ -27,6 +27,7 @@
     "rstest",
     "rustc",
     "RUSTFLAGS",
+    "rustup",
     "smap",
     "striptags",
     "thon",
