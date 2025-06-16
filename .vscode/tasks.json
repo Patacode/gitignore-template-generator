@@ -36,15 +36,23 @@
         {
             "label": "Deploy dryrun",
             "type": "shell",
-            "command": "cargo",
-            "args": ["make", "release-dryrun", "${input:bumpType}"],
+            "command": "cargo make release-dryrun",
+            "options": {
+                "env": {
+                    "BUMP_LEVEL": "${input:bumpType}"
+                }
+            },
             "problemMatcher": []
         },
         {
             "label": "Deploy",
             "type": "shell",
-            "command": "cargo",
-            "args": ["make", "release", "${input:bumpType}"],
+            "command": "cargo make release",
+            "options": {
+                "env": {
+                    "BUMP_LEVEL": "${input:bumpType}"
+                }
+            },
             "problemMatcher": []
         },
         {
