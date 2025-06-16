@@ -10,6 +10,12 @@
             "problemMatcher": []
         },
         {
+            "label": "Run all tests with env var",
+            "type": "shell",
+            "command": "cargo make validate-env",
+            "problemMatcher": []
+        },
+        {
             "label": "Format Rust code",
             "type": "shell",
             "command": "cargo make fmt",
