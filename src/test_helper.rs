@@ -15,8 +15,9 @@ impl Drop for EnvTestContext {
             println!("Removed!");
         } else {
             println!(
-                "{} env var was set. Resetting it...",
-                constant::template_manager::HOME_ENV_VAR
+                "{} env var was set to {:?}. Resetting it...",
+                constant::template_manager::HOME_ENV_VAR,
+                self.original_value
             );
             set_env_var(
                 constant::template_manager::HOME_ENV_VAR,
