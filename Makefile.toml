@@ -38,12 +38,12 @@ done
 
 [tasks.release]
 run_task = [
-    { name = [
-        "deploy-args",
-        "bump-trello-version",
-        "rename-trello-cards",
-        "archive-trello-cards",
-    ] },
+  { name = [
+    "deploy-args",
+    "bump-trello-version",
+    "rename-trello-cards",
+    "archive-trello-cards",
+  ] },
 ]
 
 [tasks.release-dryrun]
@@ -120,6 +120,11 @@ dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
 [tasks.changelog-commit]
 dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
 
+# META TASKS:
+# - changelog
+# - test
+# - validate
+
 [env]
 MAIN_CHANGELOG_FILE = "CHANGELOG.md"
 SNAPSHOT_CHANGELOG_FILE = "CHANGELOG_SNAPSHOT.md"
@@ -130,24 +135,24 @@ description = "Generate changelogs for unreleased commits in CHANGELOG_SNAPSHOT.
 install_crate = "git-cliff"
 command = "git"
 args = [
-    "cliff",
-    "--unreleased",
-    "-o",
-    "${SNAPSHOT_CHANGELOG_FILE}",
-    "--verbose",
-    "--workdir",
-    ".",
-    "--strip",
-    "all",
+  "cliff",
+  "--unreleased",
+  "-o",
+  "${SNAPSHOT_CHANGELOG_FILE}",
+  "--verbose",
+  "--workdir",
+  ".",
+  "--strip",
+  "all",
 ]
 
 [tasks.bump-changelog]
 description = "Bump sCHANGELOG_SNAPSHOT.md into CHANGELOG.md"
 condition = { files_exist = ["${SNAPSHOT_CHANGELOG_FILE}"] }
 script = [
-    "sed '/./,$!d' ${SNAPSHOT_CHANGELOG_FILE} | tac | sed '/./,$!d' | tac > tmp && mv tmp ${SNAPSHOT_CHANGELOG_FILE}",
-    "sed -e \"/@Content/{r ${SNAPSHOT_CHANGELOG_FILE}\" -e 'd}' ${MAIN_CHANGELOG_FILE} > tmp && mv tmp ${MAIN_CHANGELOG_FILE}",
-    "rm ${SNAPSHOT_CHANGELOG_FILE}",
+  "sed '/./,$!d' ${SNAPSHOT_CHANGELOG_FILE} | tac | sed '/./,$!d' | tac > tmp && mv tmp ${SNAPSHOT_CHANGELOG_FILE}",
+  "sed -e \"/@Content/{r ${SNAPSHOT_CHANGELOG_FILE}\" -e 'd}' ${MAIN_CHANGELOG_FILE} > tmp && mv tmp ${MAIN_CHANGELOG_FILE}",
+  "rm ${SNAPSHOT_CHANGELOG_FILE}",
 ]
 
 [tasks.changelog] # META TASK
@@ -155,19 +160,60 @@ description = "Generate changelogs for unreleased commits in CHANGELOG.md"
 dependencies = ["generate-changelog", "bump-changelog"]
 
 # Tests
+[tasks.test-unit]
+description = "Run unit tests"
+command = "cargo"
+args = ["test", "--lib"]
+
+[tasks.test-unit-local-templating]
+description = "Run unit tests with local_templating feature enabled"
+command = "cargo"
+args = ["test", "--lib", "--features", "local_templating"]
+
+[tasks.test-isolation]
+description = "Run isolation tests"
+command = "cargo"
+args = ["test", "--test", "isolation_tests"]
+
+[tasks.test-isolation-local-templating]
+description = "Run isolation tests with local_templating feature enabled"
+command = "cargo"
+args = ["test", "--test", "isolation_tests", "--features", "local_templating"]
+
+[tasks.test-integration]
+description = "Run integration tests"
+command = "cargo"
+args = ["test", "--test", "integration_tests"]
+
+[tasks.test-integration-local-templating]
+description = "Run integration tests with local_templating feature enabled"
+command = "cargo"
+args = ["test", "--test", "integration_tests", "--features", "local_templating"]
+
+[tasks.test] # META TASK
+description = "Run unit, isolation and integration tests"
+dependencies = [
+  "test-unit",
+  "test-unit-local-templating",
+  "test-isolation",
+  "test-isolation-local-templating",
+  "test-integration",
+  "test-integration-local-templating",
+]
+
 [tasks.lint]
-description = "Lint code with clippy"
+description = "Lint codebase with clippy"
 install_crate = { rustup_component_name = "clippy", binary = "cargo-clippy", test_arg = "--help" }
 command = "cargo"
 args = ["clippy", "--all-targets", "--all-features"]
 
 [tasks.fmt-check]
-description = "Check code format with rustfmt"
+description = "Check codebase format with rustfmt"
 toolchain = "nightly"
 install_crate = { rustup_component_name = "rustfmt", binary = "cargo-fmt", test_arg = "--help" }
 command = "cargo"
 args = ["fmt", "--check", "--", "--unstable-features"]
 
 [tasks.validate] # META TASK
-description = "Test code: unit/isolation/integration tests, lint and format check"
+description = "Test, lint and check format of codebase"
 dependencies = ["test", "lint", "fmt-check"]
