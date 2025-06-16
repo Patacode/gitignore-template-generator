@@ -1,54 +1,3 @@
-# sandbox
-[tasks.bump-trello-version]
-script = '''
-new_version=$(cat .version)
-new_name="gitignore-template-generator+${new_version}"
-key=$(cat "$TRELLO_API_KEY")
-token=$(cat "$TRELLO_API_TOKEN")
-curl -o /dev/null -s -X PUT "https://api.trello.com/1/boards/FZLDdiLN?name=${new_name}&key=${key}&token=${token}"
-echo "Trello board version bumped to ${new_version}"
-'''
-
-[tasks.archive-trello-cards]
-script = '''
-key=$(cat "$TRELLO_API_KEY")
-token=$(cat "$TRELLO_API_TOKEN")
-card_ids=$(curl -s "https://api.trello.com/1/lists/68027d1040324003560f3169/cards?key=${key}&token=${token}" | jq -r '.[].id')
-for card_id in $card_ids; do
-  curl -o /dev/null -s -X PUT "https://api.trello.com/1/cards/${card_id}?idList=68027e5026b59f970b733488&key=${key}&token=${token}"
-  echo "Moved card ${card_id} to History column"
-done
-'''
-
-[tasks.rename-trello-cards]
-script = '''
-old_version=$(cat .version)
-key=$(cat "$TRELLO_API_KEY")
-token=$(cat "$TRELLO_API_TOKEN")
-curl -s "https://api.trello.com/1/lists/68027d1040324003560f3169/cards?key=${key}&token=${token}" | jq -c '.[] | {id, name}' |
-while read -r card; do
-  card_name=$(echo "${card}" | jq -r '.name')
-  card_id=$(echo "${card}" | jq -r '.id')
-  url_encoded_card_name=$(jq -rn --arg v "$card_name" '$v|@uri')
-  new_name="${old_version}+-+${url_encoded_card_name}"
-  curl -o /dev/null -s -X PUT "https://api.trello.com/1/cards/${card_id}?name=${new_name}&idList=68027e5026b59f970b733488&key=${key}&token=${token}"
-  echo "Renamed card ${card_id} with version specifier"
-done
-'''
-
-[tasks.release]
-run_task = [
-  { name = [
-    "deploy-args",
-    "bump-trello-version",
-    "rename-trello-cards",
-    "archive-trello-cards",
-  ] },
-]
-
-[tasks.release-dryrun]
-run_task = [{ name = ["deploy-dryrun-args"] }]
-
 [tasks.gen-doc]
 command = "cargo"
 args = ["doc"]
@@ -65,32 +14,6 @@ run_task = [{ name = ["rm-static-doc", "gen-doc"] }]
 script = """
 cargo +nightly fmt -- --unstable-features
 """
-
-[tasks.deploy]
-command = "cargo"
-args = ["release", "${BUMP_LEVEL}", "--execute", "--no-confirm", "--no-verify"]
-
-[tasks.deploy-args]
-command = "cargo"
-args = ["release", "${@}", "--execute", "--no-confirm", "--no-verify"]
-
-
-[tasks.deploy-dryrun]
-command = "cargo"
-args = ["release", "${BUMP_LEVEL}", "--no-confirm", "--no-verify"]
-
-[tasks.deploy-dryrun-args]
-command = "cargo"
-args = ["release", "${@}", "--no-confirm", "--no-verify"]
-
-[tasks.deploy-patch]
-env = { "BUMP_LEVEL" = "patch" }
-run_task = "deploy"
-
-[tasks.deploy-patch-dryrun]
-env = { "BUMP_LEVEL" = "patch" }
-run_task = "deploy-dryrun"
-
 
 # git
 [tasks.git-add-all]
@@ -120,11 +43,21 @@ dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
 [tasks.changelog-commit]
 dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
 
-# META TASKS:
+##############
+# META TASKS #
+##############
+
+# [changelogs]
 # - changelog
+
+# [tests]
 # - test
 # - validate
 # - validate-env
+
+# [releases]
+# - release
+# - release-dryrun
 
 [config]
 skip_core_tasks = true
@@ -133,7 +66,11 @@ skip_core_tasks = true
 MAIN_CHANGELOG_FILE = "CHANGELOG.md"
 SNAPSHOT_CHANGELOG_FILE = "CHANGELOG_SNAPSHOT.md"
 
-# Changelogs
+
+
+################
+# [changelogs] #
+################
 [tasks.generate-changelog]
 description = "Generate changelogs for unreleased commits in CHANGELOG_SNAPSHOT.md"
 install_crate = "git-cliff"
@@ -163,7 +100,11 @@ script = [
 description = "Generate changelogs for unreleased commits in CHANGELOG.md"
 dependencies = ["generate-changelog", "bump-changelog"]
 
-# Tests
+
+
+###########
+# [tests] #
+###########
 [tasks.test-unit]
 description = "Run unit tests"
 command = "cargo"
@@ -226,3 +167,65 @@ dependencies = ["test", "lint", "fmt-check"]
 description = "Test, lint and check format of codebase with GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
 dependencies = ["test", "lint", "fmt-check"]
 env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
+
+
+
+##############
+# [releases] #
+##############
+[tasks.bump-trello-version]
+script = '''
+new_version=$(cat .version)
+new_name="gitignore-template-generator+${new_version}"
+key=$(cat "$TRELLO_API_KEY")
+token=$(cat "$TRELLO_API_TOKEN")
+curl -o /dev/null -s -X PUT "https://api.trello.com/1/boards/FZLDdiLN?name=${new_name}&key=${key}&token=${token}"
+echo "Trello board version bumped to ${new_version}"
+'''
+
+[tasks.archive-trello-cards]
+script = '''
+key=$(cat "$TRELLO_API_KEY")
+token=$(cat "$TRELLO_API_TOKEN")
+card_ids=$(curl -s "https://api.trello.com/1/lists/68027d1040324003560f3169/cards?key=${key}&token=${token}" | jq -r '.[].id')
+for card_id in $card_ids; do
+  curl -o /dev/null -s -X PUT "https://api.trello.com/1/cards/${card_id}?idList=68027e5026b59f970b733488&key=${key}&token=${token}"
+  echo "Moved card ${card_id} to History column"
+done
+'''
+
+[tasks.rename-trello-cards]
+script = '''
+old_version=$(cat .version)
+key=$(cat "$TRELLO_API_KEY")
+token=$(cat "$TRELLO_API_TOKEN")
+curl -s "https://api.trello.com/1/lists/68027d1040324003560f3169/cards?key=${key}&token=${token}" | jq -c '.[] | {id, name}' |
+while read -r card; do
+  card_name=$(echo "${card}" | jq -r '.name')
+  card_id=$(echo "${card}" | jq -r '.id')
+  url_encoded_card_name=$(jq -rn --arg v "$card_name" '$v|@uri')
+  new_name="${old_version}+-+${url_encoded_card_name}"
+  curl -o /dev/null -s -X PUT "https://api.trello.com/1/cards/${card_id}?name=${new_name}&idList=68027e5026b59f970b733488&key=${key}&token=${token}"
+  echo "Renamed card ${card_id} with version specifier"
+done
+'''
+
+[tasks.deploy]
+command = "cargo"
+args = ["release", "${@}", "--execute", "--no-confirm", "--no-verify"]
+
+
+[tasks.deploy-dryrun]
+command = "cargo"
+args = ["release", "${@}", "--no-confirm", "--no-verify"]
+
+[tasks.release] # META TASK
+dependencies = [
+  "deploy",
+  "bump-trello-version",
+  "rename-trello-cards",
+  "archive-trello-cards",
+]
+
+[tasks.release-dryrun] # META TASK
+dependencies = ["deploy-dryrun"]
