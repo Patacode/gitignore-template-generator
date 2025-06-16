@@ -67,7 +67,6 @@ MAIN_CHANGELOG_FILE = "CHANGELOG.md"
 SNAPSHOT_CHANGELOG_FILE = "CHANGELOG_SNAPSHOT.md"
 
 
-
 ################
 # [changelogs] #
 ################
@@ -99,7 +98,6 @@ script = [
 [tasks.changelog] # META TASK
 description = "Generate changelogs for unreleased commits in CHANGELOG.md"
 dependencies = ["generate-changelog", "bump-changelog"]
-
 
 
 ###########
@@ -169,7 +167,6 @@ dependencies = ["test", "lint", "fmt-check"]
 env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
 
 
-
 ##############
 # [releases] #
 ##############
@@ -211,13 +208,15 @@ done
 '''
 
 [tasks.deploy]
+condition = { env_set = ["BUMP_LEVEL"] }
 command = "cargo"
-args = ["release", "${@}", "--execute", "--no-confirm", "--no-verify"]
+args = ["release", "${BUMP_LEVEL}", "--execute", "--no-confirm", "--no-verify"]
 
 
 [tasks.deploy-dryrun]
+condition = { env_set = ["BUMP_LEVEL"] }
 command = "cargo"
-args = ["release", "${@}", "--no-confirm", "--no-verify"]
+args = ["release", "${BUMP_LEVEL}", "--no-confirm", "--no-verify"]
 
 [tasks.release] # META TASK
 dependencies = [
