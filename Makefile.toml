@@ -124,6 +124,10 @@ dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
 # - changelog
 # - test
 # - validate
+# - validate-env
+
+[config]
+skip_core_tasks = true
 
 [env]
 MAIN_CHANGELOG_FILE = "CHANGELOG.md"
@@ -217,3 +221,8 @@ args = ["fmt", "--check", "--", "--unstable-features"]
 [tasks.validate] # META TASK
 description = "Test, lint and check format of codebase"
 dependencies = ["test", "lint", "fmt-check"]
+
+[tasks.validate-env] # META TASK
+description = "Test, lint and check format of codebase with GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+dependencies = ["test", "lint", "fmt-check"]
+env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
