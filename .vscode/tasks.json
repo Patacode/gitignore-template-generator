@@ -4,73 +4,97 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run all tests",
+            "label": "test-noenv",
+            "type": "shell",
+            "command": "cargo make test-noenv",
+            "problemMatcher": []
+        },
+        {
+            "label": "doc",
+            "type": "shell",
+            "command": "cargo make doc",
+            "problemMatcher": []
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "cargo make test",
+            "problemMatcher": []
+        },
+        {
+            "label": "trello",
+            "type": "shell",
+            "command": "cargo make trello",
+            "problemMatcher": []
+        },
+        {
+            "label": "release",
+            "type": "shell",
+            "command": "cargo make release",
+            "problemMatcher": [],
+            "options": {
+                "env": {
+                    "BUMP_LEVEL": "${input:bumpType}"
+                }
+            }
+        },
+        {
+            "label": "format",
+            "type": "shell",
+            "command": "cargo make format",
+            "problemMatcher": []
+        },
+        {
+            "label": "format-save",
+            "type": "shell",
+            "command": "cargo make format-save",
+            "problemMatcher": []
+        },
+        {
+            "label": "test-env",
+            "type": "shell",
+            "command": "cargo make test-env",
+            "problemMatcher": []
+        },
+        {
+            "label": "validate",
             "type": "shell",
             "command": "cargo make validate",
             "problemMatcher": []
         },
         {
-            "label": "Run all tests with env var",
-            "type": "shell",
-            "command": "cargo make validate-env",
-            "problemMatcher": []
-        },
-        {
-            "label": "Format Rust code",
-            "type": "shell",
-            "command": "cargo make fmt",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Format Rust code and commit",
-            "type": "shell",
-            "command": "cargo make fmt-commit",
-            "presentation": {
-                "reveal": "silent"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Deploy dryrun",
+            "label": "release-dryrun",
             "type": "shell",
             "command": "cargo make release-dryrun",
+            "problemMatcher": [],
             "options": {
                 "env": {
                     "BUMP_LEVEL": "${input:bumpType}"
                 }
-            },
-            "problemMatcher": []
+            }
         },
         {
-            "label": "Deploy",
-            "type": "shell",
-            "command": "cargo make release",
-            "options": {
-                "env": {
-                    "BUMP_LEVEL": "${input:bumpType}"
-                }
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Generate changelog",
+            "label": "changelog",
             "type": "shell",
             "command": "cargo make changelog",
             "problemMatcher": []
         },
         {
-            "label": "Update changelog",
+            "label": "changelog-build",
             "type": "shell",
-            "command": "cargo make changelog-commit",
+            "command": "cargo make changelog-build",
             "problemMatcher": []
         },
         {
-            "label": "Build doc",
+            "label": "changelog-save",
             "type": "shell",
-            "command": "cargo make doc",
+            "command": "cargo make changelog-save",
+            "problemMatcher": []
+        },
+        {
+            "label": "format-build",
+            "type": "shell",
+            "command": "cargo make format-build",
             "problemMatcher": []
         }
     ],
@@ -79,8 +103,12 @@
             "id": "bumpType",
             "type": "pickString",
             "description": "Choose bump type",
-            "options": ["patch", "minor", "major"],
+            "options": [
+                "patch",
+                "minor",
+                "major"
+            ],
             "default": "patch"
-          }
+        }
     ]
 }

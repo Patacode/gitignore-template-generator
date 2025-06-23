@@ -1,64 +1,3 @@
-[tasks.gen-doc]
-command = "cargo"
-args = ["doc"]
-
-[tasks.rm-static-doc]
-command = "rm"
-args = ["-f", "target/doc/gitignore_template_generator/index.html"]
-
-[tasks.doc]
-run_task = [{ name = ["rm-static-doc", "gen-doc"] }]
-
-# cargo
-[tasks.fmt]
-script = """
-cargo +nightly fmt -- --unstable-features
-"""
-
-# git
-[tasks.git-add-all]
-command = "git"
-args = ["add", "."]
-
-[tasks.git-add-changelog]
-command = "git"
-args = ["add", "CHANGELOG.md"]
-
-[tasks.git-commit-fmt]
-command = "git"
-args = ["commit", "-m", "style: reformat code with cargo fmt"]
-
-[tasks.git-commit-changelog]
-command = "git"
-args = ["commit", "-m", "chore(changelog): update file"]
-
-[tasks.git-push]
-command = "git"
-args = ["push"]
-
-# front tasks
-[tasks.fmt-commit]
-dependencies = ["git-add-all", "git-commit-fmt", "git-push"]
-
-[tasks.changelog-commit]
-dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
-
-##############
-# META TASKS #
-##############
-
-# [changelogs]
-# - changelog
-
-# [tests]
-# - test
-# - validate
-# - validate-env
-
-# [releases]
-# - release
-# - release-dryrun
-
 [config]
 skip_core_tasks = true
 
@@ -66,111 +5,87 @@ skip_core_tasks = true
 MAIN_CHANGELOG_FILE = "CHANGELOG.md"
 SNAPSHOT_CHANGELOG_FILE = "CHANGELOG_SNAPSHOT.md"
 
+##################
+# TERMINAL TASKS #
+##################
 
-################
-# [changelogs] #
-################
-[tasks.generate-changelog]
-description = "Generate changelogs for unreleased commits in CHANGELOG_SNAPSHOT.md"
-install_crate = "git-cliff"
-command = "git"
-args = [
-  "cliff",
-  "--unreleased",
-  "-o",
-  "${SNAPSHOT_CHANGELOG_FILE}",
-  "--verbose",
-  "--workdir",
-  ".",
-  "--strip",
-  "all",
-]
-
-[tasks.bump-changelog]
-description = "Bump sCHANGELOG_SNAPSHOT.md into CHANGELOG.md"
-condition = { files_exist = ["${SNAPSHOT_CHANGELOG_FILE}"] }
-script = [
-  "sed '/./,$!d' ${SNAPSHOT_CHANGELOG_FILE} | tac | sed '/./,$!d' | tac > tmp && mv tmp ${SNAPSHOT_CHANGELOG_FILE}",
-  "sed -e \"/@Content/{r ${SNAPSHOT_CHANGELOG_FILE}\" -e 'd}' ${MAIN_CHANGELOG_FILE} > tmp && mv tmp ${MAIN_CHANGELOG_FILE}",
-  "rm ${SNAPSHOT_CHANGELOG_FILE}",
-]
-
-[tasks.changelog] # META TASK
-description = "Generate changelogs for unreleased commits in CHANGELOG.md"
-dependencies = ["generate-changelog", "bump-changelog"]
-
-
-###########
-# [tests] #
-###########
-[tasks.test-unit]
-description = "Run unit tests"
+# to run all type of tests without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set
+[tasks.test-noenv-unit]
+description = "Run unit tests without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
 command = "cargo"
 args = ["test", "--lib"]
 
-[tasks.test-unit-local-templating]
-description = "Run unit tests with local_templating feature enabled"
+[tasks.test-noenv-unit-local-templating]
+description = "Run unit tests with local_templating feature enabled without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
 command = "cargo"
 args = ["test", "--lib", "--features", "local_templating"]
 
-[tasks.test-isolation]
-description = "Run isolation tests"
+[tasks.test-noenv-isolation]
+description = "Run isolation tests without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
 command = "cargo"
 args = ["test", "--test", "isolation_tests"]
 
-[tasks.test-isolation-local-templating]
-description = "Run isolation tests with local_templating feature enabled"
+[tasks.test-noenv-isolation-local-templating]
+description = "Run isolation tests with local_templating feature enabled without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
 command = "cargo"
 args = ["test", "--test", "isolation_tests", "--features", "local_templating"]
 
-[tasks.test-integration]
-description = "Run integration tests"
+[tasks.test-noenv-integration]
+description = "Run integration tests without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
 command = "cargo"
 args = ["test", "--test", "integration_tests"]
 
-[tasks.test-integration-local-templating]
-description = "Run integration tests with local_templating feature enabled"
+[tasks.test-noenv-integration-local-templating]
+description = "Run integration tests with local_templating feature enabled without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
 command = "cargo"
 args = ["test", "--test", "integration_tests", "--features", "local_templating"]
 
-[tasks.test] # META TASK
-description = "Run unit, isolation and integration tests"
-dependencies = [
-  "test-unit",
-  "test-unit-local-templating",
-  "test-isolation",
-  "test-isolation-local-templating",
-  "test-integration",
-  "test-integration-local-templating",
-]
+# to run all type of tests with GITIGNORE_TEMPLATE_GENERATOR_HOME env var set
+[tasks.test-env-unit]
+description = "Run unit tests with GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+command = "cargo"
+args = ["test", "--lib"]
+env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
 
+[tasks.test-env-unit-local-templating]
+description = "Run unit tests with local_templating feature enabled and GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+command = "cargo"
+args = ["test", "--lib", "--features", "local_templating"]
+env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
+
+[tasks.test-env-isolation]
+description = "Run isolation tests with GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+command = "cargo"
+args = ["test", "--test", "isolation_tests"]
+env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
+
+[tasks.test-env-isolation-local-templating]
+description = "Run isolation tests with local_templating feature enabled and GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+command = "cargo"
+args = ["test", "--test", "isolation_tests", "--features", "local_templating"]
+env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
+
+[tasks.test-env-integration]
+description = "Run isolation tests with local_templating feature enabled and GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+command = "cargo"
+args = ["test", "--test", "integration_tests"]
+env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
+
+[tasks.test-env-integration-local-templating]
+description = "Run integration tests with local_templating feature enabled and GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+command = "cargo"
+args = ["test", "--test", "integration_tests", "--features", "local_templating"]
+env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
+
+# to lint codebase
 [tasks.lint]
 description = "Lint codebase with clippy"
 install_crate = { rustup_component_name = "clippy", binary = "cargo-clippy", test_arg = "--help" }
 command = "cargo"
 args = ["clippy", "--all-targets", "--all-features"]
 
-[tasks.fmt-check]
-description = "Check codebase format with rustfmt"
-toolchain = "nightly"
-install_crate = { rustup_component_name = "rustfmt", binary = "cargo-fmt", test_arg = "--help" }
-command = "cargo"
-args = ["fmt", "--check", "--", "--unstable-features"]
-
-[tasks.validate] # META TASK
-description = "Test, lint and check format of codebase"
-dependencies = ["test", "lint", "fmt-check"]
-
-[tasks.validate-env] # META TASK
-description = "Test, lint and check format of codebase with GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
-dependencies = ["test", "lint", "fmt-check"]
-env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
-
-
-##############
-# [releases] #
-##############
-[tasks.bump-trello-version]
+# to interact with trello api
+[tasks.trello-bump-version]
 description = "Update trello board name with content of .version file"
 script = '''
 new_version=$(cat .version)
@@ -181,7 +96,7 @@ curl -o /dev/null -s -X PUT "https://api.trello.com/1/boards/FZLDdiLN?name=${new
 echo "Trello board version bumped to ${new_version}"
 '''
 
-[tasks.rename-trello-cards]
+[tasks.trello-rename-cards]
 description = "Update trello card names in Done column with content of .version file"
 script = '''
 old_version=$(cat .version)
@@ -198,7 +113,7 @@ while read -r card; do
 done
 '''
 
-[tasks.archive-trello-cards]
+[tasks.trello-archive-cards]
 description = "Move trello cards from Done to History column"
 script = '''
 key=$(cat "$TRELLO_API_KEY")
@@ -210,12 +125,12 @@ for card_id in $card_ids; do
 done
 '''
 
+# to deploy new crate version
 [tasks.deploy]
 description = "Deploy crate to crates.io with value of BUMP_LEVEL"
 condition = { env_set = ["BUMP_LEVEL"] }
 command = "cargo"
 args = ["release", "${BUMP_LEVEL}", "--execute", "--no-confirm", "--no-verify"]
-
 
 [tasks.deploy-dryrun]
 description = "Simulate crate deployment to crates.io with value of BUMP_LEVEL"
@@ -223,15 +138,159 @@ condition = { env_set = ["BUMP_LEVEL"] }
 command = "cargo"
 args = ["release", "${BUMP_LEVEL}", "--no-confirm", "--no-verify"]
 
-[tasks.release] # META TASK
-description = "Release a new crate version"
-dependencies = [
-  "deploy",
-  "bump-trello-version",
-  "rename-trello-cards",
-  "archive-trello-cards",
+# to manage changelogs
+[tasks.changelog-generate]
+description = "Generate changelogs for unreleased commits in CHANGELOG_SNAPSHOT.md"
+install_crate = "git-cliff"
+command = "git"
+args = [
+  "cliff",
+  "--unreleased",
+  "-o",
+  "${SNAPSHOT_CHANGELOG_FILE}",
+  "--verbose",
+  "--workdir",
+  ".",
+  "--strip",
+  "all",
 ]
 
-[tasks.release-dryrun] # META TASK
-description = "Simulate a new crate version release"
+[tasks.changelog-bump]
+description = "Bump sCHANGELOG_SNAPSHOT.md into CHANGELOG.md"
+condition = { files_exist = ["${SNAPSHOT_CHANGELOG_FILE}"] }
+script = [
+  "sed '/./,$!d' ${SNAPSHOT_CHANGELOG_FILE} | tac | sed '/./,$!d' | tac > tmp && mv tmp ${SNAPSHOT_CHANGELOG_FILE}",
+  "sed -e \"/@Content/{r ${SNAPSHOT_CHANGELOG_FILE}\" -e 'd}' ${MAIN_CHANGELOG_FILE} > tmp && mv tmp ${MAIN_CHANGELOG_FILE}",
+  "rm ${SNAPSHOT_CHANGELOG_FILE}",
+]
+
+# to interact with git vcs
+[tasks.git-push]
+description = "Push all commits to github repo"
+command = "git"
+args = ["push"]
+
+[tasks.git-add-all]
+description = "Add all unstaged changes to staging area"
+command = "git"
+args = ["add", "."]
+
+[tasks.git-add-changelog]
+description = "Add CHANGELOG.md to staging area"
+command = "git"
+args = ["add", "CHANGELOG.md"]
+
+[tasks.git-commit-changelog]
+description = "Commit with specific changelog message"
+command = "git"
+args = ["commit", "-m", "chore(changelog): update file"]
+
+[tasks.git-commit-format]
+description = "Commit with specific code formatting message"
+command = "git"
+args = ["commit", "-m", "style: reformat code with rustfmt"]
+
+# to handle crate documentation
+[tasks.doc-generate]
+description = "Generate crate documentation"
+command = "cargo"
+args = ["doc"]
+
+[tasks.doc-remove-main-index]
+description = "Remove main doc file at 'target/doc/gitignore_template_generator/index.html'"
+command = "rm"
+args = ["-f", "target/doc/gitignore_template_generator/index.html"]
+
+# to format codebase
+[tasks.format-check]
+description = "Check codebase format with rustfmt"
+toolchain = "nightly"
+install_crate = { rustup_component_name = "rustfmt", binary = "cargo-fmt", test_arg = "--help" }
+command = "cargo"
+args = ["fmt", "--check", "--", "--unstable-features"]
+
+[tasks.format-apply]
+description = "Check codebase format with rustfmt"
+toolchain = "nightly"
+install_crate = { rustup_component_name = "rustfmt", binary = "cargo-fmt", test_arg = "--help" }
+command = "cargo"
+args = ["fmt", "--", "--unstable-features"]
+
+
+##############
+# META TASKS #
+##############
+
+[tasks.test-noenv]
+description = "[META TASK] Run unit, isolation and integration tests without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+dependencies = [
+  "test-noenv-unit",
+  "test-noenv-unit-local-templating",
+  "test-noenv-isolation",
+  "test-noenv-isolation-local-templating",
+  "test-noenv-integration",
+  "test-noenv-integration-local-templating",
+]
+
+[tasks.test-env]
+description = "[META TASK] Run unit, isolation and integration tests with GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+dependencies = [
+  "test-env-unit",
+  "test-env-unit-local-templating",
+  "test-env-isolation",
+  "test-env-isolation-local-templating",
+  "test-env-integration",
+  "test-env-integration-local-templating",
+]
+
+[tasks.test]
+description = "[META TASK] Run unit, isolation and integration tests with and without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set"
+dependencies = ["test-noenv", "test-env"]
+
+[tasks.validate]
+description = "[META TASK] Test—with and without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set—lint, and check format of codebase"
+dependencies = ["test", "lint", "format-check"]
+
+[tasks.trello]
+description = "[META TASK] Update state of Trello board associated to this project to reflect new version release"
+dependencies = [
+  "trello-bump-version",
+  "trello-rename-cards",
+  "trello-archive-cards",
+]
+
+[tasks.release]
+description = "[META TASK] Release a new crate version with value of BUMP_LEVEL and update trello board associated to this project"
+dependencies = ["deploy", "trello"]
+
+[tasks.release-dryrun]
+description = "[META TASK] Simulate a new crate version release with value of BUMP_LEVEL"
 dependencies = ["deploy-dryrun"]
+
+[tasks.changelog-build]
+description = "[META TASK] Generate changelogs for upcoming release and bump it in CHANGELOG.md"
+dependencies = ["changelog-generate", "changelog-bump"]
+
+[tasks.changelog-save]
+description = "[META TASK] Commit and push CHANGELOG.md to github repo"
+dependencies = ["git-add-changelog", "git-commit-changelog", "git-push"]
+
+[tasks.changelog]
+description = "[META TASK] Generate changelogs for upcoming release, bump it in CHANGELOG.md, and push it to github repo"
+dependencies = ["changelog-build", "changelog-save"]
+
+[tasks.doc]
+description = "[META TASK] Remove main doc file at './target/doc/gitignore_template_generator/index.html' and regenerate crate documentation"
+dependencies = ["doc-remove-main-index", "doc-generate"]
+
+[tasks.format-build]
+description = "[META TASK] Format codebase"
+dependencies = ["format-apply"]
+
+[tasks.format-save]
+description = "[META TASK] Commit and push code format changes to github repo"
+dependencies = ["git-add-all", "git-commit-format", "git-push"]
+
+[tasks.format]
+description = "[META TASK] Format codebase and push any changes to github repo"
+dependencies = ["format-build", "format-save"]
