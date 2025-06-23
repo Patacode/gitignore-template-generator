@@ -17,6 +17,7 @@ and this project adheres to
 
 - [vscode] - Define a task per meta task defined in Makefile.toml
 - [vscode] - Update setup of release-related tasks with custom env var
+- [readme] - Update development section with up-to-date infos
 
 ## [0.14.1] - 2025-06-10 <a id="0.14.1"></a>
 
