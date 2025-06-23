@@ -95,7 +95,7 @@ cargo make --list-all-steps # list all tasks
 cargo make --list-all-steps | grep -e "META TASK" # filter only on meta tasks
 ```
 
-Here are some examples:
+Execute the task you want. Here are some examples:
 
 ```bash
 cargo make test # unit/isolation/integration tests + lint + format check
