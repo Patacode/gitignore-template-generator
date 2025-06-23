@@ -9,7 +9,14 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🏗️ Build
+
+- [make] - Update overall content of Makefile.toml with better and more comprehensive structure
+
+### ⚙️ Miscellaneous Tasks
+
+- [vscode] - Define a task per meta task defined in Makefile.toml
+- [vscode] - Update setup of release-related tasks with custom env var
 
 ## [0.14.1] - 2025-06-10 <a id="0.14.1"></a>
 
