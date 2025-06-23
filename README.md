@@ -82,53 +82,42 @@ gitignore-template-generator --list
 
 ## Development
 
-Install `cargo-make`, dev tools and build the package:
+Install necessary dev tools (i.e. `cargo-make` only here):
 
 ```bash
 ./bootstrap.sh
 ```
 
-Run the tests:
+List the available tasks:
 
 ```bash
-cargo test # unit + isolation + integration tests
-cargo test --lib # unit tests
-cargo test --test isolation_tests # isolation tests
-cargo test --test integration_tests # integration tests
+cargo make --list-all-steps # list all tasks
+cargo make --list-all-steps | grep -e "META TASK" # filter only on meta tasks
 ```
 
-Generate code coverage report in HTML format under `target/tarpaulin`:
+Here are some examples:
 
 ```bash
-cargo tarpaulin \
-  --out Html \
-  --exclude-files src/lib.rs src/main.rs benches/* tests/* src/constant.rs src/core.rs src/http_client.rs src/parser.rs src/validator.rs src/**/tests.rs src/**/api.rs \
-  --output-dir target/tarpaulin
+cargo make test # unit/isolation/integration tests + lint + format check
+cargo make changelog-build # generate changelogs in CHANGELOG.md
+cargo make format-build # format codebase
+cargo make release # deploy new patch/minor/major crate version
+cargo make doc # build doc locally
 ```
 
-Benchmark the binary crate:
+Some useful tasks haven't yet been defined in `Makefile.toml`, such as:
 
-```bash
-cargo bench
-```
-
-Generate and open documentation:
-
-```bash
-cargo doc --open
-```
-
-Lint code:
-
-```bash
-cargo clippy --all-targets --all-features
-```
-
-Format code with nightly features (required to sort imports):
-
-```bash
-cargo +nightly fmt -- --unstable-features
-```
+- Generating code coverage report in HTML format under `target/tarpaulin`:
+  ```bash
+  cargo tarpaulin \
+    --out Html \
+    --exclude-files src/lib.rs src/main.rs benches/* tests/* src/constant.rs src/core.rs src/http_client.rs src/parser.rs src/validator.rs src/**/tests.rs src/**/api.rs \
+    --output-dir target/tarpaulin
+  ```
+- Benchmarking the binary crate:
+  ```bash
+  cargo bench
+  ```
 
 ## License
 
