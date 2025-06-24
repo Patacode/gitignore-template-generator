@@ -2,8 +2,8 @@ use std::ffi::OsString;
 
 use clap::ValueEnum;
 
-use crate::core::ProgramExit;
 pub use crate::parser::impls::ClapArgsParser;
+use crate::{core::ProgramExit, runner::Action};
 
 #[derive(Clone, Copy, Debug, ValueEnum, PartialEq, Default)]
 pub enum TimeoutUnit {
@@ -127,6 +127,16 @@ impl Args {
             timeout: crate::constant::template_manager::TIMEOUT_INT,
             timeout_unit: crate::constant::template_manager::TIMEOUT_UNIT_ENUM,
         }
+    }
+
+    pub fn to_action(&self) -> Action {
+        return if self.show_list {
+            Action::List
+        } else if self.check_template_names {
+            Action::GenerateWithTemplateCheck
+        } else {
+            Action::Generate
+        };
     }
 
     /// Sets new value for `template_names` field.

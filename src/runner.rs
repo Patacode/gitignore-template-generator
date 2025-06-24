@@ -1,9 +1,14 @@
 //! Define components to process cli args.
 
 use crate::{
-    core::{ProgramExit, QualifiedString, TemplateFactory, TemplateManager},
-    parser::Args,
+    constant::help_messages, core::{ProgramExit, QualifiedString, TemplateFactory, TemplateManager}, parser::Args
 };
+
+pub enum Action {
+    List,
+    GenerateWithTemplateCheck,
+    Generate,
+}
 
 pub struct TemplateManagerRunner<
     T: TemplateManager + ?Sized,
@@ -24,21 +29,17 @@ impl<T: TemplateManager + ?Sized, F: TemplateFactory<T>>
     }
 
     pub fn run(&self, args: &Args) -> Result<QualifiedString, ProgramExit> {
-        let manager = self.create_manager(args)?;
+        let manager = F::from_args(args)?;
 
-        let result = if args.show_list {
-            manager.list()
-        } else if args.check_template_names {
-            manager.generate_with_template_check(&args.template_names)
-        } else {
-            manager.generate(&args.template_names)
+        let result = match args.to_action() {
+            Action::List => manager.list(),
+            Action::GenerateWithTemplateCheck => {
+                manager.generate_with_template_check(&args.template_names)
+            }
+            Action::Generate => manager.generate(&args.template_names),
         };
 
         self.parse_result(result)
-    }
-
-    fn create_manager(&self, args: &Args) -> Result<Box<T>, ProgramExit> {
-        Ok(F::from_args(args)?)
     }
 
     fn parse_result(
@@ -47,7 +48,7 @@ impl<T: TemplateManager + ?Sized, F: TemplateFactory<T>>
     ) -> Result<QualifiedString, ProgramExit> {
         match result {
             Ok(output) if output.value.is_empty() => Ok(QualifiedString {
-                value: "Nothing to be printed".to_string(),
+                value: help_messages::NOTHING_TO_BE_PRINTED.to_string(),
                 kind: output.kind,
             }),
             Ok(output) => Ok(output),

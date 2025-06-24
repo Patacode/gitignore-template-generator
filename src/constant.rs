@@ -124,6 +124,8 @@ pub mod help_messages {
     /// Help message bound to [`crate::parser::Args::timeout_unit`]
     /// field (i.e. timeout unit option).
     pub const TIMEOUT_UNIT: &str = "The timeout unit";
+
+    pub const NOTHING_TO_BE_PRINTED: &str = "Nothing to be printed";
 }
 
 pub mod cli_options {
