@@ -9,7 +9,13 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 📚 Documentation
+
+- [binary] - Update local templating feature flag section (*Small clarification and terminology change*)
+
+### ⚙️ Miscellaneous Tasks
+
+- [readme] - Point to crate doc using latest uri
 
 ## [0.14.2] - 2025-06-23 <a id="0.14.2"></a>
 
