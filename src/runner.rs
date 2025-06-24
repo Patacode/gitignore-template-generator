@@ -1,7 +1,9 @@
 //! Define components to process cli args.
 
 use crate::{
-    constant::help_messages, core::{ProgramExit, QualifiedString, TemplateFactory, TemplateManager}, parser::Args
+    constant::help_messages,
+    core::{ProgramExit, QualifiedString, TemplateFactory, TemplateManager},
+    parser::Args,
 };
 
 pub enum Action {
