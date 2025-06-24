@@ -206,7 +206,8 @@ considered.
 When generating a gitignore template (e.g.
 `gitignore-template-generator rust python`), the binary crate will fetch for
 templates in the directory pointed to by the environment variable
-`GITIGNORE_TEMPLATE_GENERATOR_HOME`. If not set, it will fall back to
+`GITIGNORE_TEMPLATE_GENERATOR_HOME` (effectively reading the content of
+named files). If not set, it will fall back to
 `$HOME/.gitignore_template_generator/templates`.
 
 If pointed directory does not exist, the binary crate will simply consider it
@@ -269,7 +270,7 @@ remote and local templating enabled:
    error messages to `stderr` and script's return value,
    which, for the former, will be the concatenation with plus sign (`+`) of all
    the errors that occurred, and for the latter, will be the sum of remote and
-   local execution status
+   local exit status
 
 A slight overhead is to be expected as local and remote template lists need
 to be fetched upfront in order to determine from which data source (i.e. local
