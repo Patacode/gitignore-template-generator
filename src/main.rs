@@ -93,16 +93,16 @@ cfg_if::cfg_if! {
 
             let remote_manager = RemoteGitignoreTemplateManager::new(
                 &http_client,
-                Some(&generator_uri),
-                Some(&lister_uri),
+                Some(generator_uri),
+                Some(lister_uri),
             );
 
             if parsed_cli_args.show_list {
                 remote_manager.list()
             } else if parsed_cli_args.check_template_names {
-                remote_manager.generate_with_template_check(&template_names)
+                remote_manager.generate_with_template_check(template_names)
             } else {
-                remote_manager.generate(&template_names)
+                remote_manager.generate(template_names)
             }
         }
     }
