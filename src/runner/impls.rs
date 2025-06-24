@@ -96,10 +96,8 @@ impl Runner for LocalRemoteRunner {
                 }
             }
             Err(error) => Err(ProgramExit {
-                message: format!(
-                    "An error occured when trying to read $HOME, which is required for local generation: {}",
-                    error
-                ),
+                message: constant::error_messages::READ_HOME_ENV_VAR
+                    .replace("{error}", error.to_string().as_ref()),
                 exit_status: constant::exit_status::GENERIC,
                 styled_message: None,
                 kind: ExitKind::Error,

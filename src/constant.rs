@@ -72,6 +72,8 @@ pub mod error_messages {
         "An error occurred while listing templates from local file system";
 
     pub const UNSUPPORTED_TEMPLATE: &str = "One or more provided template names are not supported\nTo enable robust template names check, retry with '--check'.\nFor the list of available template names, try '--list'.";
+
+    pub const READ_HOME_ENV_VAR: &str = "An error occurred when trying to read $HOME, which is required for local generation: {error}";
 }
 
 pub mod help_messages {
