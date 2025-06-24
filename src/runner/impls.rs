@@ -17,34 +17,29 @@ pub struct LocalRemoteRunner;
 
 impl Runner for RemoteRunner {
     fn run(args: &Args) -> Result<QualifiedString, ProgramExit> {
-        let server_url = &args.server_url;
-        let generator_uri = &args.generator_uri;
-        let lister_uri = &args.lister_uri;
-        let template_names = &args.template_names;
-        let timeout_unit = args.timeout_unit;
-        let global_timeout = if timeout_unit == TimeoutUnit::SECOND {
+        let global_timeout = if args.timeout_unit == TimeoutUnit::SECOND {
             Some(Duration::from_secs(args.timeout))
         } else {
             Some(Duration::from_millis(args.timeout))
         };
 
         let http_client = UreqHttpClient {
-            server_url: server_url.to_string(),
+            server_url: args.server_url.to_string(),
             global_timeout,
         };
 
         let remote_manager = RemoteGitignoreTemplateManager::new(
             &http_client,
-            Some(generator_uri),
-            Some(lister_uri),
+            Some(&args.generator_uri),
+            Some(&args.lister_uri),
         );
 
         if args.show_list {
             remote_manager.list()
         } else if args.check_template_names {
-            remote_manager.generate_with_template_check(template_names)
+            remote_manager.generate_with_template_check(&args.template_names)
         } else {
-            remote_manager.generate(template_names)
+            remote_manager.generate(&args.template_names)
         }
     }
 }
@@ -53,26 +48,21 @@ impl Runner for LocalRemoteRunner {
     fn run(args: &Args) -> Result<QualifiedString, ProgramExit> {
         match std::env::var("HOME") {
             Ok(home_path) => {
-                let server_url = &args.server_url;
-                let generator_uri = &args.generator_uri;
-                let lister_uri = &args.lister_uri;
-                let template_names = &args.template_names;
-                let timeout_unit = args.timeout_unit;
-                let global_timeout = if timeout_unit == TimeoutUnit::SECOND {
+                let global_timeout = if args.timeout_unit == TimeoutUnit::SECOND {
                     Some(Duration::from_secs(args.timeout))
                 } else {
                     Some(Duration::from_millis(args.timeout))
                 };
 
                 let http_client = UreqHttpClient {
-                    server_url: server_url.to_string(),
+                    server_url: args.server_url.to_string(),
                     global_timeout,
                 };
 
                 let remote_manager = RemoteGitignoreTemplateManager::new(
                     &http_client,
-                    Some(generator_uri),
-                    Some(lister_uri),
+                    Some(&args.generator_uri),
+                    Some(&args.lister_uri),
                 );
 
                 let default_template_dir = format!(
@@ -90,9 +80,9 @@ impl Runner for LocalRemoteRunner {
                 if args.show_list {
                     manager.list()
                 } else if args.check_template_names {
-                    manager.generate_with_template_check(template_names)
+                    manager.generate_with_template_check(&args.template_names)
                 } else {
-                    manager.generate(template_names)
+                    manager.generate(&args.template_names)
                 }
             }
             Err(error) => Err(ProgramExit {
