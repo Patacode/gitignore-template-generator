@@ -6,5 +6,6 @@ pub mod fs;
 pub mod helper;
 pub mod http_client;
 pub mod parser;
+pub mod runner;
 pub mod test_helper;
 pub mod validator;
