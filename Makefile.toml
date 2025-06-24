@@ -78,11 +78,17 @@ args = ["test", "--test", "integration_tests", "--features", "local_templating"]
 env = { GITIGNORE_TEMPLATE_GENERATOR_HOME = "/some/path" }
 
 # to lint codebase
-[tasks.lint]
+[tasks.lint-check]
 description = "Lint codebase with clippy"
 install_crate = { rustup_component_name = "clippy", binary = "cargo-clippy", test_arg = "--help" }
 command = "cargo"
 args = ["clippy", "--all-targets", "--all-features"]
+
+[tasks.lint-apply]
+description = "Lint codebase with clippy"
+install_crate = { rustup_component_name = "clippy", binary = "cargo-clippy", test_arg = "--help" }
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--fix"]
 
 # to interact with trello api
 [tasks.trello-bump-version]
@@ -190,6 +196,11 @@ description = "Commit with specific code formatting message"
 command = "git"
 args = ["commit", "-m", "style: reformat code with rustfmt"]
 
+[tasks.git-commit-lint]
+description = "Commit with specific lint message"
+command = "git"
+args = ["commit", "-m", "refactor(lint): apply all clippy lint corrections"]
+
 # to handle crate documentation
 [tasks.doc-generate]
 description = "Generate crate documentation"
@@ -294,3 +305,15 @@ dependencies = ["git-add-all", "git-commit-format", "git-push"]
 [tasks.format]
 description = "[META TASK] Format codebase and push any changes to github repo"
 dependencies = ["format-build", "format-save"]
+
+[tasks.lint-build]
+description = "[META TASK] Lint codebase"
+dependencies = ["lint-apply"]
+
+[tasks.lint-save]
+description = "[META TASK] Lint codebase"
+dependencies = ["git-add-all", "git-commit-lint", "git-push"]
+
+[tasks.lint]
+description = "[META TASK] Lint codebase and push any changes to github repo"
+dependencies = ["lint-build", "lint-save"]
