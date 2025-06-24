@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.14.3] - 2025-06-24 <a id="0.14.3"></a>
+
 ### 📚 Documentation
 
 - [binary] - Update local templating feature flag section (*Small clarification and terminology change*)
