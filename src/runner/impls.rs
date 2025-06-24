@@ -17,22 +17,7 @@ pub struct LocalRemoteRunner;
 
 impl Runner for RemoteRunner {
     fn run(args: &Args) -> Result<QualifiedString, ProgramExit> {
-        let global_timeout = if args.timeout_unit == TimeoutUnit::SECOND {
-            Some(Duration::from_secs(args.timeout))
-        } else {
-            Some(Duration::from_millis(args.timeout))
-        };
-
-        let http_client = UreqHttpClient {
-            server_url: args.server_url.to_string(),
-            global_timeout,
-        };
-
-        let remote_manager = RemoteGitignoreTemplateManager::new(
-            &http_client,
-            Some(&args.generator_uri),
-            Some(&args.lister_uri),
-        );
+        let remote_manager = RemoteGitignoreTemplateManager::from_args(args);
 
         if args.show_list {
             remote_manager.list()
@@ -48,7 +33,8 @@ impl Runner for LocalRemoteRunner {
     fn run(args: &Args) -> Result<QualifiedString, ProgramExit> {
         match std::env::var("HOME") {
             Ok(home_path) => {
-                let global_timeout = if args.timeout_unit == TimeoutUnit::SECOND {
+                let global_timeout = if args.timeout_unit == TimeoutUnit::SECOND
+                {
                     Some(Duration::from_secs(args.timeout))
                 } else {
                     Some(Duration::from_millis(args.timeout))
@@ -60,7 +46,7 @@ impl Runner for LocalRemoteRunner {
                 };
 
                 let remote_manager = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(&args.generator_uri),
                     Some(&args.lister_uri),
                 );

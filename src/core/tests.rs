@@ -413,7 +413,7 @@ mod remote_gitignore_template_manager {
                     response: Ok(String::from(generated_template)),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -437,7 +437,7 @@ mod remote_gitignore_template_manager {
                     response: Ok(String::from(generated_template)),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     None,
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -459,7 +459,7 @@ mod remote_gitignore_template_manager {
                     response: Ok(String::from("all good")),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     None,
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -494,7 +494,7 @@ mod remote_gitignore_template_manager {
                     }),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -530,18 +530,15 @@ mod remote_gitignore_template_manager {
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
+                        (generator_url, Ok(String::from(generated_template))),
                         (
-                            generator_url.as_str(),
-                            Ok(String::from(generated_template)),
-                        ),
-                        (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -568,18 +565,15 @@ mod remote_gitignore_template_manager {
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
+                        (generator_url, Ok(String::from(generated_template))),
                         (
-                            generator_url.as_str(),
-                            Ok(String::from(generated_template)),
-                        ),
-                        (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     None,
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -606,18 +600,15 @@ mod remote_gitignore_template_manager {
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
+                        (generator_url, Ok(String::from(generated_template))),
                         (
-                            generator_url.as_str(),
-                            Ok(String::from(generated_template)),
-                        ),
-                        (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     None,
                 );
@@ -644,18 +635,15 @@ mod remote_gitignore_template_manager {
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
+                        (generator_url, Ok(String::from(generated_template))),
                         (
-                            generator_url.as_str(),
-                            Ok(String::from(generated_template)),
-                        ),
-                        (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     None,
                     None,
                 );
@@ -687,7 +675,7 @@ mod remote_gitignore_template_manager {
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (
-                            generator_url.as_str(),
+                            generator_url,
                             Err(ProgramExit {
                                 message: String::from(error_message),
                                 exit_status: constant::exit_status::GENERIC,
@@ -696,13 +684,13 @@ mod remote_gitignore_template_manager {
                             }),
                         ),
                         (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -732,12 +720,9 @@ mod remote_gitignore_template_manager {
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
+                        (generator_url, Ok(String::from(generated_template))),
                         (
-                            generator_url.as_str(),
-                            Ok(String::from(generated_template)),
-                        ),
-                        (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Err(ProgramExit {
                                 message: String::from(error_message),
                                 exit_status: constant::exit_status::GENERIC,
@@ -748,7 +733,7 @@ mod remote_gitignore_template_manager {
                     ]),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -778,18 +763,15 @@ mod remote_gitignore_template_manager {
                 let template_list = "rust\npython";
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
+                        (generator_url, Ok(String::from(generated_template))),
                         (
-                            generator_url.as_str(),
-                            Ok(String::from(generated_template)),
-                        ),
-                        (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from(template_list)),
                         ),
                     ]),
                 };
                 let generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -827,7 +809,7 @@ mod remote_gitignore_template_manager {
                     response: Ok(String::from(template_list)),
                 };
                 let lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -850,7 +832,7 @@ mod remote_gitignore_template_manager {
                     response: Ok(String::from(template_list)),
                 };
                 let lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     None,
                 );
@@ -882,7 +864,7 @@ mod remote_gitignore_template_manager {
                     }),
                 };
                 let lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -923,9 +905,9 @@ mod gitignore_template_manager {
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
-                        (generator_url.as_str(), Ok(String::from("all good"))),
+                        (generator_url, Ok(String::from("all good"))),
                         (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("python")),
                         ),
                     ]),
@@ -934,7 +916,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -989,9 +971,9 @@ mod gitignore_template_manager {
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
-                        (generator_url.as_str(), Ok(String::from("all good"))),
+                        (generator_url, Ok(String::from("all good"))),
                         (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust")),
                         ),
                     ]),
@@ -1000,7 +982,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1039,7 +1021,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1074,7 +1056,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1115,7 +1097,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1157,9 +1139,9 @@ mod gitignore_template_manager {
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
-                        (generator_url.as_str(), Ok(String::from("all good"))),
+                        (generator_url, Ok(String::from("all good"))),
                         (
-                            constant::template_manager::LISTER_URI,
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("python\nrust")),
                         ),
                     ]),
@@ -1168,7 +1150,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_generator = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1212,7 +1194,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1247,7 +1229,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1289,7 +1271,7 @@ mod gitignore_template_manager {
                 let local_generator =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1335,7 +1317,7 @@ mod gitignore_template_manager {
                 let local_lister =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1375,7 +1357,7 @@ mod gitignore_template_manager {
                 let local_lister =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1409,7 +1391,7 @@ mod gitignore_template_manager {
                 let local_lister =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );
@@ -1451,7 +1433,7 @@ mod gitignore_template_manager {
                 let local_lister =
                     LocalGitignoreTemplateManager::new(Some(&template_dir));
                 let remote_lister = RemoteGitignoreTemplateManager::new(
-                    &http_client,
+                    Box::new(http_client),
                     Some(constant::template_manager::GENERATOR_URI),
                     Some(constant::template_manager::LISTER_URI),
                 );

@@ -218,9 +218,12 @@ mod mock_endpoint_http_client {
                 let python_result_content = "success python response";
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
-                        ("/api/rust", Ok(String::from(rust_result_content))),
                         (
-                            "/api/python",
+                            "/api/rust".to_string(),
+                            Ok(String::from(rust_result_content)),
+                        ),
+                        (
+                            "/api/python".to_string(),
                             Ok(String::from(python_result_content)),
                         ),
                     ]),
@@ -240,7 +243,7 @@ mod mock_endpoint_http_client {
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (
-                            "/api/rust",
+                            "/api/rust".to_string(),
                             Err(ProgramExit {
                                 message: String::from(rust_result_content),
                                 exit_status: constant::exit_status::GENERIC,
@@ -249,7 +252,7 @@ mod mock_endpoint_http_client {
                             }),
                         ),
                         (
-                            "/api/python",
+                            "/api/python".to_string(),
                             Err(ProgramExit {
                                 message: String::from(python_result_content),
                                 exit_status: constant::exit_status::GENERIC,

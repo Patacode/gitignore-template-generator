@@ -1,4 +1,4 @@
-use std::{collections::HashSet, io::ErrorKind};
+use std::{collections::HashSet, io::ErrorKind, time::Duration};
 
 use super::{
     ExitKind, ProgramExit, QualifiedString, StringKind, TemplateGenerator,
@@ -11,7 +11,8 @@ use crate::{
     },
     fs::{DirectoryHandler, FileSystemHandler},
     helper,
-    http_client::HttpClient,
+    http_client::{HttpClient, UreqHttpClient},
+    parser::{Args, TimeoutUnit},
 };
 
 /// Manager of gitignore templates.
@@ -40,7 +41,7 @@ pub struct LocalGitignoreTemplateManager<'a> {
 /// The templates are managed via HTTP calls using the given `http_client`.
 pub struct RemoteGitignoreTemplateManager<'a> {
     /// The http client to be used to make the API call.
-    http_client: &'a dyn HttpClient,
+    http_client: Box<dyn HttpClient>,
 
     /// The endpoint URI to generate templates
     /// (defaults to [`crate::constant::template_manager::GENERATOR_URI`]
@@ -295,7 +296,7 @@ impl<'a> LocalGitignoreTemplateManager<'a> {
 
 impl<'a> RemoteGitignoreTemplateManager<'a> {
     pub fn new(
-        http_client: &'a dyn HttpClient,
+        http_client: Box<dyn HttpClient>,
         generator_endpoint_uri: Option<&'a str>,
         lister_endpoint_uri: Option<&'a str>,
     ) -> Self {
@@ -303,6 +304,25 @@ impl<'a> RemoteGitignoreTemplateManager<'a> {
             http_client,
             generator_endpoint_uri,
             lister_endpoint_uri,
+        }
+    }
+
+    pub fn from_args(args: &'a Args) -> Self {
+        let global_timeout = if args.timeout_unit == TimeoutUnit::SECOND {
+            Some(Duration::from_secs(args.timeout))
+        } else {
+            Some(Duration::from_millis(args.timeout))
+        };
+
+        let http_client = UreqHttpClient {
+            server_url: args.server_url.to_string(),
+            global_timeout,
+        };
+
+        Self {
+            http_client: Box::new(http_client),
+            generator_endpoint_uri: Some(&args.generator_uri),
+            lister_endpoint_uri: Some(&args.lister_uri),
         }
     }
 

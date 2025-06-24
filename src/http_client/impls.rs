@@ -28,10 +28,10 @@ pub struct MockHttpClient {
 }
 
 /// Http client implementation to mock a response.
-pub struct MockEndpointHttpClient<'a> {
+pub struct MockEndpointHttpClient {
     /// The mocked response to be returned when calling [`MockHttpClient::get`]
     /// method.
-    pub response: HashMap<&'a str, Result<String, ProgramExit>>,
+    pub response: HashMap<String, Result<String, ProgramExit>>,
 }
 
 impl HttpClient for UreqHttpClient {
@@ -87,7 +87,7 @@ impl HttpClient for MockHttpClient {
     }
 }
 
-impl HttpClient for MockEndpointHttpClient<'_> {
+impl HttpClient for MockEndpointHttpClient {
     /// Returns the result linked to the given url.
     ///
     /// The given `url` will only be used to get proper result from linked
