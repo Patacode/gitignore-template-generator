@@ -246,6 +246,9 @@ pub mod template_manager {
     /// Default local template directory
     pub const DEFAULT_HOME: &str = ".gitignore_template_generator";
 
+    pub const DEFAULT_TEMPLATE_DIR: &str =
+        "{home_path}/.gitignore_template_generator/templates";
+
     /// Template manager service base URL.
     pub const BASE_URL: &str = "https://www.toptal.com";
 

@@ -6,9 +6,12 @@ use super::{
 };
 use crate::{
     constant::{
-        self,
-        template_manager::{GENERATOR_URI, HOME_ENV_VAR, LISTER_URI},
+        self, error_messages, exit_status,
+        template_manager::{
+            DEFAULT_TEMPLATE_DIR, GENERATOR_URI, HOME_ENV_VAR, LISTER_URI,
+        },
     },
+    core::{TemplateFactory, TemplateManager},
     fs::{DirectoryHandler, FileSystemHandler},
     helper,
     http_client::{HttpClient, UreqHttpClient},
@@ -18,8 +21,8 @@ use crate::{
 /// Manager of gitignore templates.
 ///
 /// It can generate and list gitignore templates.
-pub struct GitignoreTemplateManager<'a> {
-    template_managers: &'a [&'a dyn TemplateGenerator],
+pub struct GitignoreTemplateManager {
+    template_managers: Vec<Box<dyn TemplateManager>>,
 }
 
 /// Manager of gitignore templates using local filesystem.
@@ -29,32 +32,32 @@ pub struct GitignoreTemplateManager<'a> {
 /// Whatever the action performed through it, it will always first try to
 /// locate template dir using `GITIGNORE_TEMPLATE_GENERATOR_HOME` env var, and
 /// if not set, will then use provided `default_template_dir`.
-pub struct LocalGitignoreTemplateManager<'a> {
+pub struct LocalGitignoreTemplateManager {
     /// The fallback directory in which templates
     /// are stored. Will be used in case `GITIGNORE_TEMPLATE_GENERATOR_HOME`
     /// env var is not set.
-    default_template_dir: &'a str,
+    default_template_dir: String,
 }
 
 /// Manager of gitignore templates using remote API.
 ///
 /// The templates are managed via HTTP calls using the given `http_client`.
-pub struct RemoteGitignoreTemplateManager<'a> {
+pub struct RemoteGitignoreTemplateManager {
     /// The http client to be used to make the API call.
     http_client: Box<dyn HttpClient>,
 
     /// The endpoint URI to generate templates
     /// (defaults to [`crate::constant::template_manager::GENERATOR_URI`]
     /// if None).
-    generator_endpoint_uri: Option<&'a str>,
+    generator_endpoint_uri: String,
 
     /// The endpoint URI to list templates (defaults to
     /// [`crate::constant::template_manager::LISTER_URI`] if None).
-    lister_endpoint_uri: Option<&'a str>,
+    lister_endpoint_uri: String,
 }
 
-impl<'a> GitignoreTemplateManager<'a> {
-    pub fn new(template_managers: &'a [&'a dyn TemplateGenerator]) -> Self {
+impl GitignoreTemplateManager {
+    pub fn new(template_managers: Vec<Box<dyn TemplateManager>>) -> Self {
         Self { template_managers }
     }
 
@@ -245,10 +248,10 @@ impl<'a> GitignoreTemplateManager<'a> {
     }
 }
 
-impl<'a> LocalGitignoreTemplateManager<'a> {
-    pub fn new(default_template_dir: Option<&'a str>) -> Self {
+impl LocalGitignoreTemplateManager {
+    pub fn new(default_template_dir: Option<String>) -> Self {
         Self {
-            default_template_dir: default_template_dir.unwrap_or(""),
+            default_template_dir: default_template_dir.unwrap_or(String::new()),
         }
     }
 
@@ -294,35 +297,18 @@ impl<'a> LocalGitignoreTemplateManager<'a> {
     }
 }
 
-impl<'a> RemoteGitignoreTemplateManager<'a> {
+impl RemoteGitignoreTemplateManager {
     pub fn new(
         http_client: Box<dyn HttpClient>,
-        generator_endpoint_uri: Option<&'a str>,
-        lister_endpoint_uri: Option<&'a str>,
+        generator_endpoint_uri: Option<String>,
+        lister_endpoint_uri: Option<String>,
     ) -> Self {
         Self {
             http_client,
-            generator_endpoint_uri,
-            lister_endpoint_uri,
-        }
-    }
-
-    pub fn from_args(args: &'a Args) -> Self {
-        let global_timeout = if args.timeout_unit == TimeoutUnit::SECOND {
-            Some(Duration::from_secs(args.timeout))
-        } else {
-            Some(Duration::from_millis(args.timeout))
-        };
-
-        let http_client = UreqHttpClient {
-            server_url: args.server_url.to_string(),
-            global_timeout,
-        };
-
-        Self {
-            http_client: Box::new(http_client),
-            generator_endpoint_uri: Some(&args.generator_uri),
-            lister_endpoint_uri: Some(&args.lister_uri),
+            generator_endpoint_uri: generator_endpoint_uri
+                .unwrap_or(GENERATOR_URI.to_string()),
+            lister_endpoint_uri: lister_endpoint_uri
+                .unwrap_or(LISTER_URI.to_string()),
         }
     }
 
@@ -331,7 +317,9 @@ impl<'a> RemoteGitignoreTemplateManager<'a> {
     }
 }
 
-impl TemplateLister for GitignoreTemplateManager<'_> {
+impl TemplateManager for GitignoreTemplateManager {}
+
+impl TemplateLister for GitignoreTemplateManager {
     fn list(&self) -> Result<QualifiedString, ProgramExit> {
         let template_list_results: Vec<Result<QualifiedString, ProgramExit>> =
             self.template_managers
@@ -367,7 +355,18 @@ impl TemplateLister for GitignoreTemplateManager<'_> {
     }
 }
 
-impl TemplateGenerator for GitignoreTemplateManager<'_> {
+impl TemplateFactory<dyn TemplateManager> for GitignoreTemplateManager {
+    fn from_args(args: &Args) -> Result<Box<dyn TemplateManager>, ProgramExit> {
+        let local_manager = LocalGitignoreTemplateManager::from_args(args)?;
+        let remote_manager = RemoteGitignoreTemplateManager::from_args(args)?;
+        let managers: Vec<Box<dyn TemplateManager>> =
+            vec![local_manager, remote_manager];
+
+        Ok(Box::new(GitignoreTemplateManager::new(managers)))
+    }
+}
+
+impl TemplateGenerator for GitignoreTemplateManager {
     fn generate(
         &self,
         template_names: &[String],
@@ -492,11 +491,13 @@ impl TemplateGenerator for GitignoreTemplateManager<'_> {
     }
 }
 
-impl TemplateLister for LocalGitignoreTemplateManager<'_> {
+impl TemplateManager for LocalGitignoreTemplateManager {}
+
+impl TemplateLister for LocalGitignoreTemplateManager {
     fn list(&self) -> Result<QualifiedString, ProgramExit> {
         let template_dir = match std::env::var(HOME_ENV_VAR) {
             Ok(directory_path) => directory_path,
-            Err(_) => self.default_template_dir.into(),
+            Err(_) => self.default_template_dir.clone(),
         };
 
         let directory_handler = DirectoryHandler::new(&template_dir);
@@ -528,14 +529,33 @@ impl TemplateLister for LocalGitignoreTemplateManager<'_> {
     }
 }
 
-impl TemplateGenerator for LocalGitignoreTemplateManager<'_> {
+impl TemplateFactory<dyn TemplateManager> for LocalGitignoreTemplateManager {
+    fn from_args(
+        _args: &Args,
+    ) -> Result<Box<dyn TemplateManager>, ProgramExit> {
+        match std::env::var("HOME") {
+            Ok(home_path) => Ok(Box::new(LocalGitignoreTemplateManager::new(
+                Some(DEFAULT_TEMPLATE_DIR.replace("{home}", &home_path)),
+            ))),
+            Err(error) => Err(ProgramExit {
+                message: error_messages::READ_HOME_ENV_VAR
+                    .replace("{error}", &error.to_string()),
+                exit_status: exit_status::GENERIC,
+                styled_message: None,
+                kind: ExitKind::Error,
+            }),
+        }
+    }
+}
+
+impl TemplateGenerator for LocalGitignoreTemplateManager {
     fn generate(
         &self,
         template_names: &[String],
     ) -> Result<QualifiedString, ProgramExit> {
         let template_dir = match std::env::var(HOME_ENV_VAR) {
             Ok(directory_path) => directory_path,
-            Err(_) => self.default_template_dir.into(),
+            Err(_) => self.default_template_dir.clone(),
         };
 
         let templates = Self::map_template_names_to_their_content(
@@ -578,10 +598,11 @@ impl TemplateGenerator for LocalGitignoreTemplateManager<'_> {
     }
 }
 
-impl TemplateLister for RemoteGitignoreTemplateManager<'_> {
+impl TemplateManager for RemoteGitignoreTemplateManager {}
+
+impl TemplateLister for RemoteGitignoreTemplateManager {
     fn list(&self) -> Result<QualifiedString, ProgramExit> {
-        let endpoint_uri = self.lister_endpoint_uri.unwrap_or(LISTER_URI);
-        match self.http_client.get(endpoint_uri) {
+        match self.http_client.get(&self.lister_endpoint_uri) {
             Ok(result) => Ok(QualifiedString {
                 value: Self::parse_template_list_from_api(result),
                 kind: StringKind::Remote,
@@ -591,7 +612,24 @@ impl TemplateLister for RemoteGitignoreTemplateManager<'_> {
     }
 }
 
-impl TemplateGenerator for RemoteGitignoreTemplateManager<'_> {
+impl TemplateFactory<dyn TemplateManager> for RemoteGitignoreTemplateManager {
+    fn from_args(args: &Args) -> Result<Box<dyn TemplateManager>, ProgramExit> {
+        Ok(Box::new(Self {
+            http_client: Box::new(UreqHttpClient {
+                server_url: args.server_url.to_string(),
+                global_timeout: if args.timeout_unit == TimeoutUnit::SECOND {
+                    Some(Duration::from_secs(args.timeout))
+                } else {
+                    Some(Duration::from_millis(args.timeout))
+                },
+            }),
+            generator_endpoint_uri: args.generator_uri.clone(),
+            lister_endpoint_uri: args.lister_uri.clone(),
+        }))
+    }
+}
+
+impl TemplateGenerator for RemoteGitignoreTemplateManager {
     fn generate(
         &self,
         template_names: &[String],
@@ -604,8 +642,7 @@ impl TemplateGenerator for RemoteGitignoreTemplateManager<'_> {
         }
 
         let path_param = template_names.join(",");
-        let endpoint_uri = self.generator_endpoint_uri.unwrap_or(GENERATOR_URI);
-        let full_uri = format!("{endpoint_uri}/{path_param}");
+        let full_uri = format!("{}/{path_param}", self.generator_endpoint_uri);
 
         match self.http_client.get(&full_uri) {
             Ok(result) => Ok(QualifiedString {

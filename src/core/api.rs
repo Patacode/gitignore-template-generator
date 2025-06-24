@@ -2,6 +2,7 @@ pub use crate::core::impls::{
     GitignoreTemplateManager, LocalGitignoreTemplateManager,
     RemoteGitignoreTemplateManager,
 };
+use crate::parser::Args;
 
 /// DTO struct representing an early or abrupt program exit.
 #[derive(Clone, PartialEq, Debug)]
@@ -109,3 +110,9 @@ pub trait TemplateLister {
     /// privilege...).
     fn list(&self) -> Result<QualifiedString, ProgramExit>;
 }
+
+pub trait TemplateFactory<T: TemplateManager + ?Sized> {
+    fn from_args(args: &Args) -> Result<Box<T>, ProgramExit>;
+}
+
+pub trait TemplateManager: TemplateGenerator {}
