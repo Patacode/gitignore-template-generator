@@ -96,6 +96,24 @@
             "type": "shell",
             "command": "cargo make format-build",
             "problemMatcher": []
+        },
+        {
+            "label": "lint-build",
+            "type": "shell",
+            "command": "cargo make lint-build",
+            "problemMatcher": []
+        },
+        {
+            "label": "lint-save",
+            "type": "shell",
+            "command": "cargo make lint-save",
+            "problemMatcher": []
+        },
+        {
+            "label": "lint",
+            "type": "shell",
+            "command": "cargo make lint",
+            "problemMatcher": []
         }
     ],
     "inputs": [
