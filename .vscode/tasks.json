@@ -4,28 +4,74 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "test-noenv",
+            "label": "changelog",
             "type": "shell",
-            "command": "cargo make test-noenv",
-            "problemMatcher": []
+            "command": "cargo make changelog",
+            "problemMatcher": [],
+            "options": {}
+        },
+        {
+            "label": "changelog-build",
+            "type": "shell",
+            "command": "cargo make changelog-build",
+            "problemMatcher": [],
+            "options": {}
+        },
+        {
+            "label": "changelog-save",
+            "type": "shell",
+            "command": "cargo make changelog-save",
+            "problemMatcher": [],
+            "options": {}
         },
         {
             "label": "doc",
             "type": "shell",
             "command": "cargo make doc",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "options": {}
         },
         {
-            "label": "test",
+            "label": "format",
             "type": "shell",
-            "command": "cargo make test",
-            "problemMatcher": []
+            "command": "cargo make format",
+            "problemMatcher": [],
+            "options": {}
         },
         {
-            "label": "trello",
+            "label": "format-build",
             "type": "shell",
-            "command": "cargo make trello",
-            "problemMatcher": []
+            "command": "cargo make format-build",
+            "problemMatcher": [],
+            "options": {}
+        },
+        {
+            "label": "format-save",
+            "type": "shell",
+            "command": "cargo make format-save",
+            "problemMatcher": [],
+            "options": {}
+        },
+        {
+            "label": "lint",
+            "type": "shell",
+            "command": "cargo make lint",
+            "problemMatcher": [],
+            "options": {}
+        },
+        {
+            "label": "lint-build",
+            "type": "shell",
+            "command": "cargo make lint-build",
+            "problemMatcher": [],
+            "options": {}
+        },
+        {
+            "label": "lint-save",
+            "type": "shell",
+            "command": "cargo make lint-save",
+            "problemMatcher": [],
+            "options": {}
         },
         {
             "label": "release",
@@ -39,30 +85,6 @@
             }
         },
         {
-            "label": "format",
-            "type": "shell",
-            "command": "cargo make format",
-            "problemMatcher": []
-        },
-        {
-            "label": "format-save",
-            "type": "shell",
-            "command": "cargo make format-save",
-            "problemMatcher": []
-        },
-        {
-            "label": "test-env",
-            "type": "shell",
-            "command": "cargo make test-env",
-            "problemMatcher": []
-        },
-        {
-            "label": "validate",
-            "type": "shell",
-            "command": "cargo make validate",
-            "problemMatcher": []
-        },
-        {
             "label": "release-dryrun",
             "type": "shell",
             "command": "cargo make release-dryrun",
@@ -74,52 +96,39 @@
             }
         },
         {
-            "label": "changelog",
+            "label": "test",
             "type": "shell",
-            "command": "cargo make changelog",
-            "problemMatcher": []
+            "command": "cargo make test",
+            "problemMatcher": [],
+            "options": {}
         },
         {
-            "label": "changelog-build",
+            "label": "test-env",
             "type": "shell",
-            "command": "cargo make changelog-build",
-            "problemMatcher": []
+            "command": "cargo make test-env",
+            "problemMatcher": [],
+            "options": {}
         },
         {
-            "label": "changelog-save",
+            "label": "test-noenv",
             "type": "shell",
-            "command": "cargo make changelog-save",
-            "problemMatcher": []
+            "command": "cargo make test-noenv",
+            "problemMatcher": [],
+            "options": {}
         },
         {
-            "label": "format-build",
+            "label": "trello",
             "type": "shell",
-            "command": "cargo make format-build",
-            "problemMatcher": []
+            "command": "cargo make trello",
+            "problemMatcher": [],
+            "options": {}
         },
         {
-            "label": "lint-check",
+            "label": "validate",
             "type": "shell",
-            "command": "cargo make lint-check",
-            "problemMatcher": []
-        },
-        {
-            "label": "lint-build",
-            "type": "shell",
-            "command": "cargo make lint-build",
-            "problemMatcher": []
-        },
-        {
-            "label": "lint-save",
-            "type": "shell",
-            "command": "cargo make lint-save",
-            "problemMatcher": []
-        },
-        {
-            "label": "lint",
-            "type": "shell",
-            "command": "cargo make lint",
-            "problemMatcher": []
+            "command": "cargo make validate",
+            "problemMatcher": [],
+            "options": {}
         }
     ],
     "inputs": [
