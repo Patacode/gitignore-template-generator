@@ -130,13 +130,13 @@ impl Args {
     }
 
     pub fn to_action(&self) -> Action {
-        return if self.show_list {
+        if self.show_list {
             Action::List
         } else if self.check_template_names {
             Action::GenerateWithTemplateCheck
         } else {
             Action::Generate
-        };
+        }
     }
 
     /// Sets new value for `template_names` field.

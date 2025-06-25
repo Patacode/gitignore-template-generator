@@ -43,7 +43,7 @@ mod local_gitignore_template_manager {
                 let template_names = make_string_vec("python rust");
 
                 set_env_var(
-                    constant::template_manager::HOME_ENV_VAR.to_string(),
+                    constant::template_manager::HOME_ENV_VAR,
                     &template_dir,
                 );
 
@@ -186,7 +186,7 @@ mod local_gitignore_template_manager {
                 ));
 
                 set_env_var(
-                    constant::template_manager::HOME_ENV_VAR.to_string(),
+                    constant::template_manager::HOME_ENV_VAR,
                     &template_dir,
                 );
 
@@ -316,7 +316,7 @@ mod local_gitignore_template_manager {
                 ));
 
                 set_env_var(
-                    constant::template_manager::HOME_ENV_VAR.to_string(),
+                    constant::template_manager::HOME_ENV_VAR,
                     &template_dir,
                 );
 
@@ -547,15 +547,13 @@ mod remote_gitignore_template_manager {
                 let generated_template = "all good";
                 let generator_url = format!(
                     "{}/rust,python",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from(generated_template))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
@@ -584,15 +582,13 @@ mod remote_gitignore_template_manager {
                 let generated_template = "all good";
                 let generator_url = format!(
                     "{}/rust,python",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from(generated_template))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
@@ -621,15 +617,13 @@ mod remote_gitignore_template_manager {
                 let generated_template = "all good";
                 let generator_url = format!(
                     "{}/rust,python",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from(generated_template))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
@@ -658,15 +652,13 @@ mod remote_gitignore_template_manager {
                 let generated_template = "all good";
                 let generator_url = format!(
                     "{}/rust,python",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from(generated_template))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
@@ -699,7 +691,7 @@ mod remote_gitignore_template_manager {
                 let error_message = "all bad";
                 let generator_url = format!(
                     "{}/rust,python",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
@@ -713,9 +705,7 @@ mod remote_gitignore_template_manager {
                             }),
                         ),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust\npython")),
                         ),
                     ]),
@@ -747,15 +737,13 @@ mod remote_gitignore_template_manager {
                 let generated_template = "all good";
                 let generator_url = format!(
                     "{}/rust,python",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from(generated_template))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Err(ProgramExit {
                                 message: String::from(error_message),
                                 exit_status: constant::exit_status::GENERIC,
@@ -791,16 +779,14 @@ mod remote_gitignore_template_manager {
                 let generated_template = "all good";
                 let generator_url = format!(
                     "{}/rust,python",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let template_list = "rust\npython";
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from(generated_template))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from(template_list)),
                         ),
                     ]),
@@ -936,15 +922,13 @@ mod gitignore_template_manager {
                 let template_dir = helper::get_resource_path("templates");
                 let generator_url = format!(
                     "{}/python",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from("all good"))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("python")),
                         ),
                     ]),
@@ -1005,15 +989,13 @@ mod gitignore_template_manager {
                 let template_dir = helper::get_resource_path("templates");
                 let generator_url = format!(
                     "{}/rust",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from("all good"))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("rust")),
                         ),
                     ]),
@@ -1179,15 +1161,13 @@ mod gitignore_template_manager {
                 let template_dir = helper::get_resource_path("templates");
                 let generator_url = format!(
                     "{}/python,rust",
-                    constant::template_manager::GENERATOR_URI.to_string()
+                    constant::template_manager::GENERATOR_URI
                 );
                 let http_client = MockEndpointHttpClient {
                     response: HashMap::from([
                         (generator_url, Ok(String::from("all good"))),
                         (
-                            constant::template_manager::LISTER_URI
-                                .to_string()
-                                .to_string(),
+                            constant::template_manager::LISTER_URI.to_string(),
                             Ok(String::from("python\nrust")),
                         ),
                     ]),

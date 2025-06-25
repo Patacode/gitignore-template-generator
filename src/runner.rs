@@ -12,6 +12,7 @@ pub enum Action {
     Generate,
 }
 
+#[derive(Default)]
 pub struct TemplateManagerRunner<
     T: TemplateManager + ?Sized,
     F: TemplateFactory<T>,
