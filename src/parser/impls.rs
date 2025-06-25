@@ -14,7 +14,13 @@ pub struct ClapArgsParser {
     cli_parser: Command,
 }
 
-#[allow(clippy::new_without_default)]
+
+impl Default for ClapArgsParser {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ClapArgsParser {
     pub fn new() -> Self {
         Self {
