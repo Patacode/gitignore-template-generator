@@ -98,6 +98,12 @@
             "problemMatcher": []
         },
         {
+            "label": "lint-check",
+            "type": "shell",
+            "command": "cargo make lint-check",
+            "problemMatcher": []
+        },
+        {
             "label": "lint-build",
             "type": "shell",
             "command": "cargo make lint-build",
