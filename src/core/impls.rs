@@ -251,7 +251,7 @@ impl GitignoreTemplateManager {
 impl LocalGitignoreTemplateManager {
     pub fn new(default_template_dir: Option<String>) -> Self {
         Self {
-            default_template_dir: default_template_dir.unwrap_or(String::new()),
+            default_template_dir: default_template_dir.unwrap_or_default(),
         }
     }
 
