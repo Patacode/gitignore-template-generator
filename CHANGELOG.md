@@ -9,7 +9,37 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚀 Features
+
+- [lib] - Add printer module to handle printing logic
+- [core] - Add new factory method in QualifiedString struct for empty variant
+- [parser] - Define Action enum
+
+### 🚜 Refactor
+
+- [main] - Remove needless borrow
+- [main] - Extract execution logic in separate 'runner' module
+- [runner] - Extract home env var reading error message into a reusable constant
+- [runner] - Inline args use in run method
+- [core/runner] - Defer all exec logic to runner module + move creation logic to factories + update core structs to own all their data
+- [parser/runner] - Move translation logic of Args into Action in Args struct + extract some hardcoded strings as constant
+- [lint] - Apply all clippy lint corrections
+- [parser] - Delete lint skipping rule for ClapArgsParser having new without default and impl Default trait
+
+### 🎨 Styling
+
+- Update max line width to 100 instead of 80
+
+### 🏗️ Build
+
+- [make] - Add new lint-related tasks
+- [make] - Use lint-build task instead of lint in validate meta task (*To avoid lint-save to be triggered*)
+
+### ⚙️ Miscellaneous Tasks
+
+- [vscode] - Add new task for lint targets
+- [vscode] - Add task to run lint checks
+- [vscode] - Sort tasks by alphabetic order
 
 ## [0.14.3] - 2025-06-24 <a id="0.14.3"></a>
 
