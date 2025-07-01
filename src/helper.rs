@@ -6,7 +6,7 @@ use std::{borrow::Cow, ffi::OsString, fs};
 
 use crate::{constant::{self, error_messages, path}, core::QualifiedString};
 
-pub fn load_expectation_file_as_string(expectation_file_name: &str) -> String {
+pub fn load_expectation_file(expectation_file_name: &str) -> String {
     let expectation_file_path = parse_expectation_file_name(expectation_file_name);
 
     fs::read_to_string(expectation_file_path)
@@ -63,7 +63,7 @@ pub fn get_ansi_help_message() -> String {
 }
 
 pub fn get_help_message_for(template_name: &str) -> String {
-    load_expectation_file_as_string(template_name)
+    load_expectation_file(template_name)
         .replace("{pkg_name}", env!("CARGO_PKG_NAME"))
         .replace("{about}", constant::parser_infos::ABOUT)
         .replace(

@@ -261,10 +261,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("no_pos_args_error"),
+                    message: load_expectation_file("no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string("ansi_no_pos_args_error")),
+                    styled_message: Some(load_expectation_file("ansi_no_pos_args_error")),
                     kind: ExitKind::Error,
                 };
                 let expected_error = Some(&expected_error);
@@ -280,10 +280,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("comma_pos_args_error"),
+                    message: load_expectation_file("comma_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_comma_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -301,10 +301,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("whitespace_pos_args_error"),
+                    message: load_expectation_file("whitespace_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_whitespace_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -325,10 +325,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("comma_whitespace_pos_args_error"),
+                    message: load_expectation_file("comma_whitespace_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_comma_whitespace_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -346,10 +346,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("server_url_no_pos_args_error"),
+                    message: load_expectation_file("server_url_no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_server_url_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -367,10 +367,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("generator_uri_no_pos_args_error"),
+                    message: load_expectation_file("generator_uri_no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_generator_uri_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -388,10 +388,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("lister_uri_no_pos_args_error"),
+                    message: load_expectation_file("lister_uri_no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_lister_uri_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -409,10 +409,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("check_option_no_pos_args_error"),
+                    message: load_expectation_file("check_option_no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_check_option_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -430,9 +430,9 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("unexpected_argument_error"),
+                    message: load_expectation_file("unexpected_argument_error"),
                     exit_status: constant::exit_status::GENERIC,
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_unexpected_argument_error",
                     )),
                     kind: ExitKind::Error,
@@ -450,9 +450,9 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("non_integer_timeout_error"),
+                    message: load_expectation_file("non_integer_timeout_error"),
                     exit_status: constant::exit_status::GENERIC,
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_non_integer_timeout_error",
                     )),
                     kind: ExitKind::Error,
@@ -470,9 +470,9 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("non_allowed_timeout_unit_error"),
+                    message: load_expectation_file("non_allowed_timeout_unit_error"),
                     exit_status: constant::exit_status::GENERIC,
-                    styled_message: Some(load_expectation_file_as_string(
+                    styled_message: Some(load_expectation_file(
                         "ansi_non_allowed_timeout_unit_error",
                     )),
                     kind: ExitKind::Error,
@@ -503,11 +503,11 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("given_multiple_times_error")
+                    message: load_expectation_file("given_multiple_times_error")
                         .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        load_expectation_file_as_string("ansi_given_multiple_times_error")
+                        load_expectation_file("ansi_given_multiple_times_error")
                             .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
@@ -533,11 +533,11 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("boolean_option_with_value_error")
+                    message: load_expectation_file("boolean_option_with_value_error")
                         .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        load_expectation_file_as_string("ansi_boolean_option_with_value_error")
+                        load_expectation_file("ansi_boolean_option_with_value_error")
                             .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
@@ -560,11 +560,11 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("uri_without_starting_slash_error")
+                    message: load_expectation_file("uri_without_starting_slash_error")
                         .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        load_expectation_file_as_string("ansi_uri_without_starting_slash_error")
+                        load_expectation_file("ansi_uri_without_starting_slash_error")
                             .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
@@ -587,11 +587,11 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string("invalid_url_error")
+                    message: load_expectation_file("invalid_url_error")
                         .replace("{input_value}", invalid_value),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        load_expectation_file_as_string("ansi_invalid_url_error")
+                        load_expectation_file("ansi_invalid_url_error")
                             .replace("{input_value}", invalid_value),
                     ),
                     kind: ExitKind::Error,

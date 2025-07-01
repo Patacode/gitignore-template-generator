@@ -179,7 +179,7 @@ mod success {
                     let template_generator_mock = mock_server
                         .mock("GET", template_generator_service_uri)
                         .with_status(200)
-                        .with_body(load_expectation_file_as_string("rust_template"))
+                        .with_body(load_expectation_file("rust_template"))
                         .create();
 
                     cli_tool
@@ -192,7 +192,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("rust_template");
+                        load_expectation_file("rust_template");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
@@ -261,7 +261,7 @@ mod success {
                     let template_lister_mock = mock_server
                         .mock("GET", template_lister_service_uri)
                         .with_status(200)
-                        .with_body(load_expectation_file_as_string("template_list"))
+                        .with_body(load_expectation_file("template_list"))
                         .create();
 
                     cli_tool
@@ -274,7 +274,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("template_list");
+                        load_expectation_file("template_list");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
@@ -338,7 +338,7 @@ mod success {
                     let template_generator_mock = mock_server
                         .mock("GET", constant::template_manager::LISTER_URI)
                         .with_status(200)
-                        .with_body(load_expectation_file_as_string("template_list"))
+                        .with_body(load_expectation_file("template_list"))
                         .create();
 
                     cli_tool
@@ -350,7 +350,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("template_list");
+                        load_expectation_file("template_list");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);

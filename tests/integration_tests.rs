@@ -99,7 +99,7 @@ mod success {
 
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string(expectation_file_name);
+                        load_expectation_file(expectation_file_name);
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -203,7 +203,7 @@ mod success {
 
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("template_list");
+                        load_expectation_file("template_list");
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -251,7 +251,7 @@ mod success {
 
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("rust_python_template");
+                        load_expectation_file("rust_python_template");
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -299,7 +299,7 @@ mod success {
 
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("rust_python_template");
+                        load_expectation_file("rust_python_template");
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -351,7 +351,7 @@ mod success {
 
                     let actual_output = parse_bytes(&result.stdout);
                     let expected_output =
-                        load_expectation_file_as_string("rust_python_template");
+                        load_expectation_file("rust_python_template");
 
                     assert!(result.status.success());
                     assert_eq!(actual_output, expected_output);
@@ -484,7 +484,7 @@ mod failure {
 
                     let actual_output = parse_bytes(&result.stderr);
                     let expected_output =
-                        load_expectation_file_as_string(expectation_file_name) + "\n";
+                        load_expectation_file(expectation_file_name) + "\n";
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(constant::exit_status::GENERIC);
@@ -514,7 +514,7 @@ mod failure {
 
                 let actual_output = parse_bytes(&result.stderr);
                 let expected_output =
-                    load_expectation_file_as_string("server_not_found_error") + "\n";
+                    load_expectation_file("server_not_found_error") + "\n";
 
                 let actual_status_code = result.status.code();
                 let expected_status_code = Some(constant::exit_status::GENERIC);
@@ -566,7 +566,7 @@ mod failure {
                             .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
                         let actual_output = parse_bytes(&result.stderr);
-                        let expected_output = load_expectation_file_as_string(
+                        let expected_output = load_expectation_file(
                             "inexistent_templates_error",
                         ) + "\n";
 

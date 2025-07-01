@@ -1,5 +1,5 @@
 use criterion::{Criterion, criterion_group, criterion_main};
-use gitignore_template_generator::helper::load_expectation_file_as_string;
+use gitignore_template_generator::helper::load_expectation_file;
 use mockito::{Server, ServerGuard};
 use test_bin::get_test_bin;
 
@@ -11,12 +11,12 @@ fn setup_mock_server() -> ServerGuard {
     mock_server
         .mock("GET", template_generator_service_uri)
         .with_status(200)
-        .with_body(load_expectation_file_as_string("rust_template"))
+        .with_body(load_expectation_file("rust_template"))
         .create();
     mock_server
         .mock("GET", template_lister_service_uri)
         .with_status(200)
-        .with_body(load_expectation_file_as_string("template_list"))
+        .with_body(load_expectation_file("template_list"))
         .create();
 
     mock_server
