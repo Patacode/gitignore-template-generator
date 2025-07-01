@@ -1,7 +1,7 @@
 pub use crate::core::impls::{
     GitignoreTemplateManager, LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager,
 };
-use crate::{constant::help_messages, parser::Args};
+use crate::{constant::{help_messages, help_texts}, parser::Args};
 
 /// DTO struct representing an early or abrupt program exit.
 #[derive(Clone, PartialEq, Debug)]
@@ -30,7 +30,7 @@ pub struct QualifiedString {
 impl QualifiedString {
     pub fn empty(kind: StringKind) -> Self {
         Self {
-            value: help_messages::NOTHING_TO_BE_PRINTED.to_string(),
+            value: help_texts::NOTHING_TO_BE_PRINTED.to_string(),
             kind,
         }
     }

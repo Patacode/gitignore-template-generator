@@ -116,9 +116,21 @@ pub mod help_messages {
     /// Help message bound to [`crate::parser::Args::timeout_unit`]
     /// field (i.e. timeout unit option).
     pub const TIMEOUT_UNIT: &str = "The timeout unit";
-
-    pub const NOTHING_TO_BE_PRINTED: &str = "Nothing to be printed";
 }
+
+pub mod help_texts {
+    pub const NOTHING_TO_BE_PRINTED: &str = "Nothing to be printed";
+
+    pub const ENV_VAR_RESET: &str = "{name} env var was set to {value}. Resetting it...";
+    pub const ENV_VAR_REMOVAL_BEFORE: &str = "{name} is set. Removing it...";
+    pub const ENV_VAR_REMOVAL_AFTER: &str = "{name} env var wasn't set. Removing it...";
+
+    pub const RESET: &str = "Reset!";
+    pub const REMOVED: &str = "Removed!";
+
+    pub const TEST_CXT_DROPPED: &str = "Test context dropped!";
+    pub const TEST_CTX_CREATED: &str = "Test context created!";
+ }
 
 pub mod cli_options {
     //! Constants for short and long cli options specifier.

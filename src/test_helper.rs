@@ -1,57 +1,65 @@
-use crate::constant;
+use crate::{
+    constant::{self, template_manager},
+    printer::{Data, pp},
+};
 
 pub struct EnvTestContext {
     original_value: Option<String>,
 }
 
-impl Drop for EnvTestContext {
-    fn drop(&mut self) {
-        if self.original_value.is_none() {
-            println!(
-                "{} env var wasn't set. Removing it...",
-                constant::template_manager::HOME_ENV_VAR
-            );
-            remove_env_var(constant::template_manager::HOME_ENV_VAR);
-            println!("Removed!");
-        } else {
-            println!(
-                "{} env var was set to {:?}. Resetting it...",
-                constant::template_manager::HOME_ENV_VAR,
-                self.original_value
-            );
-            set_env_var(
-                constant::template_manager::HOME_ENV_VAR,
-                self.original_value.as_mut().unwrap(),
-            );
-            println!("Reset!");
+impl EnvTestContext {
+    fn new(original_value: &str) -> Self {
+        Self {
+            original_value: Some(original_value.to_string()),
         }
+    }
 
-        println!("Test context dropped");
+    fn empty() -> Self {
+        Self {
+            original_value: None,
+        }
+    }
+
+    fn handle_env_var_reset(original_value: &str) {
+        pp(Data::EnvVarReset(&original_value));
+        set_env_var(template_manager::HOME_ENV_VAR, original_value);
+        pp(Data::Reset());
+    }
+
+    fn handle_env_var_removal() {
+        pp(Data::EnvVarRemovalAfter());
+        remove_env_var(constant::template_manager::HOME_ENV_VAR);
+        pp(Data::Removed());
     }
 }
 
+impl Drop for EnvTestContext {
+    fn drop(&mut self) {
+        match &self.original_value {
+            Some(original_value) => Self::handle_env_var_reset(original_value),
+            None => Self::handle_env_var_removal(),
+        }
+
+        pp(Data::TestContextDropped());
+    }
+}
+
+// fixture
 pub fn create_env_test_context() -> EnvTestContext {
-    let ctx = match std::env::var(constant::template_manager::HOME_ENV_VAR) {
-        Ok(result) => EnvTestContext {
-            original_value: Some(result),
-        },
-        Err(_) => EnvTestContext {
-            original_value: None,
-        },
+    let ctx = match std::env::var(template_manager::HOME_ENV_VAR) {
+        Ok(result) => EnvTestContext::new(&result),
+        Err(_) => EnvTestContext::empty(),
     };
 
-    println!("Test context created");
-
-    if ctx.original_value.is_some() {
-        println!(
-            "{} env var is set. Removing it...",
-            constant::template_manager::HOME_ENV_VAR
-        );
-        remove_env_var(constant::template_manager::HOME_ENV_VAR);
-        println!("Removed!");
-    }
-
+    pp(Data::TestContextCreated());
+    ctx.original_value.is_some().then(|| handle_env_var_removal());
     ctx
+}
+
+fn handle_env_var_removal() {
+    pp(Data::EnvVarRemovalBefore());
+    remove_env_var(constant::template_manager::HOME_ENV_VAR);
+    pp(Data::Removed());
 }
 
 pub fn remove_env_var<T: AsRef<std::ffi::OsStr>>(name: T) {
