@@ -12,7 +12,6 @@ use super::*;
 use crate::{
     constant,
     core::impls::{LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager},
-    helper::make_string_vec,
     http_client::{MockEndpointHttpClient, MockHttpClient},
     test_helper,
     test_helper::{EnvTestContext, create_env_test_context, set_env_var},
@@ -37,7 +36,7 @@ mod local_gitignore_template_manager {
             #[serial]
             fn it_generates_template_from_local_fs_using_env_var(_ctx: EnvTestContext) {
                 let template_dir = test_helper::get_resource_file_path("templates");
-                let template_names = make_string_vec("python rust");
+                let template_names = test_helper::to_string_list("python rust");
 
                 set_env_var(constant::template_manager::HOME_ENV_VAR, &template_dir);
 
@@ -56,7 +55,7 @@ mod local_gitignore_template_manager {
             #[serial]
             fn it_generates_template_from_local_fs_using_given_dir(_ctx: EnvTestContext) {
                 let template_dir = test_helper::get_resource_file_path("templates");
-                let template_names = make_string_vec("python rust");
+                let template_names = test_helper::to_string_list("python rust");
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 let expected_template = QualifiedString {
@@ -97,7 +96,7 @@ mod local_gitignore_template_manager {
             #[serial]
             fn it_fails_when_unsupported_template_names(_ctx: EnvTestContext) {
                 let template_dir = test_helper::get_resource_file_path("templates");
-                let template_names = make_string_vec("python rust unknown");
+                let template_names = test_helper::to_string_list("python rust unknown");
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 let expected_error = ProgramExit {
@@ -122,7 +121,7 @@ mod local_gitignore_template_manager {
             #[serial]
             fn it_propagates_fs_error_if_any_occurred(_ctx: EnvTestContext) {
                 let template_dir = test_helper::get_resource_file_path("templates");
-                let template_names = make_string_vec("dummy");
+                let template_names = test_helper::to_string_list("dummy");
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 let expected_error = ProgramExit {
@@ -154,7 +153,7 @@ mod local_gitignore_template_manager {
             #[serial]
             fn it_generates_template_from_local_fs_using_env_var(_ctx: EnvTestContext) {
                 let template_dir = test_helper::get_resource_file_path("templates");
-                let template_names = make_string_vec("python rust");
+                let template_names = test_helper::to_string_list("python rust");
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 set_env_var(constant::template_manager::HOME_ENV_VAR, &template_dir);
@@ -175,7 +174,7 @@ mod local_gitignore_template_manager {
             #[serial]
             fn it_generates_template_from_local_fs_using_given_dir(_ctx: EnvTestContext) {
                 let template_dir = test_helper::get_resource_file_path("templates");
-                let template_names = make_string_vec("python rust");
+                let template_names = test_helper::to_string_list("python rust");
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 let expected_template = QualifiedString {
@@ -198,7 +197,7 @@ mod local_gitignore_template_manager {
             #[serial]
             fn it_fails_with_detailed_msg_when_unsupported_template_names(_ctx: EnvTestContext) {
                 let template_dir = test_helper::get_resource_file_path("templates");
-                let template_names = make_string_vec("python rust unknown");
+                let template_names = test_helper::to_string_list("python rust unknown");
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 let expected_error = ProgramExit {
@@ -220,7 +219,7 @@ mod local_gitignore_template_manager {
             #[serial]
             fn it_propagates_fs_error_if_any_occurred(_ctx: EnvTestContext) {
                 let template_dir = test_helper::get_resource_file_path("templates/dummy");
-                let template_names = make_string_vec("foo");
+                let template_names = test_helper::to_string_list("foo");
                 let file_path = format!("{template_dir}/foo.txt");
                 let file_path = Path::new(&file_path);
                 let file = File::create(file_path).unwrap();
@@ -352,7 +351,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_generates_template_using_provided_client() {
-                let template_names = make_string_vec("rust python");
+                let template_names = test_helper::to_string_list("rust python");
                 let generated_template = "all good";
                 let http_client = MockHttpClient {
                     response: Ok(String::from(generated_template)),
@@ -383,7 +382,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_works_with_none_endpoint_uri() {
-                let template_names = make_string_vec("rust python");
+                let template_names = test_helper::to_string_list("rust python");
                 let generated_template = "all good";
                 let http_client = MockHttpClient {
                     response: Ok(String::from(generated_template)),
@@ -434,7 +433,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_propagates_error_from_client_if_any() {
-                let template_names = make_string_vec("rust pyth");
+                let template_names = test_helper::to_string_list("rust pyth");
                 let error_message = "all bad";
                 let http_client = MockHttpClient {
                     response: Err(ProgramExit {
@@ -472,7 +471,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_generates_template_using_provided_client() {
-                let template_names = make_string_vec("rust python");
+                let template_names = test_helper::to_string_list("rust python");
                 let generated_template = "all good";
                 let generator_url =
                     format!("{}/rust,python", constant::template_manager::GENERATOR_URI);
@@ -503,7 +502,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_works_with_none_generator_endpoint_uri() {
-                let template_names = make_string_vec("rust python");
+                let template_names = test_helper::to_string_list("rust python");
                 let generated_template = "all good";
                 let generator_url =
                     format!("{}/rust,python", constant::template_manager::GENERATOR_URI);
@@ -534,7 +533,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_works_with_none_lister_endpoint_uri() {
-                let template_names = make_string_vec("rust python");
+                let template_names = test_helper::to_string_list("rust python");
                 let generated_template = "all good";
                 let generator_url =
                     format!("{}/rust,python", constant::template_manager::GENERATOR_URI);
@@ -565,7 +564,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_works_with_none_lister_and_generator_endpoint_uris() {
-                let template_names = make_string_vec("rust python");
+                let template_names = test_helper::to_string_list("rust python");
                 let generated_template = "all good";
                 let generator_url =
                     format!("{}/rust,python", constant::template_manager::GENERATOR_URI);
@@ -597,7 +596,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_propagates_error_from_generator_client_if_any() {
-                let template_names = make_string_vec("rust python");
+                let template_names = test_helper::to_string_list("rust python");
                 let error_message = "all bad";
                 let generator_url =
                     format!("{}/rust,python", constant::template_manager::GENERATOR_URI);
@@ -638,7 +637,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_propagates_error_from_lister_client_if_any() {
-                let template_names = make_string_vec("rust python");
+                let template_names = test_helper::to_string_list("rust python");
                 let error_message = "all bad";
                 let generated_template = "all good";
                 let generator_url =
@@ -677,7 +676,7 @@ mod remote_gitignore_template_manager {
             #[test]
             #[parallel]
             fn it_returns_inexistent_template_error() {
-                let template_names = make_string_vec("rust pyth");
+                let template_names = test_helper::to_string_list("rust pyth");
                 let generated_template = "all good";
                 let generator_url =
                     format!("{}/rust,python", constant::template_manager::GENERATOR_URI);
@@ -839,7 +838,7 @@ mod gitignore_template_manager {
                     value: test_helper::load_expectation_file("local_remote_python_rust_template"),
                     kind: StringKind::Mixed,
                 });
-                let actual = generator.generate(&make_string_vec("python rust"));
+                let actual = generator.generate(&test_helper::to_string_list("python rust"));
 
                 assert_eq!(actual, expected);
             }
@@ -853,7 +852,7 @@ mod gitignore_template_manager {
                     value: String::new(),
                     kind: StringKind::Mixed,
                 });
-                let actual = generator.generate(&make_string_vec("python rust"));
+                let actual = generator.generate(&test_helper::to_string_list("python rust"));
 
                 assert_eq!(actual, expected);
             }
@@ -894,7 +893,7 @@ mod gitignore_template_manager {
                     styled_message: None,
                     kind: ExitKind::Error,
                 });
-                let actual = generator.generate(&make_string_vec("go"));
+                let actual = generator.generate(&test_helper::to_string_list("go"));
 
                 assert_eq!(actual, expected);
             }
@@ -929,7 +928,7 @@ mod gitignore_template_manager {
                     styled_message: None,
                     kind: ExitKind::Error,
                 });
-                let actual = generator.generate(&make_string_vec("rust python"));
+                let actual = generator.generate(&test_helper::to_string_list("rust python"));
 
                 assert_eq!(actual, expected);
             }
@@ -961,7 +960,7 @@ mod gitignore_template_manager {
                         kind: ExitKind::Error,
                     },
                 );
-                let actual = generator.generate(&make_string_vec("rust python"));
+                let actual = generator.generate(&test_helper::to_string_list("rust python"));
 
                 assert_eq!(actual, expected);
             }
@@ -998,7 +997,7 @@ mod gitignore_template_manager {
                         kind: ExitKind::Error,
                     },
                 );
-                let actual = generator.generate(&make_string_vec("rust python"));
+                let actual = generator.generate(&test_helper::to_string_list("rust python"));
 
                 assert_eq!(actual, expected);
             }
@@ -1042,8 +1041,8 @@ mod gitignore_template_manager {
                     value: test_helper::load_expectation_file("local_remote_python_rust_template"),
                     kind: StringKind::Mixed,
                 });
-                let actual =
-                    generator.generate_with_template_check(&make_string_vec("python rust"));
+                let actual = generator
+                    .generate_with_template_check(&test_helper::to_string_list("python rust"));
 
                 assert_eq!(actual, expected);
             }
@@ -1082,8 +1081,8 @@ mod gitignore_template_manager {
                     styled_message: None,
                     kind: ExitKind::Error,
                 });
-                let actual =
-                    generator.generate_with_template_check(&make_string_vec("rust python"));
+                let actual = generator
+                    .generate_with_template_check(&test_helper::to_string_list("rust python"));
 
                 assert_eq!(actual, expected);
             }
@@ -1115,7 +1114,8 @@ mod gitignore_template_manager {
                         kind: ExitKind::Error,
                     },
                 );
-                let actual = generator.generate_with_template_check(&make_string_vec("rust pyth"));
+                let actual = generator
+                    .generate_with_template_check(&test_helper::to_string_list("rust pyth"));
 
                 assert_eq!(actual, expected);
             }
@@ -1153,8 +1153,8 @@ mod gitignore_template_manager {
                     styled_message: None,
                     kind: ExitKind::Error,
                 });
-                let actual =
-                    generator.generate_with_template_check(&make_string_vec("rust python"));
+                let actual = generator
+                    .generate_with_template_check(&test_helper::to_string_list("rust python"));
 
                 assert_eq!(actual, expected);
             }

@@ -4,10 +4,6 @@
 
 use crate::{constant, core::QualifiedString, test_helper::load_expectation_file};
 
-pub fn make_string_vec(values: &str) -> Vec<String> {
-    values.split_whitespace().map(String::from).collect()
-}
-
 pub fn get_help_message() -> String {
     get_help_message_for("help_message")
 }

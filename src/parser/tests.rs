@@ -120,7 +120,8 @@ mod default_args_parser {
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::new().with_template_names(make_string_vec(cli_options));
+                let expected_result =
+                    Args::new().with_template_names(test_helper::to_string_list(cli_options));
                 let expected_result = Some(&expected_result);
 
                 println!("{:?}", parsed_args);
@@ -138,7 +139,7 @@ mod default_args_parser {
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(make_string_vec("rust"))
+                    .with_template_names(test_helper::to_string_list("rust"))
                     .with_server_url("https://test.com");
                 let expected_result = Some(&expected_result);
 
@@ -156,7 +157,7 @@ mod default_args_parser {
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(make_string_vec("rust"))
+                    .with_template_names(test_helper::to_string_list("rust"))
                     .with_server_url(constant::template_manager::BASE_URL)
                     .with_generator_uri("/test/api");
                 let expected_result = Some(&expected_result);
@@ -175,7 +176,7 @@ mod default_args_parser {
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(make_string_vec("rust"))
+                    .with_template_names(test_helper::to_string_list("rust"))
                     .with_lister_uri("/test/api");
                 let expected_result = Some(&expected_result);
 
@@ -195,7 +196,7 @@ mod default_args_parser {
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(make_string_vec(template_names))
+                    .with_template_names(test_helper::to_string_list(template_names))
                     .with_show_list(true);
                 let expected_result = Some(&expected_result);
 
@@ -213,7 +214,7 @@ mod default_args_parser {
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(make_string_vec("rust python"))
+                    .with_template_names(test_helper::to_string_list("rust python"))
                     .with_check_template_names(true);
                 let expected_result = Some(&expected_result);
 
@@ -231,7 +232,7 @@ mod default_args_parser {
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(make_string_vec("rust python"))
+                    .with_template_names(test_helper::to_string_list("rust python"))
                     .with_timeout(5);
                 let expected_result = Some(&expected_result);
 
@@ -249,7 +250,7 @@ mod default_args_parser {
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(make_string_vec("rust python"))
+                    .with_template_names(test_helper::to_string_list("rust python"))
                     .with_timeout_unit(unit)
                     .with_timeout(if unit == TimeoutUnit::MILLISECOND {
                         constant::template_manager::TIMEOUT_MILLISECOND_INT
@@ -646,7 +647,7 @@ mod default_args_parser {
 
                 let actual_result = ClapArgsParser::new().parse(cli_args);
                 let expected_result = Args::default()
-                    .with_template_names(make_string_vec("rust python"))
+                    .with_template_names(test_helper::to_string_list("rust python"))
                     .with_server_url("https://test")
                     .with_generator_uri("/foo")
                     .with_lister_uri("/bar")

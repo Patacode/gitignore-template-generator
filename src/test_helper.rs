@@ -104,15 +104,15 @@ pub fn get_resource_file_path(resource_name: &str) -> String {
     )
 }
 
-pub fn parse_cli_args(pos_args: &str) -> Vec<&str> {
-    pos_args.split_whitespace().collect()
+pub fn parse_cli_args(cli_args: &str) -> Vec<&str> {
+    cli_args.split_whitespace().collect()
 }
 
-pub fn parse_and_map_cli_args<B, F>(pos_args: &str, mapper: F) -> Vec<B>
+pub fn parse_and_map_cli_args<B, F>(cli_args: &str, mapper: F) -> Vec<B>
 where
     F: FnMut(&str) -> B,
 {
-    format!("{} {pos_args}", env!("CARGO_PKG_NAME"))
+    format!("{} {cli_args}", env!("CARGO_PKG_NAME"))
         .split_whitespace()
         .map(mapper)
         .collect()
@@ -120,4 +120,8 @@ where
 
 pub fn to_os_string(value: &str) -> OsString {
     OsString::from(value)
+}
+
+pub fn to_string_list(values: &str) -> Vec<String> {
+    values.split_whitespace().map(String::from).collect()
 }

@@ -2,7 +2,7 @@ use std::io::ErrorKind;
 
 use crate::{
     fs::{FileSystemHandler, impls::DirectoryHandler},
-    helper, test_helper,
+    test_helper,
 };
 
 mod directory_handler {
@@ -60,7 +60,7 @@ mod directory_handler {
                 let template_dir = test_helper::get_resource_file_path("templates");
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
-                let expected_list = helper::make_string_vec("python rust");
+                let expected_list = test_helper::to_string_list("python rust");
                 let actual_list = directory_handler.list_files();
 
                 assert!(actual_list.is_ok());
