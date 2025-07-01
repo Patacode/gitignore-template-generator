@@ -67,6 +67,13 @@
             "options": {}
         },
         {
+            "label": "lint-check",
+            "type": "shell",
+            "command": "cargo make lint-check",
+            "problemMatcher": [],
+            "options": {}
+        },
+        {
             "label": "lint-save",
             "type": "shell",
             "command": "cargo make lint-save",
@@ -129,7 +136,7 @@
             "command": "cargo make validate",
             "problemMatcher": [],
             "options": {}
-        }
+        },
     ],
     "inputs": [
         {
