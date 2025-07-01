@@ -77,15 +77,29 @@ pub fn set_env_var<T: AsRef<std::ffi::OsStr>, V: AsRef<std::ffi::OsStr>>(name: T
 }
 
 pub fn load_expectation_file(expectation_file_name: &str) -> String {
-    let expectation_file_path = parse_expectation_file_name(expectation_file_name);
+    let expect_filepath = get_expectation_file_path(expectation_file_name);
 
-    fs::read_to_string(expectation_file_path).expect(error_messages::FILE_READ_TO_STRING_FAILURE)
+    fs::read_to_string(expect_filepath).expect(error_messages::FILE_READ_TO_STRING_FAILURE)
 }
 
-fn parse_expectation_file_name(expectation_file_name: &str) -> String {
+pub fn load_resource_file(resource_file_name: &str) -> String {
+    let res_filepath = get_resource_file_path(resource_file_name);
+
+    fs::read_to_string(res_filepath).expect(error_messages::FILE_READ_TO_STRING_FAILURE)
+}
+
+pub fn get_expectation_file_path(expectation_file_name: &str) -> String {
     format!(
         "{}/{}/{expectation_file_name}.txt",
         env!("CARGO_MANIFEST_DIR"),
         path::TEST_EXPECTATIONS
+    )
+}
+
+pub fn get_resource_file_path(resource_name: &str) -> String {
+    format!(
+        "{}/{}/{resource_name}",
+        env!("CARGO_MANIFEST_DIR"),
+        constant::path::TEST_RESOURCES
     )
 }

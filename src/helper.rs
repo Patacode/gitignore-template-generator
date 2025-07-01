@@ -2,27 +2,9 @@
 //!
 //! Generic place to put helper code.
 
-use std::{borrow::Cow, ffi::OsString, fs};
+use std::ffi::OsString;
 
 use crate::{constant, core::QualifiedString, test_helper::load_expectation_file};
-
-pub fn load_resource(resource_name: &str) -> String {
-    let resource_path = get_resource_path(resource_name);
-
-    fs::read_to_string(resource_path).expect(constant::error_messages::FILE_READ_TO_STRING_FAILURE)
-}
-
-pub fn get_resource_path(resource_name: &str) -> String {
-    format!(
-        "{}/{}/{resource_name}",
-        env!("CARGO_MANIFEST_DIR"),
-        constant::path::TEST_RESOURCES
-    )
-}
-
-pub fn parse_bytes(bytes: &[u8]) -> Cow<str> {
-    String::from_utf8_lossy(bytes)
-}
 
 pub fn parse_pos_args(pos_args: &str) -> Vec<&str> {
     pos_args.split_whitespace().collect()

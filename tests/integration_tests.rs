@@ -44,7 +44,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file(expectation_file_name);
 
@@ -74,7 +74,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file(expectation_file_name);
 
@@ -97,7 +97,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file(expectation_file_name);
 
@@ -121,7 +121,7 @@ mod success {
                 .output()
                 .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = parse_bytes(&result.stdout);
+            let actual_output = String::from_utf8_lossy(&result.stdout);
             let expected_output =
                 format!("{} {}\n", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"),);
 
@@ -139,7 +139,7 @@ mod success {
                 .output()
                 .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = parse_bytes(&result.stdout);
+            let actual_output = String::from_utf8_lossy(&result.stdout);
             let expected_output = format!("{}\n", env!("CARGO_PKG_AUTHORS"));
 
             assert!(result.status.success());
@@ -156,7 +156,7 @@ mod success {
                 .output()
                 .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-            let actual_output = parse_bytes(&result.stdout);
+            let actual_output = String::from_utf8_lossy(&result.stdout);
             let expected_output = get_ansi_help_message() + "\n";
 
             assert!(result.status.success());
@@ -183,7 +183,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file("local_remote_template_list");
 
@@ -201,7 +201,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file("template_list");
 
@@ -231,7 +231,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file("local_real_remote_python_rust_template");
 
@@ -249,7 +249,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file("rust_python_template");
 
@@ -279,7 +279,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file("local_real_remote_python_rust_template");
 
@@ -297,7 +297,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file("rust_python_template");
 
@@ -329,7 +329,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file("local_real_remote_python_rust_template");
 
@@ -349,7 +349,7 @@ mod success {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stdout);
+                    let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
                         test_helper::load_expectation_file("rust_python_template");
 
@@ -390,7 +390,7 @@ mod failure {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stderr);
+                    let actual_output = String::from_utf8_lossy(&result.stderr);
                     let expected_output =
                         test_helper::load_expectation_file(expectation_file_name) + "\n";
 
@@ -422,7 +422,7 @@ mod failure {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stderr);
+                    let actual_output = String::from_utf8_lossy(&result.stderr);
                     let expected_output =
                         test_helper::load_expectation_file(expectation_file_name) + "\n";
 
@@ -455,7 +455,7 @@ mod failure {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stderr);
+                    let actual_output = String::from_utf8_lossy(&result.stderr);
                     let expected_output =
                         test_helper::load_expectation_file(expectation_file_name) + "\n";
 
@@ -482,7 +482,7 @@ mod failure {
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                    let actual_output = parse_bytes(&result.stderr);
+                    let actual_output = String::from_utf8_lossy(&result.stderr);
                     let expected_output =
                         test_helper::load_expectation_file(expectation_file_name) + "\n";
 
@@ -512,7 +512,7 @@ mod failure {
                     .output()
                     .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                let actual_output = parse_bytes(&result.stderr);
+                let actual_output = String::from_utf8_lossy(&result.stderr);
                 let expected_output =
                     test_helper::load_expectation_file("server_not_found_error") + "\n";
 
@@ -543,7 +543,7 @@ mod failure {
                             .output()
                             .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                        let actual_output = parse_bytes(&result.stderr);
+                        let actual_output = String::from_utf8_lossy(&result.stderr);
                         let expected_output = test_helper::load_expectation_file(
                             "inexistent_templates_error",
                         ) + "\n";
@@ -565,7 +565,7 @@ mod failure {
                             .output()
                             .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
-                        let actual_output = parse_bytes(&result.stderr);
+                        let actual_output = String::from_utf8_lossy(&result.stderr);
                         let expected_output = test_helper::load_expectation_file(
                             "inexistent_templates_error",
                         ) + "\n";

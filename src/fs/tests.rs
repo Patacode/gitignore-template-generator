@@ -2,7 +2,7 @@ use std::io::ErrorKind;
 
 use crate::{
     fs::{FileSystemHandler, impls::DirectoryHandler},
-    helper,
+    helper, test_helper,
 };
 
 mod directory_handler {
@@ -16,11 +16,11 @@ mod directory_handler {
 
             #[test]
             fn it_fetches_file_content() {
-                let template_dir = helper::get_resource_path("templates");
+                let template_dir = test_helper::get_resource_file_path("templates");
                 let file_name = "rust.txt";
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
-                let expected_content = helper::load_resource("templates/rust.txt");
+                let expected_content = test_helper::load_resource_file("templates/rust.txt");
                 let actual_content = directory_handler.fetch_content(file_name);
 
                 assert!(actual_content.is_ok());
@@ -35,7 +35,7 @@ mod directory_handler {
 
             #[test]
             fn it_fails_if_any_file_system_error() {
-                let template_dir = helper::get_resource_path("templates");
+                let template_dir = test_helper::get_resource_file_path("templates");
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
                 let expected_error_kind = ErrorKind::IsADirectory;
@@ -57,7 +57,7 @@ mod directory_handler {
 
             #[test]
             fn it_list_directory_files() {
-                let template_dir = helper::get_resource_path("templates");
+                let template_dir = test_helper::get_resource_file_path("templates");
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
                 let expected_list = helper::make_string_vec("python rust");
@@ -75,7 +75,7 @@ mod directory_handler {
 
             #[test]
             fn it_fails_if_any_file_system_error() {
-                let template_dir = helper::get_resource_path("inexistent");
+                let template_dir = test_helper::get_resource_file_path("inexistent");
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
                 let expected_error_kind = ErrorKind::NotFound;
