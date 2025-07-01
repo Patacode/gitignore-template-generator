@@ -14,6 +14,7 @@ use crate::{
     core::impls::{LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager},
     helper::{self, make_string_vec},
     http_client::{MockEndpointHttpClient, MockHttpClient},
+    test_helper,
     test_helper::{EnvTestContext, create_env_test_context, set_env_var},
 };
 
@@ -43,7 +44,7 @@ mod local_gitignore_template_manager {
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 let expected_template = Ok(QualifiedString {
-                    value: helper::load_expectation_file("local_rust_python_template"),
+                    value: test_helper::load_expectation_file("local_rust_python_template"),
                     kind: StringKind::Local,
                 });
                 let actual_template = generator.generate(&template_names);
@@ -59,7 +60,7 @@ mod local_gitignore_template_manager {
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 let expected_template = QualifiedString {
-                    value: helper::load_expectation_file("local_rust_python_template"),
+                    value: test_helper::load_expectation_file("local_rust_python_template"),
                     kind: StringKind::Local,
                 };
                 let actual_template = generator.generate(&template_names);
@@ -159,7 +160,7 @@ mod local_gitignore_template_manager {
                 set_env_var(constant::template_manager::HOME_ENV_VAR, &template_dir);
 
                 let expected_template = QualifiedString {
-                    value: helper::load_expectation_file("local_rust_python_template"),
+                    value: test_helper::load_expectation_file("local_rust_python_template"),
                     kind: StringKind::Local,
                 };
                 let actual_template = generator.generate_with_template_check(&template_names);
@@ -178,7 +179,7 @@ mod local_gitignore_template_manager {
                 let generator = LocalGitignoreTemplateManager::new(Some(template_dir.clone()));
 
                 let expected_template = QualifiedString {
-                    value: helper::load_expectation_file("local_rust_python_template"),
+                    value: test_helper::load_expectation_file("local_rust_python_template"),
                     kind: StringKind::Local,
                 };
                 let actual_template = generator.generate_with_template_check(&template_names);
@@ -835,9 +836,7 @@ mod gitignore_template_manager {
                 let generator = GitignoreTemplateManager::new(manager_list);
 
                 let expected: Result<QualifiedString, ProgramExit> = Ok(QualifiedString {
-                    value: helper::load_expectation_file(
-                        "local_remote_python_rust_template",
-                    ),
+                    value: test_helper::load_expectation_file("local_remote_python_rust_template"),
                     kind: StringKind::Mixed,
                 });
                 let actual = generator.generate(&make_string_vec("python rust"));
@@ -1040,9 +1039,7 @@ mod gitignore_template_manager {
                 let generator = GitignoreTemplateManager::new(manager_list);
 
                 let expected: Result<QualifiedString, ProgramExit> = Ok(QualifiedString {
-                    value: helper::load_expectation_file(
-                        "local_remote_python_rust_template",
-                    ),
+                    value: test_helper::load_expectation_file("local_remote_python_rust_template"),
                     kind: StringKind::Mixed,
                 });
                 let actual =

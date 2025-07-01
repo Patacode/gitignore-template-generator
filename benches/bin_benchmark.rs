@@ -1,5 +1,5 @@
 use criterion::{Criterion, criterion_group, criterion_main};
-use gitignore_template_generator::helper::load_expectation_file;
+use gitignore_template_generator::test_helper::load_expectation_file;
 use mockito::{Server, ServerGuard};
 use test_bin::get_test_bin;
 

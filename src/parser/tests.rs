@@ -7,6 +7,7 @@ use crate::{
     constant,
     core::{ExitKind, ProgramExit},
     helper::*,
+    test_helper::*,
 };
 
 mod default_args_parser {
@@ -283,9 +284,7 @@ mod default_args_parser {
                     message: load_expectation_file("comma_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file(
-                        "ansi_comma_pos_args_error",
-                    )),
+                    styled_message: Some(load_expectation_file("ansi_comma_pos_args_error")),
                     kind: ExitKind::Error,
                 };
                 let expected_error = Some(&expected_error);
@@ -304,9 +303,7 @@ mod default_args_parser {
                     message: load_expectation_file("whitespace_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file(
-                        "ansi_whitespace_pos_args_error",
-                    )),
+                    styled_message: Some(load_expectation_file("ansi_whitespace_pos_args_error")),
                     kind: ExitKind::Error,
                 };
                 let expected_error = Some(&expected_error);
@@ -432,9 +429,7 @@ mod default_args_parser {
                 let expected_error = ProgramExit {
                     message: load_expectation_file("unexpected_argument_error"),
                     exit_status: constant::exit_status::GENERIC,
-                    styled_message: Some(load_expectation_file(
-                        "ansi_unexpected_argument_error",
-                    )),
+                    styled_message: Some(load_expectation_file("ansi_unexpected_argument_error")),
                     kind: ExitKind::Error,
                 };
                 let expected_error = Some(&expected_error);
@@ -452,9 +447,7 @@ mod default_args_parser {
                 let expected_error = ProgramExit {
                     message: load_expectation_file("non_integer_timeout_error"),
                     exit_status: constant::exit_status::GENERIC,
-                    styled_message: Some(load_expectation_file(
-                        "ansi_non_integer_timeout_error",
-                    )),
+                    styled_message: Some(load_expectation_file("ansi_non_integer_timeout_error")),
                     kind: ExitKind::Error,
                 };
                 let expected_error = Some(&expected_error);

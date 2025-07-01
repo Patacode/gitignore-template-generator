@@ -1,5 +1,7 @@
+use std::fs;
+
 use crate::{
-    constant::{self, template_manager},
+    constant::{self, error_messages, path, template_manager},
     printer::{Data, pp},
 };
 
@@ -72,4 +74,18 @@ pub fn set_env_var<T: AsRef<std::ffi::OsStr>, V: AsRef<std::ffi::OsStr>>(name: T
     unsafe {
         std::env::set_var(name, value);
     }
+}
+
+pub fn load_expectation_file(expectation_file_name: &str) -> String {
+    let expectation_file_path = parse_expectation_file_name(expectation_file_name);
+
+    fs::read_to_string(expectation_file_path).expect(error_messages::FILE_READ_TO_STRING_FAILURE)
+}
+
+fn parse_expectation_file_name(expectation_file_name: &str) -> String {
+    format!(
+        "{}/{}/{expectation_file_name}.txt",
+        env!("CARGO_MANIFEST_DIR"),
+        path::TEST_EXPECTATIONS
+    )
 }

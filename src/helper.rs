@@ -4,22 +4,7 @@
 
 use std::{borrow::Cow, ffi::OsString, fs};
 
-use crate::{constant::{self, error_messages, path}, core::QualifiedString};
-
-pub fn load_expectation_file(expectation_file_name: &str) -> String {
-    let expectation_file_path = parse_expectation_file_name(expectation_file_name);
-
-    fs::read_to_string(expectation_file_path)
-        .expect(error_messages::FILE_READ_TO_STRING_FAILURE)
-}
-
-fn parse_expectation_file_name(expectation_file_name: &str) -> String {
-    format!(
-        "{}/{}/{expectation_file_name}.txt",
-        env!("CARGO_MANIFEST_DIR"),
-        path::TEST_EXPECTATIONS
-    )
-}
+use crate::{constant, core::QualifiedString, test_helper::load_expectation_file};
 
 pub fn load_resource(resource_name: &str) -> String {
     let resource_path = get_resource_path(resource_name);
