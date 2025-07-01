@@ -2,7 +2,7 @@ pub use crate::core::impls::{
     GitignoreTemplateManager, LocalGitignoreTemplateManager,
     RemoteGitignoreTemplateManager,
 };
-use crate::parser::Args;
+use crate::{constant::help_messages, parser::Args};
 
 /// DTO struct representing an early or abrupt program exit.
 #[derive(Clone, PartialEq, Debug)]
@@ -26,6 +26,15 @@ pub struct ProgramExit {
 pub struct QualifiedString {
     pub value: String,
     pub kind: StringKind,
+}
+
+impl QualifiedString {
+    pub fn empty(kind: StringKind) -> Self {
+        Self {
+            value: help_messages::NOTHING_TO_BE_PRINTED.to_string(),
+            kind,
+        }
+    }
 }
 
 /// Enum for kind of program exit.
