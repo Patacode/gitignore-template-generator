@@ -14,10 +14,10 @@ fn main() {
 }
 
 fn handle_success(output: &QualifiedString) {
-    pp(Data::QualifiedString(output))
+    pp(&Data::QualifiedString(output))
 }
 
 fn handle_failure(error: &ProgramExit) {
-    pp(Data::ProgramExit(error));
+    pp(&Data::ProgramExit(error));
     exit(error.exit_status);
 }

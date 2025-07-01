@@ -13,29 +13,36 @@ pub enum Data<'a> {
     Removed(),
     TestContextDropped(),
     TestContextCreated(),
+    DefaultTimeout(),
 }
 
-pub fn pp(data: Data) {
+pub fn pp(data: &Data) {
+    let value = ppg(&data);
     match data {
-        Data::QualifiedString(qs) => println!("{}", qs.value),
-        Data::ProgramExit(pe) => eprintln!("{}", pe.message),
-        Data::EnvVarReset(ev) => println!(
-            "{}",
-            help_texts::ENV_VAR_RESET
-                .replace("{name}", template_manager::HOME_ENV_VAR)
-                .replace("{value}", ev)
-        ),
-        Data::EnvVarRemovalBefore() => println!(
-            "{}",
+        Data::ProgramExit(_) => eprintln!("{value}"),
+        _ => println!("{value}"),
+    }
+}
+
+pub fn ppg(data: &Data) -> String {
+    match data {
+        Data::QualifiedString(qs) => qs.value.clone(),
+        Data::ProgramExit(pe) => pe.message.clone(),
+        Data::EnvVarReset(ev) => help_texts::ENV_VAR_RESET
+            .replace("{name}", template_manager::HOME_ENV_VAR)
+            .replace("{value}", ev),
+        Data::EnvVarRemovalBefore() => {
             help_texts::ENV_VAR_REMOVAL_BEFORE.replace("{name}", template_manager::HOME_ENV_VAR)
-        ),
-        Data::EnvVarRemovalAfter() => println!(
-            "{}",
+        }
+        Data::EnvVarRemovalAfter() => {
             help_texts::ENV_VAR_REMOVAL_AFTER.replace("{name}", template_manager::HOME_ENV_VAR)
-        ),
-        Data::Reset() => println!("{}", help_texts::RESET),
-        Data::Removed() => println!("{}", help_texts::REMOVED),
-        Data::TestContextDropped() => println!("{}", help_texts::TEST_CXT_DROPPED),
-        Data::TestContextCreated() => println!("{}", help_texts::TEST_CTX_CREATED),
+        }
+        Data::Reset() => help_texts::RESET.to_string(),
+        Data::Removed() => help_texts::REMOVED.to_string(),
+        Data::TestContextDropped() => help_texts::TEST_CXT_DROPPED.to_string(),
+        Data::TestContextCreated() => help_texts::TEST_CTX_CREATED.to_string(),
+        Data::DefaultTimeout() => help_texts::DEFAULT_TIMEOUT
+            .replace("{second}", template_manager::TIMEOUT)
+            .replace("{millis}", template_manager::TIMEOUT_MILLISECOND),
     }
 }

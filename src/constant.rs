@@ -130,6 +130,8 @@ pub mod help_texts {
 
     pub const TEST_CXT_DROPPED: &str = "Test context dropped!";
     pub const TEST_CTX_CREATED: &str = "Test context created!";
+
+    pub const DEFAULT_TIMEOUT: &str = "{second}s/{millis}ms";
 }
 
 pub mod cli_options {

@@ -2,7 +2,7 @@ use std::{ffi::OsString, fs};
 
 use crate::{
     constant::{cli_options, error_messages, help_messages, parser_infos, path, template_manager},
-    printer::{Data, pp},
+    printer::{Data, pp, ppg},
 };
 
 pub struct EnvTestContext {
@@ -23,15 +23,15 @@ impl EnvTestContext {
     }
 
     fn handle_env_var_reset(original_value: &str) {
-        pp(Data::EnvVarReset(original_value));
+        pp(&Data::EnvVarReset(original_value));
         set_env_var(template_manager::HOME_ENV_VAR, original_value);
-        pp(Data::Reset());
+        pp(&Data::Reset());
     }
 
     fn handle_env_var_removal() {
-        pp(Data::EnvVarRemovalAfter());
+        pp(&Data::EnvVarRemovalAfter());
         remove_env_var(template_manager::HOME_ENV_VAR);
-        pp(Data::Removed());
+        pp(&Data::Removed());
     }
 }
 
@@ -42,7 +42,7 @@ impl Drop for EnvTestContext {
             None => Self::handle_env_var_removal(),
         }
 
-        pp(Data::TestContextDropped());
+        pp(&Data::TestContextDropped());
     }
 }
 
@@ -53,15 +53,15 @@ pub fn create_env_test_context() -> EnvTestContext {
         Err(_) => EnvTestContext::empty(),
     };
 
-    pp(Data::TestContextCreated());
+    pp(&Data::TestContextCreated());
     ctx.original_value.is_some().then(handle_env_var_removal);
     ctx
 }
 
 fn handle_env_var_removal() {
-    pp(Data::EnvVarRemovalBefore());
+    pp(&Data::EnvVarRemovalBefore());
     remove_env_var(template_manager::HOME_ENV_VAR);
-    pp(Data::Removed());
+    pp(&Data::Removed());
 }
 
 pub fn remove_env_var<T: AsRef<std::ffi::OsStr>>(name: T) {
@@ -171,18 +171,10 @@ fn parse_expectation_file_to_help_message(template_name: &str) -> String {
         .replace("{timeout_short}", cli_options::TIMEOUT.short)
         .replace("{timeout_long}", cli_options::TIMEOUT.long)
         .replace("{timeout_desc}", help_messages::TIMEOUT)
-        .replace("{timeout_default}", &format_default_timeout())
+        .replace("{timeout_default}", &ppg(&Data::DefaultTimeout()))
         .replace("{timeout_unit_short}", cli_options::TIMEOUT_UNIT.short)
         .replace("{timeout_unit_long}", cli_options::TIMEOUT_UNIT.long)
         .replace("{timeout_unit_desc}", help_messages::TIMEOUT_UNIT)
         .replace("{timeout_unit_default}", template_manager::TIMEOUT_UNIT)
         .replace("{timeout_unit_values}", "millisecond, second")
-}
-
-fn format_default_timeout() -> String {
-    format!(
-        "{}s/{}ms",
-        template_manager::TIMEOUT,
-        template_manager::TIMEOUT_MILLISECOND
-    )
 }
