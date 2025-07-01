@@ -1,7 +1,7 @@
 pub use crate::core::impls::{
     GitignoreTemplateManager, LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager,
 };
-use crate::{constant::{help_messages, help_texts}, parser::Args};
+use crate::{constant::help_texts, parser::Args};
 
 /// DTO struct representing an early or abrupt program exit.
 #[derive(Clone, PartialEq, Debug)]

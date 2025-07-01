@@ -52,7 +52,9 @@ pub fn create_env_test_context() -> EnvTestContext {
     };
 
     pp(Data::TestContextCreated());
-    ctx.original_value.is_some().then(|| handle_env_var_removal());
+    ctx.original_value
+        .is_some()
+        .then(|| handle_env_var_removal());
     ctx
 }
 
