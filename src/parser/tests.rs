@@ -6,7 +6,6 @@ use super::*;
 use crate::{
     constant,
     core::{ExitKind, ProgramExit},
-    helper::*,
     test_helper,
 };
 
@@ -70,9 +69,9 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: get_help_message(),
+                    message: test_helper::get_help_message(),
                     exit_status: 0,
-                    styled_message: Some(get_ansi_help_message()),
+                    styled_message: Some(test_helper::get_ansi_help_message()),
                     kind: ExitKind::HelpInfos,
                 };
                 let expected_error = Some(&expected_error);

@@ -2,7 +2,7 @@
 use gitignore_template_generator::test_helper::{
     EnvTestContext, create_env_test_context, set_env_var,
 };
-use gitignore_template_generator::{constant, helper::*, test_helper};
+use gitignore_template_generator::{constant, test_helper};
 use rstest::*;
 use serial_test::parallel;
 #[cfg(feature = "local_templating")]
@@ -157,7 +157,7 @@ mod success {
                 .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = String::from_utf8_lossy(&result.stdout);
-            let expected_output = get_ansi_help_message() + "\n";
+            let expected_output = test_helper::get_ansi_help_message() + "\n";
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
