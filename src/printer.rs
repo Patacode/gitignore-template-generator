@@ -17,7 +17,7 @@ pub enum Data<'a> {
 }
 
 pub fn pp(data: &Data) {
-    let value = ppg(&data);
+    let value = ppg(data);
     match data {
         Data::ProgramExit(_) => eprintln!("{value}"),
         _ => println!("{value}"),
