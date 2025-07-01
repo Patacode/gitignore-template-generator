@@ -1,4 +1,4 @@
-use std::fs;
+use std::{ffi::OsString, fs};
 
 use crate::{
     constant::{self, error_messages, path, template_manager},
@@ -102,4 +102,22 @@ pub fn get_resource_file_path(resource_name: &str) -> String {
         env!("CARGO_MANIFEST_DIR"),
         constant::path::TEST_RESOURCES
     )
+}
+
+pub fn parse_cli_args(pos_args: &str) -> Vec<&str> {
+    pos_args.split_whitespace().collect()
+}
+
+pub fn parse_and_map_cli_args<B, F>(pos_args: &str, mapper: F) -> Vec<B>
+where
+    F: FnMut(&str) -> B,
+{
+    format!("{} {pos_args}", env!("CARGO_PKG_NAME"))
+        .split_whitespace()
+        .map(mapper)
+        .collect()
+}
+
+pub fn to_os_string(value: &str) -> OsString {
+    OsString::from(value)
 }

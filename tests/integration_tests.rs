@@ -32,14 +32,14 @@ mod success {
                     let expectation_file_name = "local_remote_rust_template";
 
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
 
-                    cli_tool.args(parse_pos_args(pos_args));
+                    cli_tool.args(test_helper::parse_cli_args(pos_args));
                     let result = cli_tool
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -62,14 +62,14 @@ mod success {
                         "local_real_remote_python_rust_template";
 
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
 
-                    cli_tool.args(parse_pos_args(pos_args));
+                    cli_tool.args(test_helper::parse_cli_args(pos_args));
                     let result = cli_tool
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -92,7 +92,7 @@ mod success {
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-                    cli_tool.args(parse_pos_args(pos_args));
+                    cli_tool.args(test_helper::parse_cli_args(pos_args));
                     let result = cli_tool
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -171,7 +171,7 @@ mod success {
                     _ctx: EnvTestContext,
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
@@ -219,14 +219,14 @@ mod success {
                     _ctx: EnvTestContext,
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
 
-                    cli_tool.args(parse_pos_args("rust python --check"));
+                    cli_tool.args(test_helper::parse_cli_args("rust python --check"));
                     let result = cli_tool
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -244,7 +244,7 @@ mod success {
                 fn it_outputs_gitignore_templates_from_api_with_check_option() {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-                    cli_tool.args(parse_pos_args("rust python --check"));
+                    cli_tool.args(test_helper::parse_cli_args("rust python --check"));
                     let result = cli_tool
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -267,14 +267,14 @@ mod success {
                     _ctx: EnvTestContext,
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
 
-                    cli_tool.args(parse_pos_args("rust python --timeout 5"));
+                    cli_tool.args(test_helper::parse_cli_args("rust python --timeout 5"));
                     let result = cli_tool
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -292,7 +292,7 @@ mod success {
                 fn it_outputs_gitignore_templates_from_api_with_timeout_option() {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-                    cli_tool.args(parse_pos_args("rust python --timeout 5"));
+                    cli_tool.args(test_helper::parse_cli_args("rust python --timeout 5"));
                     let result = cli_tool
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -315,14 +315,14 @@ mod success {
                     _ctx: EnvTestContext,
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
 
-                    cli_tool.args(parse_pos_args(
+                    cli_tool.args(test_helper::parse_cli_args(
                         "rust python --timeout 5000 --timeout-unit millisecond",
                     ));
                     let result = cli_tool
@@ -342,7 +342,7 @@ mod success {
                 fn it_outputs_gitignore_templates_from_api_with_timeout_unit_option() {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
 
-                    cli_tool.args(parse_pos_args(
+                    cli_tool.args(test_helper::parse_cli_args(
                         "rust python --timeout 5000 --timeout-unit millisecond",
                     ));
                     let result = cli_tool
@@ -378,14 +378,14 @@ mod failure {
                     let expectation_file_name = "ansi_no_pos_args_error";
 
                     let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
 
-                    cli_tools.args(parse_pos_args(pos_args));
+                    cli_tools.args(test_helper::parse_cli_args(pos_args));
                     let result = cli_tools
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -410,14 +410,14 @@ mod failure {
                     let expectation_file_name = "ansi_comma_pos_args_error";
 
                     let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
 
-                    cli_tools.args(parse_pos_args(pos_args));
+                    cli_tools.args(test_helper::parse_cli_args(pos_args));
                     let result = cli_tools
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -443,14 +443,14 @@ mod failure {
                         "local_remote_template_not_found_error";
 
                     let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
 
-                    cli_tools.args(parse_pos_args(pos_args));
+                    cli_tools.args(test_helper::parse_cli_args(pos_args));
                     let result = cli_tools
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -477,7 +477,7 @@ mod failure {
                 ) {
                     let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
 
-                    cli_tools.args(parse_pos_args(pos_args));
+                    cli_tools.args(test_helper::parse_cli_args(pos_args));
                     let result = cli_tools
                         .output()
                         .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -507,7 +507,9 @@ mod failure {
             fn it_outputs_error_and_fails_when_server_not_found() {
                 let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
 
-                cli_tools.args(parse_pos_args("-s https://fjizefhize.com rust"));
+                cli_tools.args(test_helper::parse_cli_args(
+                    "-s https://fjizefhize.com rust",
+                ));
                 let result = cli_tools
                     .output()
                     .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -531,14 +533,14 @@ mod failure {
                         _ctx: EnvTestContext,
                     ) {
                         let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
-                        let template_dir = get_resource_path("templates");
+                        let template_dir = test_helper::get_resource_file_path("templates");
 
                         set_env_var(
                             constant::template_manager::HOME_ENV_VAR,
                             &template_dir,
                         );
 
-                        cli_tools.args(parse_pos_args("rust pyth foo --check"));
+                        cli_tools.args(test_helper::parse_cli_args("rust pyth foo --check"));
                         let result = cli_tools
                             .output()
                             .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
@@ -560,7 +562,7 @@ mod failure {
                     fn it_outputs_error_and_fails_when_inexistent_templates() {
                         let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
 
-                        cli_tools.args(parse_pos_args("rust pyth foo --check"));
+                        cli_tools.args(test_helper::parse_cli_args("rust pyth foo --check"));
                         let result = cli_tools
                             .output()
                             .expect(constant::error_messages::CMD_EXECUTION_FAILURE);

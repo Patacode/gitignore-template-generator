@@ -3,8 +3,6 @@ use std::{fs, path::Path};
 use std::{thread, time::Duration};
 
 #[cfg(feature = "local_templating")]
-use gitignore_template_generator::helper;
-#[cfg(feature = "local_templating")]
 use gitignore_template_generator::test_helper::{
     EnvTestContext, create_env_test_context, set_env_var,
 };
@@ -41,7 +39,7 @@ mod success {
                     _ctx: EnvTestContext
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = helper::get_resource_path("templates/empty");
+                    let template_dir = test_helper::get_resource_file_path("templates/empty");
                     if !Path::new(&template_dir).exists() {
                         fs::create_dir(&template_dir).expect("Error creating empty directory");
                     }
@@ -126,7 +124,7 @@ mod success {
                     _ctx: EnvTestContext
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = helper::get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
@@ -215,7 +213,7 @@ mod success {
                     _ctx: EnvTestContext
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = helper::get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
@@ -295,7 +293,7 @@ mod success {
                 #[serial]
                 fn it_outputs_available_template_list(_ctx: EnvTestContext) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = helper::get_resource_path("templates");
+                    let template_dir = test_helper::get_resource_file_path("templates");
 
                     set_env_var(
                         constant::template_manager::HOME_ENV_VAR,

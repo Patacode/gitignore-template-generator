@@ -2,20 +2,7 @@
 //!
 //! Generic place to put helper code.
 
-use std::ffi::OsString;
-
 use crate::{constant, core::QualifiedString, test_helper::load_expectation_file};
-
-pub fn parse_pos_args(pos_args: &str) -> Vec<&str> {
-    pos_args.split_whitespace().collect()
-}
-
-pub fn parse_cli_args(pos_args: &str) -> Vec<OsString> {
-    format!("{} {pos_args}", env!("CARGO_PKG_NAME"))
-        .split_whitespace()
-        .map(OsString::from)
-        .collect()
-}
 
 pub fn make_string_vec(values: &str) -> Vec<String> {
     values.split_whitespace().map(String::from).collect()
