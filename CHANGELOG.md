@@ -9,7 +9,16 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
-@Content
+### 🚜 Refactor
+
+- [test_helper] - Update and streamline module design
+- [helper] - Move all test-related helper functions to test_helper module
+- [parser/test_helper] - Use static str in  CliOptionName struct for short field + define new helper function to convert str to char
+
+### ⚙️ Miscellaneous Tasks
+
+- [cargo] - Format Cargo.toml file
+- [vscode] - Add task ro run lint-check target
 
 ## [0.14.4] - 2025-07-01 <a id="0.14.4"></a>
 
