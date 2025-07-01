@@ -141,7 +141,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-a --author`
     pub const AUTHOR: CliOptionName = CliOptionName {
-        short: 'a',
+        short: "a",
         long: "author",
     };
 
@@ -149,7 +149,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-s --server-url`
     pub const SERVER_URL: CliOptionName = CliOptionName {
-        short: 's',
+        short: "s",
         long: "server-url",
     };
 
@@ -157,7 +157,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-h --help`
     pub const HELP: CliOptionName = CliOptionName {
-        short: 'h',
+        short: "h",
         long: "help",
     };
 
@@ -165,7 +165,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-V --version`
     pub const VERSION: CliOptionName = CliOptionName {
-        short: 'V',
+        short: "V",
         long: "version",
     };
 
@@ -173,7 +173,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-g --generator-uri`
     pub const GENERATOR_URI: CliOptionName = CliOptionName {
-        short: 'g',
+        short: "g",
         long: "generator-uri",
     };
 
@@ -181,7 +181,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-l --list`
     pub const LIST: CliOptionName = CliOptionName {
-        short: 'l',
+        short: "l",
         long: "list",
     };
 
@@ -189,7 +189,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-i --lister-uri`
     pub const LISTER_URI: CliOptionName = CliOptionName {
-        short: 'i',
+        short: "i",
         long: "lister-uri",
     };
 
@@ -197,7 +197,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-c --check`
     pub const CHECK: CliOptionName = CliOptionName {
-        short: 'c',
+        short: "c",
         long: "check",
     };
 
@@ -205,7 +205,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-t --timeout`
     pub const TIMEOUT: CliOptionName = CliOptionName {
-        short: 't',
+        short: "t",
         long: "timeout",
     };
 
@@ -213,7 +213,7 @@ pub mod cli_options {
     ///
     /// **Value**: `-u --timeout-unit`
     pub const TIMEOUT_UNIT: CliOptionName = CliOptionName {
-        short: 'u',
+        short: "u",
         long: "timeout-unit",
     };
 }

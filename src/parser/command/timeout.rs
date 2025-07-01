@@ -4,7 +4,7 @@ use clap::{
 };
 
 use super::ClapArg;
-use crate::constant;
+use crate::{constant, helper};
 
 pub struct TimeoutClapArg;
 
@@ -12,7 +12,7 @@ impl ClapArg for TimeoutClapArg {
     fn build() -> Arg {
         Arg::new("timeout")
             .id("TIMEOUT")
-            .short(constant::cli_options::TIMEOUT.short)
+            .short(helper::to_char(constant::cli_options::TIMEOUT.short))
             .long(constant::cli_options::TIMEOUT.long)
             .help(format!(
                 "{} [default: {}s/{}ms]",

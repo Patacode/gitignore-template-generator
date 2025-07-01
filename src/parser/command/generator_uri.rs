@@ -2,7 +2,7 @@ use clap::Arg;
 
 use super::ClapArg;
 use crate::{
-    constant,
+    constant, helper,
     validator::{CliArgsValidator, DefaultCliArgsValidator},
 };
 
@@ -12,7 +12,7 @@ impl ClapArg for GeneratorUriClapArg {
     fn build() -> Arg {
         Arg::new("generator_uri")
             .id("GENERATOR_URI")
-            .short(constant::cli_options::GENERATOR_URI.short)
+            .short(helper::to_char(constant::cli_options::GENERATOR_URI.short))
             .long(constant::cli_options::GENERATOR_URI.long)
             .help(constant::help_messages::GENERATOR_URI)
             .value_parser(DefaultCliArgsValidator::is_starting_with_slash)

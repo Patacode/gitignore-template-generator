@@ -1,7 +1,7 @@
 use std::{ffi::OsString, fs};
 
 use crate::{
-    constant::{self, error_messages, path, template_manager},
+    constant::{cli_options, error_messages, help_messages, parser_infos, path, template_manager},
     printer::{Data, pp},
 };
 
@@ -30,7 +30,7 @@ impl EnvTestContext {
 
     fn handle_env_var_removal() {
         pp(Data::EnvVarRemovalAfter());
-        remove_env_var(constant::template_manager::HOME_ENV_VAR);
+        remove_env_var(template_manager::HOME_ENV_VAR);
         pp(Data::Removed());
     }
 }
@@ -60,7 +60,7 @@ pub fn create_env_test_context() -> EnvTestContext {
 
 fn handle_env_var_removal() {
     pp(Data::EnvVarRemovalBefore());
-    remove_env_var(constant::template_manager::HOME_ENV_VAR);
+    remove_env_var(template_manager::HOME_ENV_VAR);
     pp(Data::Removed());
 }
 
@@ -100,7 +100,7 @@ pub fn get_resource_file_path(resource_name: &str) -> String {
     format!(
         "{}/{}/{resource_name}",
         env!("CARGO_MANIFEST_DIR"),
-        constant::path::TEST_RESOURCES
+        path::TEST_RESOURCES
     )
 }
 
@@ -137,109 +137,52 @@ pub fn get_ansi_help_message() -> String {
 fn parse_expectation_file_to_help_message(template_name: &str) -> String {
     load_expectation_file(template_name)
         .replace("{pkg_name}", env!("CARGO_PKG_NAME"))
-        .replace("{about}", constant::parser_infos::ABOUT)
-        .replace(
-            "{template_names_desc}",
-            constant::help_messages::TEMPLATE_NAMES,
-        )
-        .replace("{author_desc}", constant::help_messages::AUTHOR)
-        .replace("{server_url_desc}", constant::help_messages::SERVER_URL)
-        .replace("{help_desc}", constant::help_messages::HELP)
-        .replace("{version_desc}", constant::help_messages::VERSION)
+        .replace("{about}", parser_infos::ABOUT)
+        .replace("{template_names_desc}", help_messages::TEMPLATE_NAMES)
+        .replace("{author_desc}", help_messages::AUTHOR)
+        .replace("{server_url_desc}", help_messages::SERVER_URL)
+        .replace("{help_desc}", help_messages::HELP)
+        .replace("{version_desc}", help_messages::VERSION)
         .replace("{version}", env!("CARGO_PKG_VERSION"))
         .replace("{author}", env!("CARGO_PKG_AUTHORS"))
-        .replace(
-            "{author_short}",
-            constant::cli_options::AUTHOR.short.to_string().as_str(),
-        )
-        .replace("{author_long}", constant::cli_options::AUTHOR.long)
-        .replace(
-            "{server_url_short}",
-            constant::cli_options::SERVER_URL.short.to_string().as_str(),
-        )
-        .replace("{server_url_long}", constant::cli_options::SERVER_URL.long)
-        .replace(
-            "{help_short}",
-            constant::cli_options::HELP.short.to_string().as_str(),
-        )
-        .replace("{help_long}", constant::cli_options::HELP.long)
-        .replace(
-            "{version_short}",
-            constant::cli_options::VERSION.short.to_string().as_str(),
-        )
-        .replace("{version_long}", constant::cli_options::VERSION.long)
-        .replace("{server_url_default}", constant::template_manager::BASE_URL)
-        .replace(
-            "{generator_uri_short}",
-            constant::cli_options::GENERATOR_URI
-                .short
-                .to_string()
-                .as_str(),
-        )
-        .replace(
-            "{generator_uri_long}",
-            constant::cli_options::GENERATOR_URI.long,
-        )
-        .replace(
-            "{generator_uri_desc}",
-            constant::help_messages::GENERATOR_URI,
-        )
-        .replace(
-            "{generator_uri_default}",
-            constant::template_manager::GENERATOR_URI,
-        )
-        .replace(
-            "{list_short}",
-            constant::cli_options::LIST.short.to_string().as_str(),
-        )
-        .replace("{list_long}", constant::cli_options::LIST.long)
-        .replace("{list_desc}", constant::help_messages::LIST)
-        .replace(
-            "{lister_uri_short}",
-            constant::cli_options::LISTER_URI.short.to_string().as_str(),
-        )
-        .replace("{lister_uri_long}", constant::cli_options::LISTER_URI.long)
-        .replace("{lister_uri_desc}", constant::help_messages::LISTER_URI)
-        .replace(
-            "{lister_uri_default}",
-            constant::template_manager::LISTER_URI,
-        )
-        .replace(
-            "{check_short}",
-            constant::cli_options::CHECK.short.to_string().as_str(),
-        )
-        .replace("{check_long}", constant::cli_options::CHECK.long)
-        .replace("{check_desc}", constant::help_messages::CHECK)
-        .replace(
-            "{timeout_short}",
-            constant::cli_options::TIMEOUT.short.to_string().as_str(),
-        )
-        .replace("{timeout_long}", constant::cli_options::TIMEOUT.long)
-        .replace("{timeout_desc}", constant::help_messages::TIMEOUT)
-        .replace(
-            "{timeout_default}",
-            format!(
-                "{}s/{}ms",
-                constant::template_manager::TIMEOUT,
-                constant::template_manager::TIMEOUT_MILLISECOND
-            )
-            .as_str(),
-        )
-        .replace(
-            "{timeout_unit_short}",
-            constant::cli_options::TIMEOUT_UNIT
-                .short
-                .to_string()
-                .as_str(),
-        )
-        .replace(
-            "{timeout_unit_long}",
-            constant::cli_options::TIMEOUT_UNIT.long,
-        )
-        .replace("{timeout_unit_desc}", constant::help_messages::TIMEOUT_UNIT)
-        .replace(
-            "{timeout_unit_default}",
-            constant::template_manager::TIMEOUT_UNIT,
-        )
+        .replace("{author_short}", cli_options::AUTHOR.short)
+        .replace("{author_long}", cli_options::AUTHOR.long)
+        .replace("{server_url_short}", cli_options::SERVER_URL.short)
+        .replace("{server_url_long}", cli_options::SERVER_URL.long)
+        .replace("{help_short}", cli_options::HELP.short)
+        .replace("{help_long}", cli_options::HELP.long)
+        .replace("{version_short}", cli_options::VERSION.short)
+        .replace("{version_long}", cli_options::VERSION.long)
+        .replace("{server_url_default}", template_manager::BASE_URL)
+        .replace("{generator_uri_short}", cli_options::GENERATOR_URI.short)
+        .replace("{generator_uri_long}", cli_options::GENERATOR_URI.long)
+        .replace("{generator_uri_desc}", help_messages::GENERATOR_URI)
+        .replace("{generator_uri_default}", template_manager::GENERATOR_URI)
+        .replace("{list_short}", cli_options::LIST.short)
+        .replace("{list_long}", cli_options::LIST.long)
+        .replace("{list_desc}", help_messages::LIST)
+        .replace("{lister_uri_short}", cli_options::LISTER_URI.short)
+        .replace("{lister_uri_long}", cli_options::LISTER_URI.long)
+        .replace("{lister_uri_desc}", help_messages::LISTER_URI)
+        .replace("{lister_uri_default}", template_manager::LISTER_URI)
+        .replace("{check_short}", cli_options::CHECK.short)
+        .replace("{check_long}", cli_options::CHECK.long)
+        .replace("{check_desc}", help_messages::CHECK)
+        .replace("{timeout_short}", cli_options::TIMEOUT.short)
+        .replace("{timeout_long}", cli_options::TIMEOUT.long)
+        .replace("{timeout_desc}", help_messages::TIMEOUT)
+        .replace("{timeout_default}", &format_default_timeout())
+        .replace("{timeout_unit_short}", cli_options::TIMEOUT_UNIT.short)
+        .replace("{timeout_unit_long}", cli_options::TIMEOUT_UNIT.long)
+        .replace("{timeout_unit_desc}", help_messages::TIMEOUT_UNIT)
+        .replace("{timeout_unit_default}", template_manager::TIMEOUT_UNIT)
         .replace("{timeout_unit_values}", "millisecond, second")
+}
+
+fn format_default_timeout() -> String {
+    format!(
+        "{}s/{}ms",
+        template_manager::TIMEOUT,
+        template_manager::TIMEOUT_MILLISECOND
+    )
 }

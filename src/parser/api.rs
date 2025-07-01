@@ -19,7 +19,7 @@ pub enum Action {
 }
 
 pub struct CliOptionName {
-    pub short: char,
+    pub short: &'static str,
     pub long: &'static str,
 }
 
