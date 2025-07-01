@@ -21,7 +21,7 @@ impl EnvTestContext {
     }
 
     fn handle_env_var_reset(original_value: &str) {
-        pp(Data::EnvVarReset(&original_value));
+        pp(Data::EnvVarReset(original_value));
         set_env_var(template_manager::HOME_ENV_VAR, original_value);
         pp(Data::Reset());
     }
@@ -52,9 +52,7 @@ pub fn create_env_test_context() -> EnvTestContext {
     };
 
     pp(Data::TestContextCreated());
-    ctx.original_value
-        .is_some()
-        .then(|| handle_env_var_removal());
+    ctx.original_value.is_some().then(handle_env_var_removal);
     ctx
 }
 
