@@ -14,7 +14,6 @@ pub struct ClapArgsParser {
     cli_parser: Command,
 }
 
-
 impl Default for ClapArgsParser {
     fn default() -> Self {
         Self::new()
@@ -116,7 +115,9 @@ impl ClapArgsParser {
         match error.kind {
             ExitKind::VersionInfos
             | ExitKind::HelpInfos
-            | ExitKind::AuthorInfos => println!("{message}"),
+            | ExitKind::AuthorInfos => {
+                println!("{message}")
+            }
             ExitKind::Error => eprintln!("{message}"),
         }
     }
