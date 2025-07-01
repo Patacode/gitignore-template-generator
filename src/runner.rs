@@ -1,81 +1,78 @@
 //! Define components to process cli args.
 
 use crate::{
-    constant::help_messages,
-    core::{ProgramExit, QualifiedString, TemplateFactory, TemplateManager},
-    parser::Args,
+    core::{
+        GitignoreTemplateManager, ProgramExit, QualifiedString,
+        RemoteGitignoreTemplateManager, TemplateFactory, TemplateManager,
+    },
+    parser::{Action, ArgsParser, ClapArgsParser},
 };
 
-pub enum Action {
-    List,
-    GenerateWithTemplateCheck,
-    Generate,
-}
+pub type RunnerCallback<T, P> = fn(TemplateManagerRunner<T>, P);
+pub type MixedRunnerCallback =
+    RunnerCallback<GitignoreTemplateManager, ClapArgsParser>;
+pub type RemoteRunnerCallback =
+    RunnerCallback<RemoteGitignoreTemplateManager, ClapArgsParser>;
+
+pub type MixedRunner = TemplateManagerRunner<GitignoreTemplateManager>;
+pub type RemoteRunner = TemplateManagerRunner<RemoteGitignoreTemplateManager>;
 
 #[derive(Default)]
-pub struct TemplateManagerRunner<
-    T: TemplateManager + ?Sized,
-    F: TemplateFactory<T>,
-> {
-    _phantom_t: std::marker::PhantomData<T>,
+pub struct TemplateManagerRunner<F: TemplateFactory<dyn TemplateManager>> {
     _phantom_f: std::marker::PhantomData<F>,
 }
 
-impl<T: TemplateManager + ?Sized, F: TemplateFactory<T>>
-    TemplateManagerRunner<T, F>
-{
+impl<F: TemplateFactory<dyn TemplateManager>> TemplateManagerRunner<F> {
     pub fn new() -> Self {
         Self {
-            _phantom_t: std::marker::PhantomData,
             _phantom_f: std::marker::PhantomData,
         }
     }
 
-    pub fn run(&self, args: &Args) -> Result<QualifiedString, ProgramExit> {
-        let manager = F::from_args(args)?;
+    pub fn exec(
+        &self,
+        parser: &impl ArgsParser,
+    ) -> Result<QualifiedString, ProgramExit> {
+        let args = parser.parse(std::env::args_os());
+        let manager = F::from_args(&args)?;
 
         let result = match args.to_action() {
             Action::List => manager.list(),
-            Action::GenerateWithTemplateCheck => {
+            Action::RobustGenerate => {
                 manager.generate_with_template_check(&args.template_names)
             }
             Action::Generate => manager.generate(&args.template_names),
         };
 
-        self.parse_result(result)
+        self.parse_result(&result)
     }
 
     fn parse_result(
         &self,
-        result: Result<QualifiedString, ProgramExit>,
+        result: &Result<QualifiedString, ProgramExit>,
     ) -> Result<QualifiedString, ProgramExit> {
         match result {
-            Ok(output) if output.value.is_empty() => Ok(QualifiedString {
-                value: help_messages::NOTHING_TO_BE_PRINTED.to_string(),
-                kind: output.kind,
-            }),
-            Ok(output) => Ok(output),
-            Err(error) => Err(error),
+            Ok(output) if output.value.is_empty() => {
+                Ok(QualifiedString::empty(output.kind))
+            }
+            Ok(output) => Ok(output.clone()),
+            Err(error) => Err(error.clone()),
         }
     }
 }
 
+pub fn get_parser() -> ClapArgsParser {
+    ClapArgsParser::new()
+}
+
 cfg_if::cfg_if! {
     if #[cfg(feature = "local_templating")] {
-        use crate::core::GitignoreTemplateManager;
-
-        pub fn get_runner() -> TemplateManagerRunner<dyn TemplateManager, GitignoreTemplateManager> {
-            TemplateManagerRunner
-                ::<dyn TemplateManager, GitignoreTemplateManager>
-                ::new()
+        pub fn start(callback: MixedRunnerCallback) {
+            callback(MixedRunner::new(), get_parser());
         }
     } else {
-        use crate::core::RemoteGitignoreTemplateManager;
-
-        pub fn get_runner() -> TemplateManagerRunner<dyn TemplateManager, RemoteGitignoreTemplateManager> {
-            TemplateManagerRunner
-                ::<dyn TemplateManager, RemoteGitignoreTemplateManager>
-                ::new()
+        pub fn start(callback: RemoteRunnerCallback) {
+            callback(RemoteRunner::new(), get_parser());
         }
     }
 }
