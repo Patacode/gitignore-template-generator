@@ -260,7 +260,7 @@ dependencies = ["test-noenv", "test-env"]
 
 [tasks.validate]
 description = "[META TASK] Test—with and without GITIGNORE_TEMPLATE_GENERATOR_HOME env var set—lint, and check format of codebase"
-dependencies = ["test", "lint", "format-check"]
+dependencies = ["test", "lint-build", "format-check"]
 
 [tasks.trello]
 description = "[META TASK] Update state of Trello board associated to this project to reflect new version release"
