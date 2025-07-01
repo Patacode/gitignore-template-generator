@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.14.4] - 2025-07-01 <a id="0.14.4"></a>
+
 ### 🚀 Features
 
 - [lib] - Add printer module to handle printing logic
