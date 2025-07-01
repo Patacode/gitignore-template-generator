@@ -18,6 +18,11 @@ pub enum Action {
     Generate,
 }
 
+pub struct CliOptionName {
+    pub short: char,
+    pub long: &'static str,
+}
+
 /// Struct to gather cli args parsing result.
 ///
 /// Used by [`crate::parser::ArgsParser`] implementations to store

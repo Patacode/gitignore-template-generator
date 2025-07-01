@@ -135,7 +135,7 @@ pub mod help_texts {
 pub mod cli_options {
     //! Constants for short and long cli options specifier.
 
-    use crate::helper::CliOptionName;
+    use crate::parser::CliOptionName;
 
     /// Short and long specifier for author option.
     ///

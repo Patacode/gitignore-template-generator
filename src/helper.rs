@@ -6,11 +6,6 @@ use std::{borrow::Cow, ffi::OsString, fs};
 
 use crate::{constant, core::QualifiedString};
 
-pub struct CliOptionName {
-    pub short: char,
-    pub long: &'static str,
-}
-
 pub fn load_expectation_file_as_string(expectation_file_name: &str) -> String {
     let expectation_file_path = format!(
         "{}/{}/{expectation_file_name}.txt",
