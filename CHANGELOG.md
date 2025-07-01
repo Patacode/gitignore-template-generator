@@ -9,6 +9,10 @@ and this project adheres to
 [comment]: <> (@PlannedForNextRelease)
 ## [@Unreleased] - @ReleaseDate
 
+@Content
+
+## [0.14.5] - 2025-07-01 <a id="0.14.5"></a>
+
 ### 🚜 Refactor
 
 - [test_helper] - Update and streamline module design
