@@ -41,17 +41,13 @@ impl CliArgsValidator for DefaultCliArgsValidator {
 
     fn has_valid_template_name(value: &str) -> Result<String, String> {
         match Self::has_no_commas(value) {
-            Ok(no_commas_value) => {
-                match Self::has_no_whitespaces(&no_commas_value) {
-                    Ok(clean_value) => Ok(clean_value),
-                    Err(whitespaces_error) => Err(whitespaces_error),
-                }
-            }
+            Ok(no_commas_value) => match Self::has_no_whitespaces(&no_commas_value) {
+                Ok(clean_value) => Ok(clean_value),
+                Err(whitespaces_error) => Err(whitespaces_error),
+            },
             Err(commas_error) => match Self::has_no_whitespaces(value) {
                 Ok(_) => Err(commas_error),
-                Err(whitespaces_error) => {
-                    Err(format!("{} + {}", commas_error, whitespaces_error))
-                }
+                Err(whitespaces_error) => Err(format!("{} + {}", commas_error, whitespaces_error)),
             },
         }
     }
@@ -69,8 +65,7 @@ impl CliArgsValidator for DefaultCliArgsValidator {
     fn is_valid_url(value: &str) -> Result<String, String> {
         match Url::parse(value) {
             Ok(valid_url) => {
-                if valid_url.scheme() == "https" || valid_url.scheme() == "http"
-                {
+                if valid_url.scheme() == "https" || valid_url.scheme() == "http" {
                     Ok(value.to_string())
                 } else {
                     Err(String::from(constant::error_messages::INVALID_URL))

@@ -52,17 +52,14 @@ fn benchmark_template_generation(c: &mut Criterion) {
     let mock_server = setup_mock_server();
     let mock_server_base_url = mock_server.url();
 
-    let mut template_generation_group =
-        c.benchmark_group("template/generation");
+    let mut template_generation_group = c.benchmark_group("template/generation");
 
-    template_generation_group
-        .bench_function("Template generation without robust check", |b| {
-            b.iter(|| generate_template(&mock_server_base_url, false))
-        });
-    template_generation_group
-        .bench_function("Template generation with robust check", |b| {
-            b.iter(|| generate_template(&mock_server_base_url, true))
-        });
+    template_generation_group.bench_function("Template generation without robust check", |b| {
+        b.iter(|| generate_template(&mock_server_base_url, false))
+    });
+    template_generation_group.bench_function("Template generation with robust check", |b| {
+        b.iter(|| generate_template(&mock_server_base_url, true))
+    });
 
     template_generation_group.finish();
 }

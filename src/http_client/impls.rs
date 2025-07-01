@@ -44,13 +44,13 @@ impl HttpClient for UreqHttpClient {
     fn get(&self, url: &str) -> Result<String, ProgramExit> {
         let full_url = format!("{}{url}", self.server_url);
         let agent: Agent = Agent::config_builder()
-            .timeout_global(Some(self.global_timeout.unwrap_or(
-                Duration::from_secs(
-                    constant::template_manager::TIMEOUT.parse().expect(
-                        constant::error_messages::FAILED_U64_CONVERSION,
-                    ),
-                ),
-            )))
+            .timeout_global(Some(
+                self.global_timeout.unwrap_or(Duration::from_secs(
+                    constant::template_manager::TIMEOUT
+                        .parse()
+                        .expect(constant::error_messages::FAILED_U64_CONVERSION),
+                )),
+            ))
             .build()
             .into();
 

@@ -122,11 +122,8 @@ mod success {
                 .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_output = parse_bytes(&result.stdout);
-            let expected_output = format!(
-                "{} {}\n",
-                env!("CARGO_PKG_NAME"),
-                env!("CARGO_PKG_VERSION"),
-            );
+            let expected_output =
+                format!("{} {}\n", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"),);
 
             assert!(result.status.success());
             assert_eq!(actual_output, expected_output);
@@ -510,16 +507,14 @@ mod failure {
             fn it_outputs_error_and_fails_when_server_not_found() {
                 let mut cli_tools = get_test_bin(env!("CARGO_PKG_NAME"));
 
-                cli_tools
-                    .args(parse_pos_args("-s https://fjizefhize.com rust"));
+                cli_tools.args(parse_pos_args("-s https://fjizefhize.com rust"));
                 let result = cli_tools
                     .output()
                     .expect(constant::error_messages::CMD_EXECUTION_FAILURE);
 
                 let actual_output = parse_bytes(&result.stderr);
                 let expected_output =
-                    load_expectation_file_as_string("server_not_found_error")
-                        + "\n";
+                    load_expectation_file_as_string("server_not_found_error") + "\n";
 
                 let actual_status_code = result.status.code();
                 let expected_status_code = Some(constant::exit_status::GENERIC);

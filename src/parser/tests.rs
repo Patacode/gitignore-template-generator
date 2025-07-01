@@ -37,11 +37,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: format!(
-                        "{} {}",
-                        env!("CARGO_PKG_NAME"),
-                        env!("CARGO_PKG_VERSION")
-                    ),
+                    message: format!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION")),
                     exit_status: 0,
                     styled_message: None,
                     kind: ExitKind::VersionInfos,
@@ -94,9 +90,7 @@ mod default_args_parser {
             #[case("rust -t 5 -a")]
             #[case("rust -u second -a")]
             #[case("rust -l -a")]
-            fn it_parses_author_cli_option_preemptively(
-                #[case] cli_args: &str,
-            ) {
+            fn it_parses_author_cli_option_preemptively(#[case] cli_args: &str) {
                 let cli_args = parse_cli_args(cli_args);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
@@ -116,15 +110,12 @@ mod default_args_parser {
             #[rstest]
             #[case("rust")]
             #[case("rust python node")]
-            fn it_parses_pos_args_without_server_url_cli_option(
-                #[case] cli_options: &str,
-            ) {
+            fn it_parses_pos_args_without_server_url_cli_option(#[case] cli_options: &str) {
                 let cli_args = parse_cli_args(cli_options);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
-                let expected_result = Args::new()
-                    .with_template_names(make_string_vec(cli_options));
+                let expected_result = Args::new().with_template_names(make_string_vec(cli_options));
                 let expected_result = Some(&expected_result);
 
                 println!("{:?}", parsed_args);
@@ -135,9 +126,7 @@ mod default_args_parser {
             #[rstest]
             #[case("rust -s https://test.com")]
             #[case("rust --server-url https://test.com")]
-            fn it_parses_pos_args_with_server_url_cli_option(
-                #[case] cli_args: &str,
-            ) {
+            fn it_parses_pos_args_with_server_url_cli_option(#[case] cli_args: &str) {
                 let cli_args = parse_cli_args(cli_args);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
@@ -154,9 +143,7 @@ mod default_args_parser {
             #[rstest]
             #[case("rust -g /test/api")]
             #[case("rust --generator-uri /test/api")]
-            fn it_parses_pos_args_with_generator_uri_cli_option(
-                #[case] cli_args: &str,
-            ) {
+            fn it_parses_pos_args_with_generator_uri_cli_option(#[case] cli_args: &str) {
                 let cli_args = parse_cli_args(cli_args);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
@@ -174,9 +161,7 @@ mod default_args_parser {
             #[rstest]
             #[case("rust -i /test/api")]
             #[case("rust --lister-uri /test/api")]
-            fn it_parses_pos_args_with_lister_uri_cli_option(
-                #[case] cli_args: &str,
-            ) {
+            fn it_parses_pos_args_with_lister_uri_cli_option(#[case] cli_args: &str) {
                 let cli_args = parse_cli_args(cli_args);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
@@ -195,10 +180,7 @@ mod default_args_parser {
             #[case("--list", "")]
             #[case("rust --list", "rust")]
             #[case("rust python --list", "rust python")]
-            fn it_parses_list_cli_option(
-                #[case] cli_args: &str,
-                #[case] template_names: &str,
-            ) {
+            fn it_parses_list_cli_option(#[case] cli_args: &str, #[case] template_names: &str) {
                 let cli_args = parse_cli_args(cli_args);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
@@ -248,14 +230,8 @@ mod default_args_parser {
 
             #[rstest]
             #[case("rust python -u second", TimeoutUnit::SECOND)]
-            #[case(
-                "rust python --timeout-unit millisecond",
-                TimeoutUnit::MILLISECOND
-            )]
-            fn it_parses_timeout_unit_option(
-                #[case] cli_args: &str,
-                #[case] unit: TimeoutUnit,
-            ) {
+            #[case("rust python --timeout-unit millisecond", TimeoutUnit::MILLISECOND)]
+            fn it_parses_timeout_unit_option(#[case] cli_args: &str, #[case] unit: TimeoutUnit) {
                 let cli_args = parse_cli_args(cli_args);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
@@ -285,14 +261,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "no_pos_args_error",
-                    ),
+                    message: load_expectation_file_as_string("no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(load_expectation_file_as_string(
-                        "ansi_no_pos_args_error",
-                    )),
+                    styled_message: Some(load_expectation_file_as_string("ansi_no_pos_args_error")),
                     kind: ExitKind::Error,
                 };
                 let expected_error = Some(&expected_error);
@@ -308,9 +280,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "comma_pos_args_error",
-                    ),
+                    message: load_expectation_file_as_string("comma_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
                     styled_message: Some(load_expectation_file_as_string(
@@ -326,17 +296,12 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_whitespaces_in_pos_args() {
-                let cli_args = vec![
-                    OsString::from(env!("CARGO_PKG_NAME")),
-                    OsString::from("r "),
-                ];
+                let cli_args = vec![OsString::from(env!("CARGO_PKG_NAME")), OsString::from("r ")];
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "whitespace_pos_args_error",
-                    ),
+                    message: load_expectation_file_as_string("whitespace_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
                     styled_message: Some(load_expectation_file_as_string(
@@ -360,9 +325,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "comma_whitespace_pos_args_error",
-                    ),
+                    message: load_expectation_file_as_string("comma_whitespace_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
                     styled_message: Some(load_expectation_file_as_string(
@@ -383,9 +346,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "server_url_no_pos_args_error",
-                    ),
+                    message: load_expectation_file_as_string("server_url_no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
                     styled_message: Some(load_expectation_file_as_string(
@@ -406,9 +367,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "generator_uri_no_pos_args_error",
-                    ),
+                    message: load_expectation_file_as_string("generator_uri_no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
                     styled_message: Some(load_expectation_file_as_string(
@@ -429,9 +388,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "lister_uri_no_pos_args_error",
-                    ),
+                    message: load_expectation_file_as_string("lister_uri_no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
                     styled_message: Some(load_expectation_file_as_string(
@@ -452,9 +409,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "check_option_no_pos_args_error",
-                    ),
+                    message: load_expectation_file_as_string("check_option_no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
                     styled_message: Some(load_expectation_file_as_string(
@@ -475,9 +430,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "unexpected_argument_error",
-                    ),
+                    message: load_expectation_file_as_string("unexpected_argument_error"),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(load_expectation_file_as_string(
                         "ansi_unexpected_argument_error",
@@ -497,9 +450,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "non_integer_timeout_error",
-                    ),
+                    message: load_expectation_file_as_string("non_integer_timeout_error"),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(load_expectation_file_as_string(
                         "ansi_non_integer_timeout_error",
@@ -519,9 +470,7 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "non_allowed_timeout_unit_error",
-                    ),
+                    message: load_expectation_file_as_string("non_allowed_timeout_unit_error"),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(load_expectation_file_as_string(
                         "ansi_non_allowed_timeout_unit_error",
@@ -539,10 +488,7 @@ mod default_args_parser {
             #[case("-g /bar -g /foo", "--generator-uri <GENERATOR_URI>")]
             #[case("-ll", "--list")]
             #[case("-i /bar -i /foo", "--lister-uri <LISTER_URI>")]
-            #[case(
-                "-s https://foo.com -s https://bar.com",
-                "--server-url <SERVER_URL>"
-            )]
+            #[case("-s https://foo.com -s https://bar.com", "--server-url <SERVER_URL>")]
             #[case("-t1 -t2", "--timeout <TIMEOUT>")]
             #[case("-u millisecond -u second", "--timeout-unit <TIMEOUT_UNIT>")]
             #[case("-hh", "--help")]
@@ -557,16 +503,12 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "given_multiple_times_error",
-                    )
-                    .replace("{argument_name}", option_name),
+                    message: load_expectation_file_as_string("given_multiple_times_error")
+                        .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        load_expectation_file_as_string(
-                            "ansi_given_multiple_times_error",
-                        )
-                        .replace("{argument_name}", option_name),
+                        load_expectation_file_as_string("ansi_given_multiple_times_error")
+                            .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
                 };
@@ -591,16 +533,12 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "boolean_option_with_value_error",
-                    )
-                    .replace("{argument_name}", option_name),
+                    message: load_expectation_file_as_string("boolean_option_with_value_error")
+                        .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        load_expectation_file_as_string(
-                            "ansi_boolean_option_with_value_error",
-                        )
-                        .replace("{argument_name}", option_name),
+                        load_expectation_file_as_string("ansi_boolean_option_with_value_error")
+                            .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
                 };
@@ -622,16 +560,12 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "uri_without_starting_slash_error",
-                    )
-                    .replace("{argument_name}", option_name),
+                    message: load_expectation_file_as_string("uri_without_starting_slash_error")
+                        .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        load_expectation_file_as_string(
-                            "ansi_uri_without_starting_slash_error",
-                        )
-                        .replace("{argument_name}", option_name),
+                        load_expectation_file_as_string("ansi_uri_without_starting_slash_error")
+                            .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
                 };
@@ -653,16 +587,12 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: load_expectation_file_as_string(
-                        "invalid_url_error",
-                    )
-                    .replace("{input_value}", invalid_value),
+                    message: load_expectation_file_as_string("invalid_url_error")
+                        .replace("{input_value}", invalid_value),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        load_expectation_file_as_string(
-                            "ansi_invalid_url_error",
-                        )
-                        .replace("{input_value}", invalid_value),
+                        load_expectation_file_as_string("ansi_invalid_url_error")
+                            .replace("{input_value}", invalid_value),
                     ),
                     kind: ExitKind::Error,
                 };

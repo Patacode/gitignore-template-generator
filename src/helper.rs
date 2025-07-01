@@ -25,8 +25,7 @@ pub fn load_expectation_file_as_string(expectation_file_name: &str) -> String {
 pub fn load_resource(resource_name: &str) -> String {
     let resource_path = get_resource_path(resource_name);
 
-    fs::read_to_string(resource_path)
-        .expect(constant::error_messages::FILE_READ_TO_STRING_FAILURE)
+    fs::read_to_string(resource_path).expect(constant::error_messages::FILE_READ_TO_STRING_FAILURE)
 }
 
 pub fn get_resource_path(resource_name: &str) -> String {
@@ -182,11 +181,7 @@ pub fn capitalize(s: &str) -> String {
     }
 }
 
-pub fn insert_at(
-    l: &mut Vec<QualifiedString>,
-    idx: usize,
-    val: QualifiedString,
-) {
+pub fn insert_at(l: &mut Vec<QualifiedString>, idx: usize, val: QualifiedString) {
     let mut tail = l.split_off(idx);
     l.push(val);
     l.append(&mut tail);

@@ -40,7 +40,7 @@
     "venv"
   ],
   "editor.rulers": [
-    80
+    100
   ],
   "conventionalCommits.scopes": [
     "changelog",

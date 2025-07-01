@@ -31,10 +31,8 @@ mod ureq_client {
                 let server_url = mock_server.url();
                 let http_client = UreqHttpClient::default();
 
-                let actual =
-                    http_client.get(&format!("{server_url}{mock_uri}"));
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(mock_body));
+                let actual = http_client.get(&format!("{server_url}{mock_uri}"));
+                let expected: Result<String, ProgramExit> = Ok(String::from(mock_body));
 
                 mock.assert();
                 assert_eq!(actual, expected);
@@ -58,8 +56,7 @@ mod ureq_client {
                 };
 
                 let actual = http_client.get(mock_uri);
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(mock_body));
+                let expected: Result<String, ProgramExit> = Ok(String::from(mock_body));
 
                 mock.assert();
                 assert_eq!(actual, expected);
@@ -83,8 +80,7 @@ mod ureq_client {
                 };
 
                 let actual = http_client.get(mock_uri);
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(mock_body));
+                let expected: Result<String, ProgramExit> = Ok(String::from(mock_body));
 
                 mock.assert();
                 assert_eq!(actual, expected);
@@ -108,8 +104,7 @@ mod ureq_client {
                 let server_url = mock_server.url();
                 let http_client = UreqHttpClient::default();
 
-                let actual =
-                    http_client.get(&format!("{server_url}{mock_uri}"));
+                let actual = http_client.get(&format!("{server_url}{mock_uri}"));
                 let expected: Result<String, ProgramExit> = Err(ProgramExit {
                     message: constant::error_messages::API_CALL_FAILURE
                         .replace("{error}", constant::error_messages::HTTP_400),
@@ -136,12 +131,9 @@ mod ureq_client {
                 let server_url = mock_server.url();
                 let http_client = UreqHttpClient::default();
 
-                let actual =
-                    http_client.get(&format!("{server_url}{mock_uri}"));
+                let actual = http_client.get(&format!("{server_url}{mock_uri}"));
                 let expected: Result<String, ProgramExit> = Err(ProgramExit {
-                    message: String::from(
-                        constant::error_messages::INVALID_ENCODING,
-                    ),
+                    message: String::from(constant::error_messages::INVALID_ENCODING),
                     exit_status: constant::exit_status::HTTP_CLIENT_ERROR,
                     styled_message: None,
                     kind: ExitKind::Error,
@@ -171,8 +163,7 @@ mod mock_client {
                 };
 
                 let actual = http_client.get("/api/rust");
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(result_content));
+                let expected: Result<String, ProgramExit> = Ok(String::from(result_content));
 
                 assert_eq!(actual, expected);
             }
@@ -230,8 +221,7 @@ mod mock_endpoint_http_client {
                 };
 
                 let actual = http_client.get("/api/rust");
-                let expected: Result<String, ProgramExit> =
-                    Ok(String::from(rust_result_content));
+                let expected: Result<String, ProgramExit> = Ok(String::from(rust_result_content));
 
                 assert_eq!(actual, expected);
             }

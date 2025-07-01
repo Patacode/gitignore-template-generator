@@ -1,15 +1,12 @@
 use std::{collections::HashSet, io::ErrorKind, time::Duration};
 
 use super::{
-    ExitKind, ProgramExit, QualifiedString, StringKind, TemplateGenerator,
-    TemplateLister,
+    ExitKind, ProgramExit, QualifiedString, StringKind, TemplateGenerator, TemplateLister,
 };
 use crate::{
     constant::{
         self, error_messages, exit_status,
-        template_manager::{
-            DEFAULT_TEMPLATE_DIR, GENERATOR_URI, HOME_ENV_VAR, LISTER_URI,
-        },
+        template_manager::{DEFAULT_TEMPLATE_DIR, GENERATOR_URI, HOME_ENV_VAR, LISTER_URI},
     },
     core::{TemplateFactory, TemplateManager},
     fs::{DirectoryHandler, FileSystemHandler},
@@ -101,10 +98,7 @@ impl GitignoreTemplateManager {
         }
     }
 
-    fn map_lines_to_qstrs(
-        value: &str,
-        kind: StringKind,
-    ) -> Vec<QualifiedString> {
+    fn map_lines_to_qstrs(value: &str, kind: StringKind) -> Vec<QualifiedString> {
         value
             .lines()
             .map(|tt| QualifiedString {
@@ -114,11 +108,7 @@ impl GitignoreTemplateManager {
             .collect()
     }
 
-    fn smap_lines_to_qstrs(
-        value: &str,
-        kind: StringKind,
-        skip: usize,
-    ) -> Vec<QualifiedString> {
+    fn smap_lines_to_qstrs(value: &str, kind: StringKind, skip: usize) -> Vec<QualifiedString> {
         value
             .lines()
             .skip(skip)
@@ -137,8 +127,9 @@ impl GitignoreTemplateManager {
 
         let flist_res = list_results.first().unwrap();
         match flist_res {
-            Ok(list) if !list.value.is_empty() => lines_res
-                .append(&mut Self::map_lines_to_qstrs(&list.value, list.kind)),
+            Ok(list) if !list.value.is_empty() => {
+                lines_res.append(&mut Self::map_lines_to_qstrs(&list.value, list.kind))
+            }
             Err(error) => errors.push(error.clone()),
             _ => {}
         }
@@ -148,20 +139,14 @@ impl GitignoreTemplateManager {
                 Ok(list) if errors.is_empty() && !list.value.is_empty() => {
                     // got list lines but nothing in lines res yet
                     if lines_res.is_empty() {
-                        lines_res.append(&mut Self::map_lines_to_qstrs(
-                            &list.value,
-                            list.kind,
-                        ));
+                        lines_res.append(&mut Self::map_lines_to_qstrs(&list.value, list.kind));
                         continue;
                     }
 
                     // got first line lex higher than last lines res
                     let flist_line = list.value.lines().next().unwrap();
                     if flist_line >= lines_res.last().unwrap().value.as_str() {
-                        lines_res.append(&mut Self::map_lines_to_qstrs(
-                            &list.value,
-                            list.kind,
-                        ));
+                        lines_res.append(&mut Self::map_lines_to_qstrs(&list.value, list.kind));
                         continue;
                     }
 
@@ -273,8 +258,7 @@ impl LocalGitignoreTemplateManager {
                 Err(error) => {
                     let error_message = match error.kind() {
                         ErrorKind::NotFound => {
-                            constant::error_messages::UNSUPPORTED_TEMPLATE
-                                .into()
+                            constant::error_messages::UNSUPPORTED_TEMPLATE.into()
                         }
                         _ => error.to_string(),
                     };
@@ -305,10 +289,8 @@ impl RemoteGitignoreTemplateManager {
     ) -> Self {
         Self {
             http_client,
-            generator_endpoint_uri: generator_endpoint_uri
-                .unwrap_or(GENERATOR_URI.to_string()),
-            lister_endpoint_uri: lister_endpoint_uri
-                .unwrap_or(LISTER_URI.to_string()),
+            generator_endpoint_uri: generator_endpoint_uri.unwrap_or(GENERATOR_URI.to_string()),
+            lister_endpoint_uri: lister_endpoint_uri.unwrap_or(LISTER_URI.to_string()),
         }
     }
 
@@ -321,11 +303,11 @@ impl TemplateManager for GitignoreTemplateManager {}
 
 impl TemplateLister for GitignoreTemplateManager {
     fn list(&self) -> Result<QualifiedString, ProgramExit> {
-        let template_list_results: Vec<Result<QualifiedString, ProgramExit>> =
-            self.template_managers
-                .iter()
-                .map(|template_manager| template_manager.list())
-                .collect();
+        let template_list_results: Vec<Result<QualifiedString, ProgramExit>> = self
+            .template_managers
+            .iter()
+            .map(|template_manager| template_manager.list())
+            .collect();
 
         if template_list_results.is_empty() {
             return Ok(QualifiedString {
@@ -359,18 +341,14 @@ impl TemplateFactory<dyn TemplateManager> for GitignoreTemplateManager {
     fn from_args(args: &Args) -> Result<Box<dyn TemplateManager>, ProgramExit> {
         let local_manager = LocalGitignoreTemplateManager::from_args(args)?;
         let remote_manager = RemoteGitignoreTemplateManager::from_args(args)?;
-        let managers: Vec<Box<dyn TemplateManager>> =
-            vec![local_manager, remote_manager];
+        let managers: Vec<Box<dyn TemplateManager>> = vec![local_manager, remote_manager];
 
         Ok(Box::new(GitignoreTemplateManager::new(managers)))
     }
 }
 
 impl TemplateGenerator for GitignoreTemplateManager {
-    fn generate(
-        &self,
-        template_names: &[String],
-    ) -> Result<QualifiedString, ProgramExit> {
+    fn generate(&self, template_names: &[String]) -> Result<QualifiedString, ProgramExit> {
         let mut processed_templates: HashSet<String> = HashSet::new();
         let template_results: Vec<Result<QualifiedString, ProgramExit>> = self
             .template_managers
@@ -380,18 +358,14 @@ impl TemplateGenerator for GitignoreTemplateManager {
                     let templates_to_process: Vec<String> = supported_templates
                         .value
                         .lines()
-                        .filter(|line| {
-                            template_names.contains(&line.to_string())
-                        })
+                        .filter(|line| template_names.contains(&line.to_string()))
                         .map(|line| line.to_string())
                         .collect();
 
-                    let result =
-                        template_manager.generate(&templates_to_process);
+                    let result = template_manager.generate(&templates_to_process);
                     if result.is_ok() {
                         templates_to_process.iter().for_each(|template_name| {
-                            processed_templates
-                                .insert(template_name.to_string());
+                            processed_templates.insert(template_name.to_string());
                         });
                     }
                     result
@@ -408,16 +382,13 @@ impl TemplateGenerator for GitignoreTemplateManager {
         }
 
         if template_results.iter().all(|result| result.clone().is_ok())
-            && !HashSet::from_iter(
-                template_names.iter().map(|tt| tt.to_string()),
-            )
-            .difference(&processed_templates)
-            .collect::<HashSet<&String>>()
-            .is_empty()
+            && !HashSet::from_iter(template_names.iter().map(|tt| tt.to_string()))
+                .difference(&processed_templates)
+                .collect::<HashSet<&String>>()
+                .is_empty()
         {
             return Err(ProgramExit {
-                message: constant::error_messages::UNSUPPORTED_TEMPLATE
-                    .to_string(),
+                message: constant::error_messages::UNSUPPORTED_TEMPLATE.to_string(),
                 exit_status: constant::exit_status::GENERIC,
                 styled_message: None,
                 kind: ExitKind::Error,
@@ -438,32 +409,28 @@ impl TemplateGenerator for GitignoreTemplateManager {
         available_templates.clone()?;
 
         let invalid_template_names = find_invalid_templates(
-            &Self::postprocess_template_list_result(
-                &available_templates.unwrap().value,
-            ),
+            &Self::postprocess_template_list_result(&available_templates.unwrap().value),
             template_names,
         );
 
         if invalid_template_names.is_empty() {
-            let template_results: Vec<Result<QualifiedString, ProgramExit>> =
-                self.template_managers
-                    .iter()
-                    .map(|tpl_mgr| match tpl_mgr.list() {
-                        Ok(list) => {
-                            let templates_to_process: Vec<String> = list
-                                .value
-                                .lines()
-                                .filter(|line| {
-                                    template_names.contains(&line.to_string())
-                                })
-                                .map(|line| line.to_string())
-                                .collect();
+            let template_results: Vec<Result<QualifiedString, ProgramExit>> = self
+                .template_managers
+                .iter()
+                .map(|tpl_mgr| match tpl_mgr.list() {
+                    Ok(list) => {
+                        let templates_to_process: Vec<String> = list
+                            .value
+                            .lines()
+                            .filter(|line| template_names.contains(&line.to_string()))
+                            .map(|line| line.to_string())
+                            .collect();
 
-                            tpl_mgr.generate(&templates_to_process)
-                        }
-                        Err(error) => Err(error),
-                    })
-                    .collect();
+                        tpl_mgr.generate(&templates_to_process)
+                    }
+                    Err(error) => Err(error),
+                })
+                .collect();
 
             if template_results.is_empty() {
                 return Ok(QualifiedString {
@@ -479,10 +446,7 @@ impl TemplateGenerator for GitignoreTemplateManager {
         } else {
             Err(ProgramExit {
                 message: constant::error_messages::INEXISTENT_TEMPLATE_NAMES
-                    .replace(
-                        "{templates}",
-                        invalid_template_names.join(", ").as_str(),
-                    ),
+                    .replace("{templates}", invalid_template_names.join(", ").as_str()),
                 exit_status: constant::exit_status::GENERIC,
                 styled_message: None,
                 kind: ExitKind::Error,
@@ -515,11 +479,7 @@ impl TemplateLister for LocalGitignoreTemplateManager {
                     kind: StringKind::Local,
                 }),
                 _ => Err(ProgramExit {
-                    message: format!(
-                        "{}: {}",
-                        constant::error_messages::LOCAL_LISTING,
-                        error
-                    ),
+                    message: format!("{}: {}", constant::error_messages::LOCAL_LISTING, error),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: None,
                     kind: ExitKind::Error,
@@ -530,16 +490,13 @@ impl TemplateLister for LocalGitignoreTemplateManager {
 }
 
 impl TemplateFactory<dyn TemplateManager> for LocalGitignoreTemplateManager {
-    fn from_args(
-        _args: &Args,
-    ) -> Result<Box<dyn TemplateManager>, ProgramExit> {
+    fn from_args(_args: &Args) -> Result<Box<dyn TemplateManager>, ProgramExit> {
         match std::env::var("HOME") {
-            Ok(home_path) => Ok(Box::new(LocalGitignoreTemplateManager::new(
-                Some(DEFAULT_TEMPLATE_DIR.replace("{home}", &home_path)),
-            ))),
+            Ok(home_path) => Ok(Box::new(LocalGitignoreTemplateManager::new(Some(
+                DEFAULT_TEMPLATE_DIR.replace("{home}", &home_path),
+            )))),
             Err(error) => Err(ProgramExit {
-                message: error_messages::READ_HOME_ENV_VAR
-                    .replace("{error}", &error.to_string()),
+                message: error_messages::READ_HOME_ENV_VAR.replace("{error}", &error.to_string()),
                 exit_status: exit_status::GENERIC,
                 styled_message: None,
                 kind: ExitKind::Error,
@@ -549,19 +506,13 @@ impl TemplateFactory<dyn TemplateManager> for LocalGitignoreTemplateManager {
 }
 
 impl TemplateGenerator for LocalGitignoreTemplateManager {
-    fn generate(
-        &self,
-        template_names: &[String],
-    ) -> Result<QualifiedString, ProgramExit> {
+    fn generate(&self, template_names: &[String]) -> Result<QualifiedString, ProgramExit> {
         let template_dir = match std::env::var(HOME_ENV_VAR) {
             Ok(directory_path) => directory_path,
             Err(_) => self.default_template_dir.clone(),
         };
 
-        let templates = Self::map_template_names_to_their_content(
-            &template_dir,
-            template_names,
-        )?;
+        let templates = Self::map_template_names_to_their_content(&template_dir, template_names)?;
 
         Ok(QualifiedString {
             value: templates.join("\n\n"),
@@ -576,20 +527,15 @@ impl TemplateGenerator for LocalGitignoreTemplateManager {
         let available_templates = self.list();
         available_templates.clone()?;
 
-        let invalid_template_names = find_invalid_templates(
-            &available_templates.unwrap().value,
-            template_names,
-        );
+        let invalid_template_names =
+            find_invalid_templates(&available_templates.unwrap().value, template_names);
 
         if invalid_template_names.is_empty() {
             self.generate(template_names)
         } else {
             Err(ProgramExit {
                 message: constant::error_messages::INEXISTENT_TEMPLATE_NAMES
-                    .replace(
-                        "{templates}",
-                        invalid_template_names.join(", ").as_str(),
-                    ),
+                    .replace("{templates}", invalid_template_names.join(", ").as_str()),
                 exit_status: constant::exit_status::GENERIC,
                 styled_message: None,
                 kind: ExitKind::Error,
@@ -630,10 +576,7 @@ impl TemplateFactory<dyn TemplateManager> for RemoteGitignoreTemplateManager {
 }
 
 impl TemplateGenerator for RemoteGitignoreTemplateManager {
-    fn generate(
-        &self,
-        template_names: &[String],
-    ) -> Result<QualifiedString, ProgramExit> {
+    fn generate(&self, template_names: &[String]) -> Result<QualifiedString, ProgramExit> {
         if template_names.is_empty() {
             return Ok(QualifiedString {
                 value: String::new(),
@@ -660,20 +603,15 @@ impl TemplateGenerator for RemoteGitignoreTemplateManager {
         let available_templates = self.list();
         available_templates.clone()?;
 
-        let invalid_template_names = find_invalid_templates(
-            &available_templates.unwrap().value,
-            template_names,
-        );
+        let invalid_template_names =
+            find_invalid_templates(&available_templates.unwrap().value, template_names);
 
         if invalid_template_names.is_empty() {
             self.generate(template_names)
         } else {
             Err(ProgramExit {
                 message: constant::error_messages::INEXISTENT_TEMPLATE_NAMES
-                    .replace(
-                        "{templates}",
-                        invalid_template_names.join(", ").as_str(),
-                    ),
+                    .replace("{templates}", invalid_template_names.join(", ").as_str()),
                 exit_status: constant::exit_status::GENERIC,
                 styled_message: None,
                 kind: ExitKind::Error,

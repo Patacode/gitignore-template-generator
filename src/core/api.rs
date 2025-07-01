@@ -1,6 +1,5 @@
 pub use crate::core::impls::{
-    GitignoreTemplateManager, LocalGitignoreTemplateManager,
-    RemoteGitignoreTemplateManager,
+    GitignoreTemplateManager, LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager,
 };
 use crate::{constant::help_messages, parser::Args};
 
@@ -76,10 +75,7 @@ pub trait TemplateGenerator: TemplateLister {
     ///
     /// A result containing the generated template on success, or a
     /// [`ProgramExit`] on error (e.g. 4xx, network issues...).
-    fn generate(
-        &self,
-        template_names: &[String],
-    ) -> Result<QualifiedString, ProgramExit>;
+    fn generate(&self, template_names: &[String]) -> Result<QualifiedString, ProgramExit>;
 
     /// Generates a string template matching given template names, with robust
     /// template names check.

@@ -30,9 +30,8 @@ mod default_cli_args_validator {
             fn it_returns_error_for_values_with_commas() {
                 let value = "r,ust";
 
-                let expected: Result<String, String> = Err(String::from(
-                    constant::error_messages::COMMAS_NOT_ALLOWED,
-                ));
+                let expected: Result<String, String> =
+                    Err(String::from(constant::error_messages::COMMAS_NOT_ALLOWED));
                 let actual = DefaultCliArgsValidator::has_no_commas(value);
 
                 assert_eq!(actual, expected);
@@ -85,8 +84,7 @@ mod default_cli_args_validator {
                 let value = "rust";
 
                 let expected: Result<String, String> = Ok(String::from(value));
-                let actual =
-                    DefaultCliArgsValidator::has_valid_template_name(value);
+                let actual = DefaultCliArgsValidator::has_valid_template_name(value);
 
                 assert_eq!(actual, expected);
             }
@@ -102,8 +100,7 @@ mod default_cli_args_validator {
                 let expected: Result<String, String> = Err(String::from(
                     constant::error_messages::WHITESPACES_NOT_ALLOWED,
                 ));
-                let actual =
-                    DefaultCliArgsValidator::has_valid_template_name(value);
+                let actual = DefaultCliArgsValidator::has_valid_template_name(value);
 
                 assert_eq!(actual, expected);
             }
@@ -112,11 +109,9 @@ mod default_cli_args_validator {
             fn it_returns_error_for_values_with_commas() {
                 let value = "r,ust";
 
-                let expected: Result<String, String> = Err(String::from(
-                    constant::error_messages::COMMAS_NOT_ALLOWED,
-                ));
-                let actual =
-                    DefaultCliArgsValidator::has_valid_template_name(value);
+                let expected: Result<String, String> =
+                    Err(String::from(constant::error_messages::COMMAS_NOT_ALLOWED));
+                let actual = DefaultCliArgsValidator::has_valid_template_name(value);
 
                 assert_eq!(actual, expected);
             }
@@ -130,8 +125,7 @@ mod default_cli_args_validator {
                     constant::error_messages::COMMAS_NOT_ALLOWED,
                     constant::error_messages::WHITESPACES_NOT_ALLOWED,
                 ));
-                let actual =
-                    DefaultCliArgsValidator::has_valid_template_name(value);
+                let actual = DefaultCliArgsValidator::has_valid_template_name(value);
 
                 assert_eq!(actual, expected);
             }
@@ -149,8 +143,7 @@ mod default_cli_args_validator {
                 let value = "/valid/uri";
 
                 let expected: Result<String, String> = Ok(String::from(value));
-                let actual =
-                    DefaultCliArgsValidator::is_starting_with_slash(value);
+                let actual = DefaultCliArgsValidator::is_starting_with_slash(value);
 
                 assert_eq!(actual, expected);
             }
@@ -164,9 +157,7 @@ mod default_cli_args_validator {
                 let expected: Result<String, String> = Err(String::from(
                     constant::error_messages::URI_WITHOUT_STARTING_SLASH,
                 ));
-                let actual = DefaultCliArgsValidator::is_starting_with_slash(
-                    "invalid/uri",
-                );
+                let actual = DefaultCliArgsValidator::is_starting_with_slash("invalid/uri");
 
                 assert_eq!(actual, expected);
             }

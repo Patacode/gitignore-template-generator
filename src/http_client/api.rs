@@ -1,7 +1,5 @@
 use crate::core::ProgramExit;
-pub use crate::http_client::impls::{
-    MockEndpointHttpClient, MockHttpClient, UreqHttpClient,
-};
+pub use crate::http_client::impls::{MockEndpointHttpClient, MockHttpClient, UreqHttpClient};
 
 /// Http client trait to make HTTP calls.
 pub trait HttpClient {

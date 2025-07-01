@@ -60,10 +60,7 @@ pub fn remove_env_var<T: AsRef<std::ffi::OsStr>>(name: T) {
     }
 }
 
-pub fn set_env_var<T: AsRef<std::ffi::OsStr>, V: AsRef<std::ffi::OsStr>>(
-    name: T,
-    value: V,
-) {
+pub fn set_env_var<T: AsRef<std::ffi::OsStr>, V: AsRef<std::ffi::OsStr>>(name: T, value: V) {
     unsafe {
         std::env::set_var(name, value);
     }

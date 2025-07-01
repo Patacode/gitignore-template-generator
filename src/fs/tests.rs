@@ -20,8 +20,7 @@ mod directory_handler {
                 let file_name = "rust.txt";
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
-                let expected_content =
-                    helper::load_resource("templates/rust.txt");
+                let expected_content = helper::load_resource("templates/rust.txt");
                 let actual_content = directory_handler.fetch_content(file_name);
 
                 assert!(actual_content.is_ok());

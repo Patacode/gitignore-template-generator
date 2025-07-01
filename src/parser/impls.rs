@@ -40,9 +40,7 @@ impl ClapArgsParser {
             Some(ProgramExit {
                 message: rendered_help.to_string().trim_end().to_string(),
                 exit_status: constant::exit_status::SUCCESS,
-                styled_message: Some(
-                    rendered_help.ansi().to_string().trim_end().to_string(),
-                ),
+                styled_message: Some(rendered_help.ansi().to_string().trim_end().to_string()),
                 kind: ExitKind::HelpInfos,
             })
         } else if args.show_version {
@@ -50,8 +48,7 @@ impl ClapArgsParser {
                 Some(version) => {
                     format!("{} {version}", env!("CARGO_PKG_NAME"))
                 }
-                None => constant::error_messages::VERSION_INFOS_NOT_AVAILABLE
-                    .to_string(),
+                None => constant::error_messages::VERSION_INFOS_NOT_AVAILABLE.to_string(),
             };
 
             Some(ProgramExit {
@@ -113,9 +110,7 @@ impl ClapArgsParser {
 
     fn print_error_message(error: &ProgramExit, message: &str) {
         match error.kind {
-            ExitKind::VersionInfos
-            | ExitKind::HelpInfos
-            | ExitKind::AuthorInfos => {
+            ExitKind::VersionInfos | ExitKind::HelpInfos | ExitKind::AuthorInfos => {
                 println!("{message}")
             }
             ExitKind::Error => eprintln!("{message}"),
@@ -150,24 +145,17 @@ impl ArgsParser for ClapArgsParser {
         }
     }
 
-    fn try_parse(
-        &self,
-        args: impl IntoIterator<Item = OsString>,
-    ) -> Result<Args, ProgramExit> {
+    fn try_parse(&self, args: impl IntoIterator<Item = OsString>) -> Result<Args, ProgramExit> {
         match self.cli_parser.clone().try_get_matches_from(args) {
             Ok(parsing_result) => {
-                let parsed_args =
-                    Self::map_arg_matches_to_struct(&parsing_result);
+                let parsed_args = Self::map_arg_matches_to_struct(&parsing_result);
                 match self.parse_global_options(&parsed_args) {
                     Some(error) => Err(error),
                     None => Ok(parsed_args),
                 }
             }
             Err(error) => Err(ProgramExit {
-                message: format!(
-                    "{}\nFor more information, try '--help'.",
-                    error.render()
-                ),
+                message: format!("{}\nFor more information, try '--help'.", error.render()),
                 exit_status: error.exit_code(),
                 styled_message: Some(format!(
                     "{}\nFor more information, try '\u{1b}[1m--help\u{1b}[0m'.",

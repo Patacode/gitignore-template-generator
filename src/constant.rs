@@ -7,21 +7,17 @@ pub mod error_messages {
     pub const CMD_EXECUTION_FAILURE: &str = "Failed to execute command";
 
     /// An error occurred during HTTP body parsing.
-    pub const BODY_PARSING_ISSUE: &str =
-        "An error occurred during body parsing";
+    pub const BODY_PARSING_ISSUE: &str = "An error occurred during body parsing";
 
     /// An error occurred while reading a file and converting it to a String
     /// instance.
-    pub const FILE_READ_TO_STRING_FAILURE: &str =
-        "Failed to read expected output file";
+    pub const FILE_READ_TO_STRING_FAILURE: &str = "Failed to read expected output file";
 
     /// Commas found in cli positional args.
-    pub const COMMAS_NOT_ALLOWED: &str =
-        "Commas are not allowed in template names";
+    pub const COMMAS_NOT_ALLOWED: &str = "Commas are not allowed in template names";
 
     /// An error occurred during an api call.
-    pub const API_CALL_FAILURE: &str =
-        "An error occurred during the API call: {error}";
+    pub const API_CALL_FAILURE: &str = "An error occurred during the API call: {error}";
 
     /// A HTTP error 400 occurred during api call.
     pub const HTTP_400: &str = "http status: 400";
@@ -30,12 +26,10 @@ pub mod error_messages {
     pub const HTTP_404: &str = "http status: 404";
 
     /// User requested author infos but none is available.
-    pub const AUTHOR_INFOS_NOT_AVAILABLE: &str =
-        "Author information not available.";
+    pub const AUTHOR_INFOS_NOT_AVAILABLE: &str = "Author information not available.";
 
     /// User requested version infos but none is available.
-    pub const VERSION_INFOS_NOT_AVAILABLE: &str =
-        "Version information not available.";
+    pub const VERSION_INFOS_NOT_AVAILABLE: &str = "Version information not available.";
 
     /// `White_Space` found in cli positional args.
     ///
@@ -81,8 +75,7 @@ pub mod help_messages {
 
     /// Help message bound to [`crate::parser::Args::template_names`]
     /// field (i.e. positional args).
-    pub const TEMPLATE_NAMES: &str =
-        "A non-empty list of gitignore template names";
+    pub const TEMPLATE_NAMES: &str = "A non-empty list of gitignore template names";
 
     /// Help message bound to [`crate::parser::Args::show_author`]
     /// field (i.e. author option).
@@ -118,8 +111,7 @@ pub mod help_messages {
 
     /// Help message bound to [`crate::parser::Args::timeout`]
     /// field (i.e. timeout option).
-    pub const TIMEOUT: &str =
-        "The template generation and listing service calls timeout";
+    pub const TIMEOUT: &str = "The template generation and listing service calls timeout";
 
     /// Help message bound to [`crate::parser::Args::timeout_unit`]
     /// field (i.e. timeout unit option).
@@ -248,8 +240,7 @@ pub mod template_manager {
     /// Default local template directory
     pub const DEFAULT_HOME: &str = ".gitignore_template_generator";
 
-    pub const DEFAULT_TEMPLATE_DIR: &str =
-        "{home_path}/.gitignore_template_generator/templates";
+    pub const DEFAULT_TEMPLATE_DIR: &str = "{home_path}/.gitignore_template_generator/templates";
 
     /// Template manager service base URL.
     pub const BASE_URL: &str = "https://www.toptal.com";

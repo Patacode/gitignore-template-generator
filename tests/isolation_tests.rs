@@ -474,8 +474,7 @@ mod failure {
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_error_message = String::from_utf8_lossy(&result.stderr);
-            let expected_error_message =
-                format!("{}\n", error_messages::INVALID_ENCODING);
+            let expected_error_message = format!("{}\n", error_messages::INVALID_ENCODING);
 
             let actual_status_code = result.status.code();
             let expected_status_code = Some(exit_status::HTTP_CLIENT_ERROR);
@@ -601,8 +600,7 @@ mod failure {
             let actual_error_message = String::from_utf8_lossy(&result.stderr);
             let expected_error_message = format!(
                 "{}\n",
-                error_messages::API_CALL_FAILURE
-                    .replace("{error}", error_messages::HTTP_404)
+                error_messages::API_CALL_FAILURE.replace("{error}", error_messages::HTTP_404)
             );
 
             let actual_status_code = result.status.code();
@@ -640,8 +638,7 @@ mod failure {
                 .expect(error_messages::CMD_EXECUTION_FAILURE);
 
             let actual_error_message = String::from_utf8_lossy(&result.stderr);
-            let expected_error_message =
-                constant::error_messages::TIMEOUT.to_string() + "\n";
+            let expected_error_message = constant::error_messages::TIMEOUT.to_string() + "\n";
 
             let actual_status_code = result.status.code();
             let expected_status_code = Some(exit_status::HTTP_CLIENT_ERROR);

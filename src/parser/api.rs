@@ -121,10 +121,8 @@ impl Args {
         Self {
             template_names: Vec::new(),
             server_url: crate::constant::template_manager::BASE_URL.to_string(),
-            generator_uri: crate::constant::template_manager::GENERATOR_URI
-                .to_string(),
-            lister_uri: crate::constant::template_manager::LISTER_URI
-                .to_string(),
+            generator_uri: crate::constant::template_manager::GENERATOR_URI.to_string(),
+            lister_uri: crate::constant::template_manager::LISTER_URI.to_string(),
             show_help: false,
             show_version: false,
             show_author: false,
@@ -241,10 +239,7 @@ impl Args {
     /// # Returns
     ///
     /// The mutated borrowed instance.
-    pub fn with_check_template_names(
-        mut self,
-        check_template_names: bool,
-    ) -> Self {
+    pub fn with_check_template_names(mut self, check_template_names: bool) -> Self {
         self.check_template_names = check_template_names;
         self
     }
@@ -322,8 +317,5 @@ pub trait ArgsParser {
     /// A result containing an owned instance of [`Args`] if successful parsing,
     /// or a [`ProgramExit`] if any error or early exit occurred (e.g. version/
     /// author/help infos printing, invalid cli args...)
-    fn try_parse(
-        &self,
-        args: impl IntoIterator<Item = OsString>,
-    ) -> Result<Args, ProgramExit>;
+    fn try_parse(&self, args: impl IntoIterator<Item = OsString>) -> Result<Args, ProgramExit>;
 }

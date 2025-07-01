@@ -2,17 +2,15 @@
 
 use crate::{
     core::{
-        GitignoreTemplateManager, ProgramExit, QualifiedString,
-        RemoteGitignoreTemplateManager, TemplateFactory, TemplateManager,
+        GitignoreTemplateManager, ProgramExit, QualifiedString, RemoteGitignoreTemplateManager,
+        TemplateFactory, TemplateManager,
     },
     parser::{Action, ArgsParser, ClapArgsParser},
 };
 
 pub type RunnerCallback<T, P> = fn(TemplateManagerRunner<T>, P);
-pub type MixedRunnerCallback =
-    RunnerCallback<GitignoreTemplateManager, ClapArgsParser>;
-pub type RemoteRunnerCallback =
-    RunnerCallback<RemoteGitignoreTemplateManager, ClapArgsParser>;
+pub type MixedRunnerCallback = RunnerCallback<GitignoreTemplateManager, ClapArgsParser>;
+pub type RemoteRunnerCallback = RunnerCallback<RemoteGitignoreTemplateManager, ClapArgsParser>;
 
 pub type MixedRunner = TemplateManagerRunner<GitignoreTemplateManager>;
 pub type RemoteRunner = TemplateManagerRunner<RemoteGitignoreTemplateManager>;
@@ -29,18 +27,13 @@ impl<F: TemplateFactory<dyn TemplateManager>> TemplateManagerRunner<F> {
         }
     }
 
-    pub fn exec(
-        &self,
-        parser: &impl ArgsParser,
-    ) -> Result<QualifiedString, ProgramExit> {
+    pub fn exec(&self, parser: &impl ArgsParser) -> Result<QualifiedString, ProgramExit> {
         let args = parser.parse(std::env::args_os());
         let manager = F::from_args(&args)?;
 
         let result = match args.to_action() {
             Action::List => manager.list(),
-            Action::RobustGenerate => {
-                manager.generate_with_template_check(&args.template_names)
-            }
+            Action::RobustGenerate => manager.generate_with_template_check(&args.template_names),
             Action::Generate => manager.generate(&args.template_names),
         };
 
@@ -52,9 +45,7 @@ impl<F: TemplateFactory<dyn TemplateManager>> TemplateManagerRunner<F> {
         result: &Result<QualifiedString, ProgramExit>,
     ) -> Result<QualifiedString, ProgramExit> {
         match result {
-            Ok(output) if output.value.is_empty() => {
-                Ok(QualifiedString::empty(output.kind))
-            }
+            Ok(output) if output.value.is_empty() => Ok(QualifiedString::empty(output.kind)),
             Ok(output) => Ok(output.clone()),
             Err(error) => Err(error.clone()),
         }
