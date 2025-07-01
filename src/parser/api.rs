@@ -2,14 +2,20 @@ use std::ffi::OsString;
 
 use clap::ValueEnum;
 
+use crate::core::ProgramExit;
 pub use crate::parser::impls::ClapArgsParser;
-use crate::{core::ProgramExit, runner::Action};
 
 #[derive(Clone, Copy, Debug, ValueEnum, PartialEq, Default)]
 pub enum TimeoutUnit {
     MILLISECOND,
     #[default]
     SECOND,
+}
+
+pub enum Action {
+    List,
+    RobustGenerate,
+    Generate,
 }
 
 /// Struct to gather cli args parsing result.
@@ -133,7 +139,7 @@ impl Args {
         if self.show_list {
             Action::List
         } else if self.check_template_names {
-            Action::GenerateWithTemplateCheck
+            Action::RobustGenerate
         } else {
             Action::Generate
         }
