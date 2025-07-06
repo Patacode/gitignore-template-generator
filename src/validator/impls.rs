@@ -9,7 +9,7 @@ use crate::constant;
 pub struct DefaultCliArgsValidator;
 
 impl CliArgsValidator for DefaultCliArgsValidator {
-    /// Checks if given value contains commas.
+    /// Checks if given value does not contain any commas.
     ///
     /// Returns [`constant::error_messages::COMMAS_NOT_ALLOWED`] if any commas
     /// found.
