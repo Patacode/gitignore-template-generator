@@ -84,7 +84,7 @@ mod default_cli_args_validator {
                 let value = "rust";
 
                 let expected: Result<String, String> = Ok(String::from(value));
-                let actual = DefaultCliArgsValidator::has_valid_template_name(value);
+                let actual = DefaultCliArgsValidator::is_valid_template_name(value);
 
                 assert_eq!(actual, expected);
             }
@@ -100,7 +100,7 @@ mod default_cli_args_validator {
                 let expected: Result<String, String> = Err(String::from(
                     constant::error_messages::WHITESPACES_NOT_ALLOWED,
                 ));
-                let actual = DefaultCliArgsValidator::has_valid_template_name(value);
+                let actual = DefaultCliArgsValidator::is_valid_template_name(value);
 
                 assert_eq!(actual, expected);
             }
@@ -111,7 +111,7 @@ mod default_cli_args_validator {
 
                 let expected: Result<String, String> =
                     Err(String::from(constant::error_messages::COMMAS_NOT_ALLOWED));
-                let actual = DefaultCliArgsValidator::has_valid_template_name(value);
+                let actual = DefaultCliArgsValidator::is_valid_template_name(value);
 
                 assert_eq!(actual, expected);
             }
@@ -120,12 +120,9 @@ mod default_cli_args_validator {
             fn it_returns_error_for_values_with_commas_and_whitespaces() {
                 let value = "r, ust";
 
-                let expected: Result<String, String> = Err(format!(
-                    "{} + {}",
-                    constant::error_messages::COMMAS_NOT_ALLOWED,
-                    constant::error_messages::WHITESPACES_NOT_ALLOWED,
-                ));
-                let actual = DefaultCliArgsValidator::has_valid_template_name(value);
+                let expected: Result<String, String> =
+                    Err(String::from(constant::error_messages::COMMAS_NOT_ALLOWED));
+                let actual = DefaultCliArgsValidator::is_valid_template_name(value);
 
                 assert_eq!(actual, expected);
             }
@@ -185,12 +182,14 @@ mod default_cli_args_validator {
             use super::*;
 
             #[rstest]
-            #[case("hello")]
-            #[case("https//foo.com")]
-            #[case("htps:/myapis.foobar.com")]
-            fn it_returns_error_for_invalid_url(#[case] input_url: &str) {
-                let expected: Result<String, String> =
-                    Err(String::from(constant::error_messages::INVALID_URL));
+            #[case("hello", constant::error_messages::INVALID_URL)]
+            #[case("https//foo.com", constant::error_messages::INVALID_URL)]
+            #[case("htps:/myapis.foobar.com", constant::error_messages::INVALID_SCHEME)]
+            fn it_returns_error_for_invalid_url(
+                #[case] input_url: &str,
+                #[case] expected_err_msg: &str
+            ) {
+                let expected: Result<String, String> = Err(expected_err_msg.to_string());
                 let actual = DefaultCliArgsValidator::is_valid_url(input_url);
 
                 assert_eq!(actual, expected);

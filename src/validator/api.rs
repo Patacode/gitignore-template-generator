@@ -2,7 +2,7 @@ pub use crate::validator::impls::DefaultCliArgsValidator;
 
 /// Cli args validator trait to validate cli args.
 pub trait CliArgsValidator {
-    /// Checks if given value contains commas or not.
+    /// Checks if given value does not contain any commas.
     ///
     /// # Arguments
     ///
@@ -11,10 +11,10 @@ pub trait CliArgsValidator {
     /// # Returns
     ///
     /// A result containing the provided value if no commas found, or
-    /// an error containing proper error message.
+    /// an error containing proper error message otherwise.
     fn has_no_commas(value: &str) -> Result<String, String>;
 
-    /// Checks if given value contains `White_Space` or not.
+    /// Checks if given value does not contain any `White_Space` characters.
     ///
     /// `White_Space` is specified in the
     /// [Unicode Character Database][ucd] [`PropList.txt`].
@@ -29,7 +29,7 @@ pub trait CliArgsValidator {
     /// # Returns
     ///
     /// A result containing the provided value if no `White_Space` found, or
-    /// an error containing proper error message.
+    /// an error containing proper error message otherwise.
     fn has_no_whitespaces(value: &str) -> Result<String, String>;
 
     /// Checks if given value is a valid template name.
@@ -44,9 +44,9 @@ pub trait CliArgsValidator {
     ///
     /// # Returns
     ///
-    /// A result containing the provided value if valid, or
-    /// an error containing proper error message.
-    fn has_valid_template_name(value: &str) -> Result<String, String>;
+    /// A result containing the provided value if valid template name, or
+    /// an error containing proper error message otherwise.
+    fn is_valid_template_name(value: &str) -> Result<String, String>;
 
     /// Checks if given value starts with a slash (`/`).
     ///
@@ -57,12 +57,12 @@ pub trait CliArgsValidator {
     /// # Returns
     ///
     /// A result containing the provided value if a slash was found as first
-    /// character, or an error containing proper error message.
+    /// character, or an error containing proper error message otherwise.
     fn is_starting_with_slash(value: &str) -> Result<String, String>;
 
     /// Checks if given value is a valid URL.
     ///
-    /// URL validity is checked against the [URL Standard]
+    /// URL validity is checked against the [URL Standard].
     ///
     /// [URL Standard]: https://url.spec.whatwg.org/
     ///
@@ -73,6 +73,6 @@ pub trait CliArgsValidator {
     /// # Returns
     ///
     /// A result containing the provided value if valid url, or an error
-    /// containing proper error message.
+    /// containing proper error message otherwise.
     fn is_valid_url(value: &str) -> Result<String, String>;
 }

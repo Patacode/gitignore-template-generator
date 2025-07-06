@@ -59,6 +59,8 @@ pub mod error_messages {
     /// Invalid URL.
     pub const INVALID_URL: &str = "Value must be a valid URL";
 
+    pub const INVALID_SCHEME: &str = "URLs must start with a valid scheme (http or https)";
+
     pub const LOCAL_GENERATION: &str =
         "An error occurred while generating template from local file system";
 
