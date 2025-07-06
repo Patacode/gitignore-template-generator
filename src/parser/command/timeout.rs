@@ -1,6 +1,5 @@
 use clap::{
-    Arg,
-    builder::{ArgPredicate, OsStr},
+    builder::{ArgPredicate, OsStr}, Arg, ArgMatches
 };
 
 use super::ClapArg;
@@ -30,7 +29,7 @@ impl ClapArg<u64> for TimeoutClapArg {
             )
     }
 
-    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> u64 {
+    fn from_arg_matches(arg_matches: &ArgMatches) -> u64 {
         match arg_matches.get_one::<u64>("TIMEOUT") {
             Some(timeout) => *timeout,
             None => constant::template_manager::TIMEOUT_INT,

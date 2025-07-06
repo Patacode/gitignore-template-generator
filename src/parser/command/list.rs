@@ -1,4 +1,4 @@
-use clap::{Arg, ArgAction};
+use clap::{Arg, ArgAction, ArgMatches};
 
 use super::ClapArg;
 use crate::{constant, helper};
@@ -15,7 +15,7 @@ impl ClapArg<bool> for ListClapArg {
             .action(ArgAction::SetTrue)
     }
 
-    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> bool {
+    fn from_arg_matches(arg_matches: &ArgMatches) -> bool {
         arg_matches.get_flag("LIST")
     }
 }

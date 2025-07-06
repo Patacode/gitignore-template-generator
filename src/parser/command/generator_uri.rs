@@ -1,4 +1,4 @@
-use clap::Arg;
+use clap::{Arg, ArgMatches};
 
 use super::ClapArg;
 use crate::{
@@ -19,7 +19,7 @@ impl ClapArg<String> for GeneratorUriClapArg {
             .default_value(constant::template_manager::GENERATOR_URI)
     }
 
-    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> String {
+    fn from_arg_matches(arg_matches: &ArgMatches) -> String {
         arg_matches
             .get_one::<String>("GENERATOR_URI")
             .unwrap()

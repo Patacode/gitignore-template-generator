@@ -1,4 +1,4 @@
-use clap::Arg;
+use clap::{Arg, ArgMatches};
 
 use super::ClapArg;
 use crate::{
@@ -18,7 +18,7 @@ impl ClapArg<Vec<String>> for TemplateNamesClapArg {
             .num_args(1..)
     }
 
-    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> Vec<String> {
+    fn from_arg_matches(arg_matches: &ArgMatches) -> Vec<String> {
         arg_matches
             .get_many::<String>("TEMPLATE_NAMES")
             .map(|vals| vals.cloned().collect())
