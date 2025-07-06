@@ -8,7 +8,7 @@ use crate::{
 
 pub struct GeneratorUriClapArg;
 
-impl ClapArg for GeneratorUriClapArg {
+impl ClapArg<String> for GeneratorUriClapArg {
     fn build() -> Arg {
         Arg::new("generator_uri")
             .id("GENERATOR_URI")
@@ -17,5 +17,12 @@ impl ClapArg for GeneratorUriClapArg {
             .help(constant::help_messages::GENERATOR_URI)
             .value_parser(DefaultCliArgsValidator::is_starting_with_slash)
             .default_value(constant::template_manager::GENERATOR_URI)
+    }
+
+    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> String {
+        arg_matches
+            .get_one::<String>("GENERATOR_URI")
+            .unwrap()
+            .to_string()
     }
 }

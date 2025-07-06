@@ -603,7 +603,11 @@ mod default_args_parser {
 
             #[rstest]
             #[case("--server-url foo", "foo", "invalid_url_error")]
-            #[case("--server-url xyz:://foo.com", "xyz:://foo.com", "invalid_scheme_error")]
+            #[case(
+                "--server-url xyz:://foo.com",
+                "xyz:://foo.com",
+                "invalid_scheme_error"
+            )]
             fn it_fails_parsing_when_invalid_url(
                 #[case] cli_args: &str,
                 #[case] invalid_value: &str,

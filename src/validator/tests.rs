@@ -187,7 +187,7 @@ mod default_cli_args_validator {
             #[case("htps:/myapis.foobar.com", constant::error_messages::INVALID_SCHEME)]
             fn it_returns_error_for_invalid_url(
                 #[case] input_url: &str,
-                #[case] expected_err_msg: &str
+                #[case] expected_err_msg: &str,
             ) {
                 let expected: Result<String, String> = Err(expected_err_msg.to_string());
                 let actual = DefaultCliArgsValidator::is_valid_url(input_url);

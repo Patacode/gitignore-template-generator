@@ -8,7 +8,7 @@ use crate::{constant, helper};
 
 pub struct TimeoutClapArg;
 
-impl ClapArg for TimeoutClapArg {
+impl ClapArg<u64> for TimeoutClapArg {
     fn build() -> Arg {
         Arg::new("timeout")
             .id("TIMEOUT")
@@ -28,5 +28,12 @@ impl ClapArg for TimeoutClapArg {
                 )),
                 constant::template_manager::TIMEOUT_MILLISECOND,
             )
+    }
+
+    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> u64 {
+        match arg_matches.get_one::<u64>("TIMEOUT") {
+            Some(timeout) => *timeout,
+            None => constant::template_manager::TIMEOUT_INT,
+        }
     }
 }

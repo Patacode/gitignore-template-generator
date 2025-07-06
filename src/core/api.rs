@@ -1,7 +1,13 @@
+use clap::Error;
+
 pub use crate::core::impls::{
     GitignoreTemplateManager, LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager,
 };
-use crate::{constant::help_texts, parser::Args};
+use crate::{
+    constant::help_texts,
+    parser::Args,
+    printer::{Data, ppg},
+};
 
 /// DTO struct representing an early or abrupt program exit.
 #[derive(Clone, PartialEq, Debug)]
@@ -19,6 +25,17 @@ pub struct ProgramExit {
 
     /// The kind of program exit.
     pub kind: ExitKind,
+}
+
+impl ProgramExit {
+    pub fn from_clap_error(error: &Error) -> Self {
+        Self {
+            message: ppg(&Data::ClapError(error)),
+            exit_status: error.exit_code(),
+            styled_message: Some(ppg(&Data::StyledClapError(error))),
+            kind: ExitKind::Error,
+        }
+    }
 }
 
 #[derive(Clone, PartialEq, Debug)]

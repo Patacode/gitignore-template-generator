@@ -5,7 +5,7 @@ use crate::{constant, helper};
 
 pub struct CheckClapArg;
 
-impl ClapArg for CheckClapArg {
+impl ClapArg<bool> for CheckClapArg {
     fn build() -> Arg {
         Arg::new("check")
             .id("CHECK")
@@ -13,5 +13,9 @@ impl ClapArg for CheckClapArg {
             .long(constant::cli_options::CHECK.long)
             .help(constant::help_messages::CHECK)
             .action(ArgAction::SetTrue)
+    }
+
+    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> bool {
+        arg_matches.get_flag("CHECK")
     }
 }

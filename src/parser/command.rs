@@ -1,6 +1,6 @@
 //! Define components to build cli args
 
-use clap::Arg;
+use clap::{Arg, ArgMatches, Command};
 
 mod author;
 mod check;
@@ -14,24 +14,27 @@ mod timeout;
 mod timeout_unit;
 mod version;
 
-use author::AuthorClapArg;
-use check::CheckClapArg;
-use generator_uri::GeneratorUriClapArg;
-use help::HelpClapArg;
-use list::ListClapArg;
-use lister_uri::ListerUriClapArg;
-use server_url::ServerUrlClapArg;
-use template_names::TemplateNamesClapArg;
-use timeout::TimeoutClapArg;
-use timeout_unit::TimeoutUnitClapArg;
-use version::VersionClapArg;
+pub use author::AuthorClapArg;
+pub use check::CheckClapArg;
+pub use generator_uri::GeneratorUriClapArg;
+pub use help::HelpClapArg;
+pub use list::ListClapArg;
+pub use lister_uri::ListerUriClapArg;
+pub use server_url::ServerUrlClapArg;
+pub use template_names::TemplateNamesClapArg;
+pub use timeout::TimeoutClapArg;
+pub use timeout_unit::TimeoutUnitClapArg;
+pub use version::VersionClapArg;
 
-pub trait ClapArg {
+use crate::{core::ProgramExit, parser::Args};
+
+pub trait ClapArg<T> {
     fn build() -> Arg;
+    fn from_arg_matches(arg_matches: &ArgMatches) -> T;
 }
 
-pub fn build_clap_args() -> Vec<Arg> {
-    vec![
+pub fn build_clap_args() -> [Arg; 11] {
+    [
         CheckClapArg::build(),
         GeneratorUriClapArg::build(),
         ListClapArg::build(),
@@ -43,5 +46,13 @@ pub fn build_clap_args() -> Vec<Arg> {
         HelpClapArg::build(),
         VersionClapArg::build(),
         AuthorClapArg::build(),
+    ]
+}
+
+pub fn get_global_options(args: &Args) -> [(bool, fn(&Command) -> ProgramExit); 3] {
+    [
+        (args.show_help, HelpClapArg::as_program_exit),
+        (args.show_version, VersionClapArg::as_program_exit),
+        (args.show_author, AuthorClapArg::as_program_exit),
     ]
 }

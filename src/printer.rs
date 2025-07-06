@@ -1,3 +1,5 @@
+use clap::Error;
+
 use crate::{
     constant::{help_texts, template_manager},
     core::{ProgramExit, QualifiedString},
@@ -14,6 +16,8 @@ pub enum Data<'a> {
     TestContextDropped(),
     TestContextCreated(),
     DefaultTimeout(),
+    ClapError(&'a Error),
+    StyledClapError(&'a Error),
 }
 
 pub fn pp(data: &Data) {
@@ -44,5 +48,10 @@ pub fn ppg(data: &Data) -> String {
         Data::DefaultTimeout() => help_texts::DEFAULT_TIMEOUT
             .replace("{second}", template_manager::TIMEOUT)
             .replace("{millis}", template_manager::TIMEOUT_MILLISECOND),
+        Data::ClapError(error) => {
+            help_texts::HELP_FOR_MORE_INFOS.replace("{error}", &error.render().to_string())
+        }
+        Data::StyledClapError(error) => help_texts::STYLED_HELP_FOR_MORE_INFOS
+            .replace("{error}", &error.render().ansi().to_string()),
     }
 }

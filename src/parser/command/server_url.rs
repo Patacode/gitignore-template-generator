@@ -8,7 +8,7 @@ use crate::{
 
 pub struct ServerUrlClapArg;
 
-impl ClapArg for ServerUrlClapArg {
+impl ClapArg<String> for ServerUrlClapArg {
     fn build() -> Arg {
         Arg::new("server_url")
             .id("SERVER_URL")
@@ -17,5 +17,12 @@ impl ClapArg for ServerUrlClapArg {
             .help(constant::help_messages::SERVER_URL)
             .value_parser(DefaultCliArgsValidator::is_valid_url)
             .default_value(constant::template_manager::BASE_URL)
+    }
+
+    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> String {
+        arg_matches
+            .get_one::<String>("SERVER_URL")
+            .unwrap()
+            .to_string()
     }
 }

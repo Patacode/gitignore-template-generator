@@ -1,9 +1,16 @@
 use std::ffi::OsString;
 
-use clap::ValueEnum;
+use clap::{ArgMatches, ValueEnum};
 
-use crate::core::ProgramExit;
 pub use crate::parser::impls::ClapArgsParser;
+use crate::{
+    core::ProgramExit,
+    parser::command::{
+        AuthorClapArg, CheckClapArg, ClapArg, GeneratorUriClapArg, HelpClapArg, ListClapArg,
+        ListerUriClapArg, ServerUrlClapArg, TemplateNamesClapArg, TimeoutClapArg,
+        TimeoutUnitClapArg, VersionClapArg,
+    },
+};
 
 #[derive(Clone, Copy, Debug, ValueEnum, PartialEq, Default)]
 pub enum TimeoutUnit {
@@ -135,6 +142,22 @@ impl Args {
             check_template_names: false,
             timeout: crate::constant::template_manager::TIMEOUT_INT,
             timeout_unit: crate::constant::template_manager::TIMEOUT_UNIT_ENUM,
+        }
+    }
+
+    pub fn from_arg_matches(arg_matches: &ArgMatches) -> Self {
+        Self {
+            template_names: TemplateNamesClapArg::from_arg_matches(arg_matches),
+            server_url: ServerUrlClapArg::from_arg_matches(arg_matches),
+            generator_uri: GeneratorUriClapArg::from_arg_matches(arg_matches),
+            lister_uri: ListerUriClapArg::from_arg_matches(arg_matches),
+            timeout: TimeoutClapArg::from_arg_matches(arg_matches),
+            timeout_unit: TimeoutUnitClapArg::from_arg_matches(arg_matches),
+            check_template_names: CheckClapArg::from_arg_matches(arg_matches),
+            show_help: HelpClapArg::from_arg_matches(arg_matches),
+            show_version: VersionClapArg::from_arg_matches(arg_matches),
+            show_author: AuthorClapArg::from_arg_matches(arg_matches),
+            show_list: ListClapArg::from_arg_matches(arg_matches),
         }
     }
 

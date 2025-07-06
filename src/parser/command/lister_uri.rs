@@ -8,7 +8,7 @@ use crate::{
 
 pub struct ListerUriClapArg;
 
-impl ClapArg for ListerUriClapArg {
+impl ClapArg<String> for ListerUriClapArg {
     fn build() -> Arg {
         Arg::new("lister_uri")
             .id("LISTER_URI")
@@ -17,5 +17,12 @@ impl ClapArg for ListerUriClapArg {
             .help(constant::help_messages::LISTER_URI)
             .value_parser(DefaultCliArgsValidator::is_starting_with_slash)
             .default_value(constant::template_manager::LISTER_URI)
+    }
+
+    fn from_arg_matches(arg_matches: &clap::ArgMatches) -> String {
+        arg_matches
+            .get_one::<String>("LISTER_URI")
+            .unwrap()
+            .to_string()
     }
 }
