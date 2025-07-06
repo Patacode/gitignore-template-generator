@@ -1,0 +1,3 @@
+error: invalid value '{input_value}' for '--server-url <SERVER_URL>': URLs must start with a valid scheme (http or https)
+
+For more information, try '--help'.

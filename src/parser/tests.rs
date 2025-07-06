@@ -602,11 +602,12 @@ mod default_args_parser {
             }
 
             #[rstest]
-            #[case("--server-url foo", "foo")]
-            #[case("--server-url xyz:://foo.com", "xyz:://foo.com")]
+            #[case("--server-url foo", "foo", "invalid_url_error")]
+            #[case("--server-url xyz:://foo.com", "xyz:://foo.com", "invalid_scheme_error")]
             fn it_fails_parsing_when_invalid_url(
                 #[case] cli_args: &str,
                 #[case] invalid_value: &str,
+                #[case] expectation_filename: &str,
             ) {
                 let cli_args =
                     test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
@@ -614,11 +615,11 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("invalid_url_error")
+                    message: test_helper::load_expectation_file(expectation_filename)
                         .replace("{input_value}", invalid_value),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        test_helper::load_expectation_file("ansi_invalid_url_error")
+                        test_helper::load_expectation_file(&format!("ansi_{expectation_filename}"))
                             .replace("{input_value}", invalid_value),
                     ),
                     kind: ExitKind::Error,

@@ -1,3 +1,3 @@
-error: invalid value 'r ,' for '[TEMPLATE_NAMES]...': Commas are not allowed in template names + Whitespace characters are not allowed in template names
+error: invalid value 'r ,' for '[TEMPLATE_NAMES]...': Commas are not allowed in template names
 
 For more information, try '--help'.
