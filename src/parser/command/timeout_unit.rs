@@ -1,4 +1,4 @@
-use clap::{builder::EnumValueParser, Arg, ArgMatches};
+use clap::{Arg, ArgMatches, builder::EnumValueParser};
 
 use super::ClapArg;
 use crate::{

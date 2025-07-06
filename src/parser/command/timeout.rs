@@ -1,5 +1,6 @@
 use clap::{
-    builder::{ArgPredicate, OsStr}, Arg, ArgMatches
+    Arg, ArgMatches,
+    builder::{ArgPredicate, OsStr},
 };
 
 use super::ClapArg;
