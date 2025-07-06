@@ -1,6 +1,6 @@
 //! Define components to build cli args
 
-use clap::{Arg, ArgMatches, Command};
+use clap::{Arg, ArgMatches};
 
 mod author;
 mod check;
@@ -26,8 +26,6 @@ pub use timeout::TimeoutClapArg;
 pub use timeout_unit::TimeoutUnitClapArg;
 pub use version::VersionClapArg;
 
-use crate::{core::ProgramExit, parser::Args};
-
 pub trait ClapArg<T> {
     fn build() -> Arg;
     fn from_arg_matches(arg_matches: &ArgMatches) -> T;
@@ -46,13 +44,5 @@ pub fn build_clap_args() -> [Arg; 11] {
         HelpClapArg::build(),
         VersionClapArg::build(),
         AuthorClapArg::build(),
-    ]
-}
-
-pub fn get_global_options(args: &Args) -> [(bool, fn(&Command) -> ProgramExit); 3] {
-    [
-        (args.show_help, HelpClapArg::as_program_exit),
-        (args.show_version, VersionClapArg::as_program_exit),
-        (args.show_author, AuthorClapArg::as_program_exit),
     ]
 }

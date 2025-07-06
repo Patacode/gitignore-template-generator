@@ -1,6 +1,6 @@
 use std::ffi::OsString;
 
-use clap::{ArgMatches, ValueEnum};
+use clap::{ArgMatches, Command, ValueEnum};
 
 pub use crate::parser::impls::ClapArgsParser;
 use crate::{
@@ -162,13 +162,32 @@ impl Args {
     }
 
     pub fn to_action(&self) -> Action {
-        if self.show_list {
-            Action::List
-        } else if self.check_template_names {
-            Action::RobustGenerate
-        } else {
-            Action::Generate
-        }
+        self.get_action_options()
+            .into_iter()
+            .find_map(|(flag, action)| flag.then_some(action))
+            .or(Some(Action::Generate))
+            .unwrap()
+    }
+
+    pub fn get_global_options(&self) -> [(bool, fn(&Command) -> ProgramExit); 3] {
+        [
+            (self.show_help, HelpClapArg::as_program_exit),
+            (self.show_version, VersionClapArg::as_program_exit),
+            (self.show_author, AuthorClapArg::as_program_exit),
+        ]
+    }
+
+    pub fn get_action_options(&self) -> [(bool, Action); 2] {
+        [
+            (self.show_list, Action::Generate),
+            (self.check_template_names, Action::RobustGenerate),
+        ]
+    }
+
+    pub fn as_program_exit(&self, cli_parser: &Command) -> Option<ProgramExit> {
+        self.get_global_options()
+            .into_iter()
+            .find_map(|(flag, handler)| flag.then(|| handler(cli_parser)))
     }
 
     /// Sets new value for `template_names` field.

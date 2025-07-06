@@ -6,7 +6,6 @@ use super::{Args, ArgsParser, command::build_clap_args};
 use crate::{
     constant,
     core::{ExitKind, ProgramExit},
-    parser::command::get_global_options,
 };
 
 /// Default implementation of args parser that parses CLI args using
@@ -32,7 +31,7 @@ impl ClapArgsParser {
     fn print_message(error: &ProgramExit, message: &str) -> Option<String> {
         match error.kind {
             ExitKind::Error => eprintln!("{message}"),
-            _ => println!("{message}")
+            _ => println!("{message}"),
         }
         Some(message.to_string())
     }
@@ -54,7 +53,9 @@ impl ArgsParser for ClapArgsParser {
         match self.try_parse(args) {
             Ok(parsed_args) => parsed_args,
             Err(error) => {
-                error.styled_message.clone()
+                error
+                    .styled_message
+                    .clone()
                     .and_then(|styled_message| Self::print_message(&error, &styled_message))
                     .or_else(|| Self::print_message(&error, &error.message));
                 exit(error.exit_status);
@@ -66,15 +67,11 @@ impl ArgsParser for ClapArgsParser {
         match self.cli_parser.clone().try_get_matches_from(args) {
             Ok(arg_matches) => {
                 let args = Args::from_arg_matches(&arg_matches);
-                let res = get_global_options(&args)
-                    .into_iter()
-                    .find_map(|(flag, handler)| flag.then(|| handler(&self.cli_parser)));
-
-                match res {
+                match args.as_program_exit(&self.cli_parser) {
                     Some(value) => Err(value),
                     None => Ok(args),
                 }
-            },
+            }
             Err(error) => Err(ProgramExit::from_clap_error(&error)),
         }
     }
