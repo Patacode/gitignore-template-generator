@@ -1,26 +1,9 @@
-use clap::{Arg, ArgAction, Command};
+use clap::{Arg, ArgAction};
 
 use super::ClapArg;
-use crate::{
-    constant,
-    core::{ExitKind, ProgramExit},
-    helper,
-};
+use crate::{constant, helper};
 
 pub struct HelpClapArg;
-
-impl HelpClapArg {
-    pub fn as_program_exit(cli_parser: &Command) -> ProgramExit {
-        let rendered_help = cli_parser.clone().render_help();
-
-        ProgramExit {
-            message: rendered_help.to_string().trim_end().to_string(),
-            exit_status: constant::exit_status::SUCCESS,
-            styled_message: Some(rendered_help.ansi().to_string().trim_end().to_string()),
-            kind: ExitKind::HelpInfos,
-        }
-    }
-}
 
 impl ClapArg<bool> for HelpClapArg {
     fn build() -> Arg {

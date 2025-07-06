@@ -142,8 +142,7 @@ pub mod help_texts {
 
 pub mod cli_options {
     //! Constants for short and long cli options specifier.
-
-    use crate::parser::CliOptionName;
+    use crate::helper::CliOptionName;
 
     /// Short and long specifier for author option.
     ///
@@ -251,8 +250,7 @@ pub mod exit_status {
 
 pub mod template_manager {
     //! Constants for gitignore template manager service.
-
-    use crate::parser::TimeoutUnit;
+    use crate::helper::TimeoutUnit;
 
     /// Env variable name pointing to local template directory
     pub const HOME_ENV_VAR: &str = "GITIGNORE_TEMPLATE_GENERATOR_HOME";

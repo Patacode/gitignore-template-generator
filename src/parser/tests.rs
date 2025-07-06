@@ -6,6 +6,7 @@ use super::*;
 use crate::{
     constant,
     core::{ExitKind, ProgramExit},
+    helper::TimeoutUnit,
     test_helper,
 };
 
@@ -650,7 +651,7 @@ mod default_args_parser {
                 );
 
                 let actual_result = ClapArgsParser::new().parse(cli_args);
-                let expected_result = Args::default()
+                let expected_result = Args::new()
                     .with_template_names(test_helper::to_string_list("rust python"))
                     .with_server_url("https://test")
                     .with_generator_uri("/foo")

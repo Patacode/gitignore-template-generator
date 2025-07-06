@@ -1,10 +1,10 @@
-use clap::Error;
+use clap::{Command, Error};
 
 pub use crate::core::impls::{
     GitignoreTemplateManager, LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager,
 };
 use crate::{
-    constant::help_texts,
+    constant::{error_messages, exit_status, help_texts},
     parser::Args,
     printer::{Data, ppg},
 };
@@ -28,6 +28,24 @@ pub struct ProgramExit {
 }
 
 impl ProgramExit {
+    pub fn success(message: &String, kind: &ExitKind) -> Self {
+        Self {
+            message: message.clone(),
+            exit_status: exit_status::SUCCESS,
+            styled_message: None,
+            kind: kind.clone(),
+        }
+    }
+
+    pub fn styled_success(message: &String, styled_message: &String, kind: &ExitKind) -> Self {
+        Self {
+            message: message.clone(),
+            exit_status: exit_status::SUCCESS,
+            styled_message: Some(styled_message.clone()),
+            kind: kind.clone(),
+        }
+    }
+
     pub fn from_clap_error(error: &Error) -> Self {
         Self {
             message: ppg(&Data::ClapError(error)),
@@ -35,6 +53,34 @@ impl ProgramExit {
             styled_message: Some(ppg(&Data::StyledClapError(error))),
             kind: ExitKind::Error,
         }
+    }
+
+    pub fn author_option(cli_parser: &Command) -> Self {
+        let message = match cli_parser.get_author() {
+            Some(author) => author,
+            None => error_messages::AUTHOR_INFOS_NOT_AVAILABLE,
+        };
+
+        Self::success(&message.to_string(), &ExitKind::AuthorInfos)
+    }
+
+    pub fn version_option(cli_parser: &Command) -> Self {
+        let message = match cli_parser.get_version() {
+            Some(version) => format!("{} {version}", env!("CARGO_PKG_NAME")),
+            None => error_messages::VERSION_INFOS_NOT_AVAILABLE.to_string(),
+        };
+
+        Self::success(&message, &ExitKind::VersionInfos)
+    }
+
+    pub fn help_option(cli_parser: &Command) -> Self {
+        let rendered_help = cli_parser.clone().render_help();
+
+        Self::styled_success(
+            &rendered_help.to_string().trim_end().to_string(),
+            &rendered_help.ansi().to_string().trim_end().to_string(),
+            &ExitKind::HelpInfos,
+        )
     }
 }
 

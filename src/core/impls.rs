@@ -10,9 +10,9 @@ use crate::{
     },
     core::{TemplateFactory, TemplateManager},
     fs::{DirectoryHandler, FileSystemHandler},
-    helper,
+    helper::{self, TimeoutUnit},
     http_client::{HttpClient, UreqHttpClient},
-    parser::{Args, TimeoutUnit},
+    parser::Args,
 };
 
 /// Manager of gitignore templates.

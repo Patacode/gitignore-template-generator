@@ -1,7 +1,10 @@
 use std::{ffi::OsString, fs};
 
 use crate::{
-    constant::{cli_options, error_messages, help_messages, parser_infos, path, template_manager},
+    constant::{
+        cli_options, error_messages, help_messages, help_texts, parser_infos, path,
+        template_manager,
+    },
     printer::{Data, pp, ppg},
 };
 
@@ -25,13 +28,13 @@ impl EnvTestContext {
     fn handle_env_var_reset(original_value: &str) {
         pp(&Data::EnvVarReset(original_value));
         set_env_var(template_manager::HOME_ENV_VAR, original_value);
-        pp(&Data::Reset());
+        pp(&Data::Any(help_texts::RESET));
     }
 
     fn handle_env_var_removal() {
         pp(&Data::EnvVarRemovalAfter());
         remove_env_var(template_manager::HOME_ENV_VAR);
-        pp(&Data::Removed());
+        pp(&Data::Any(help_texts::REMOVED));
     }
 }
 
@@ -42,7 +45,7 @@ impl Drop for EnvTestContext {
             None => Self::handle_env_var_removal(),
         }
 
-        pp(&Data::TestContextDropped());
+        pp(&Data::Any(help_texts::TEST_CXT_DROPPED));
     }
 }
 
@@ -53,7 +56,7 @@ pub fn create_env_test_context() -> EnvTestContext {
         Err(_) => EnvTestContext::empty(),
     };
 
-    pp(&Data::TestContextCreated());
+    pp(&Data::Any(help_texts::TEST_CTX_CREATED));
     ctx.original_value.is_some().then(handle_env_var_removal);
     ctx
 }
@@ -61,7 +64,7 @@ pub fn create_env_test_context() -> EnvTestContext {
 fn handle_env_var_removal() {
     pp(&Data::EnvVarRemovalBefore());
     remove_env_var(template_manager::HOME_ENV_VAR);
-    pp(&Data::Removed());
+    pp(&Data::Any(help_texts::REMOVED));
 }
 
 pub fn remove_env_var<T: AsRef<std::ffi::OsStr>>(name: T) {

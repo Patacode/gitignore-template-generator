@@ -2,7 +2,20 @@
 //!
 //! Generic place to put helper code.
 
+use clap::ValueEnum;
+
 use crate::core::QualifiedString;
+
+#[derive(Clone, Copy, Debug, ValueEnum, PartialEq)]
+pub enum TimeoutUnit {
+    MILLISECOND,
+    SECOND,
+}
+
+pub struct CliOptionName {
+    pub short: &'static str,
+    pub long: &'static str,
+}
 
 pub fn capitalize(s: &str) -> String {
     let mut c = s.chars();
