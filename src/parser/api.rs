@@ -179,7 +179,7 @@ impl Args {
 
     pub fn get_action_options(&self) -> [(bool, Action); 2] {
         [
-            (self.show_list, Action::Generate),
+            (self.show_list, Action::List),
             (self.check_template_names, Action::RobustGenerate),
         ]
     }
