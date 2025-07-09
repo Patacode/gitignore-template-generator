@@ -31,11 +31,11 @@ impl ProgramExit {
         }
     }
 
-    pub fn styled_success(message: &str, styled_message: &String, kind: &ExitKind) -> Self {
+    pub fn styled_success(message: &str, styled_message: &str, kind: &ExitKind) -> Self {
         Self {
             message: message.to_string(),
             exit_status: exit_status::SUCCESS,
-            styled_message: Some(styled_message.clone()),
+            styled_message: Some(styled_message.to_string()),
             kind: kind.clone(),
         }
     }

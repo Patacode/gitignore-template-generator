@@ -16,7 +16,7 @@ impl AuthorClapArg {
             None => error_messages::AUTHOR_INFOS_NOT_AVAILABLE,
         };
 
-        ProgramExit::success(&message.to_string(), &ExitKind::AuthorInfos)
+        ProgramExit::success(message, &ExitKind::AuthorInfos)
     }
 }
 
