@@ -15,7 +15,7 @@ impl HelpClapArg {
 
         ProgramExit::styled_success(
             rendered_help.to_string().trim_end(),
-            &rendered_help.ansi().to_string().trim_end().to_string(),
+            rendered_help.ansi().to_string().trim_end(),
             &ExitKind::HelpInfos,
         )
     }
