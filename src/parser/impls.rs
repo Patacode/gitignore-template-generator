@@ -17,10 +17,18 @@ use crate::{
     },
 };
 
+type ToProgramExitCallback = fn(&Command) -> ProgramExit;
+
 /// Default implementation of args parser that parses CLI args using
 /// [`clap`].
 pub struct ClapArgsParser {
     cli_parser: Command,
+}
+
+impl Default for Args {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Args {
@@ -56,7 +64,7 @@ impl Args {
         }
     }
 
-    pub fn get_global_options(&self) -> [(bool, fn(&Command) -> ProgramExit); 3] {
+    pub fn get_global_options(&self) -> [(bool, ToProgramExitCallback); 3] {
         [
             (self.show_help, HelpClapArg::as_program_exit),
             (self.show_version, VersionClapArg::as_program_exit),
@@ -75,8 +83,7 @@ impl Args {
         self.get_action_options()
             .into_iter()
             .find_map(|(flag, action)| flag.then_some(action))
-            .or(Some(Action::Generate))
-            .unwrap()
+            .unwrap_or(Action::Generate)
     }
 
     pub fn as_program_exit(&self, cli_parser: &Command) -> Option<ProgramExit> {
@@ -219,6 +226,12 @@ impl Args {
     }
 }
 
+impl Default for ClapArgsParser {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ClapArgsParser {
     pub fn new() -> Self {
         Self {
@@ -242,7 +255,7 @@ impl ClapArgsParser {
     }
 
     fn process_arg_matches(&self, arg_matches: &ArgMatches) -> Result<Args, ProgramExit> {
-        let args = Args::from_arg_matches(&arg_matches);
+        let args = Args::from_arg_matches(arg_matches);
         match args.as_program_exit(&self.cli_parser) {
             Some(value) => Err(value),
             None => Ok(args),

@@ -22,27 +22,27 @@ use crate::{
 };
 
 impl ProgramExit {
-    pub fn success(message: &String, kind: &ExitKind) -> Self {
+    pub fn success(message: &str, kind: &ExitKind) -> Self {
         Self {
-            message: message.clone(),
+            message: message.to_string(),
             exit_status: exit_status::SUCCESS,
             styled_message: None,
             kind: kind.clone(),
         }
     }
 
-    pub fn styled_success(message: &String, styled_message: &String, kind: &ExitKind) -> Self {
+    pub fn styled_success(message: &str, styled_message: &String, kind: &ExitKind) -> Self {
         Self {
-            message: message.clone(),
+            message: message.to_string(),
             exit_status: exit_status::SUCCESS,
             styled_message: Some(styled_message.clone()),
             kind: kind.clone(),
         }
     }
 
-    pub fn error(message: &String) -> Self {
+    pub fn error(message: &str) -> Self {
         Self {
-            message: message.clone(),
+            message: message.to_string(),
             exit_status: exit_status::GENERIC,
             styled_message: None,
             kind: ExitKind::Error,
