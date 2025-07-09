@@ -2,7 +2,7 @@ use std::process::exit;
 
 use gitignore_template_generator::{
     core::{ProgramExit, QualifiedString},
-    printer::{Data, pp},
+    printer::{Data, DataPrinter, DefaultDataPrinter},
     runner::start,
 };
 
@@ -14,10 +14,10 @@ fn main() {
 }
 
 fn handle_success(output: &QualifiedString) {
-    pp(&Data::QualifiedString(output))
+    DefaultDataPrinter::pp(&Data::QualifiedString(output))
 }
 
 fn handle_failure(error: &ProgramExit) {
-    pp(&Data::ProgramExit(error));
+    DefaultDataPrinter::pp(&Data::ProgramExit(error));
     exit(error.exit_status);
 }

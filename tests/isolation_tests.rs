@@ -3,13 +3,11 @@ use std::{fs, path::Path};
 use std::{thread, time::Duration};
 
 #[cfg(feature = "local_templating")]
-use gitignore_template_generator::test_helper::{
-    EnvTestContext, create_env_test_context, set_env_var,
-};
+use gitignore_template_generator::test_helper::EnvTestContext;
 use gitignore_template_generator::{
     constant,
     constant::{error_messages, exit_status, template_manager},
-    test_helper,
+    test_helper::{DefaultTestUtils, TestUtils},
 };
 use mockito::Server;
 #[cfg(feature = "local_templating")]
@@ -22,7 +20,7 @@ use test_bin::get_test_bin;
 #[cfg(feature = "local_templating")]
 #[fixture]
 fn ctx() -> EnvTestContext {
-    create_env_test_context()
+    DefaultTestUtils::create_env_test_context()
 }
 
 mod success {
@@ -39,12 +37,12 @@ mod success {
                     _ctx: EnvTestContext
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = test_helper::get_resource_file_path("templates/empty");
+                    let template_dir = DefaultTestUtils::get_resource_file_path("templates/empty");
                     if !Path::new(&template_dir).exists() {
                         fs::create_dir(&template_dir).expect("Error creating empty directory");
                     }
 
-                    set_env_var(
+                    DefaultTestUtils::set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
@@ -124,9 +122,9 @@ mod success {
                     _ctx: EnvTestContext
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = test_helper::get_resource_file_path("templates");
+                    let template_dir = DefaultTestUtils::get_resource_file_path("templates");
 
-                    set_env_var(
+                    DefaultTestUtils::set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
@@ -143,7 +141,7 @@ mod success {
                     let template_generator_mock = mock_server
                         .mock("GET", template_generator_service_uri)
                         .with_status(200)
-                        .with_body(test_helper::load_expectation_file("rust_template"))
+                        .with_body(DefaultTestUtils::load_expectation_file("rust_template"))
                         .create();
 
                     cli_tool
@@ -156,7 +154,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        test_helper::load_expectation_file("local_remote_rust_template");
+                        DefaultTestUtils::load_expectation_file("local_remote_rust_template");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
@@ -179,7 +177,7 @@ mod success {
                     let template_generator_mock = mock_server
                         .mock("GET", template_generator_service_uri)
                         .with_status(200)
-                        .with_body(test_helper::load_expectation_file("rust_template"))
+                        .with_body(DefaultTestUtils::load_expectation_file("rust_template"))
                         .create();
 
                     cli_tool
@@ -192,7 +190,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        test_helper::load_expectation_file("rust_template");
+                        DefaultTestUtils::load_expectation_file("rust_template");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
@@ -213,9 +211,9 @@ mod success {
                     _ctx: EnvTestContext
                 ) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = test_helper::get_resource_file_path("templates");
+                    let template_dir = DefaultTestUtils::get_resource_file_path("templates");
 
-                    set_env_var(
+                    DefaultTestUtils::set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
@@ -226,7 +224,7 @@ mod success {
                     let template_lister_mock = mock_server
                         .mock("GET", template_lister_service_uri)
                         .with_status(200)
-                        .with_body(test_helper::load_expectation_file("template_list"))
+                        .with_body(DefaultTestUtils::load_expectation_file("template_list"))
                         .create();
 
                     cli_tool
@@ -239,7 +237,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        test_helper::load_expectation_file("local_remote_template_list");
+                        DefaultTestUtils::load_expectation_file("local_remote_template_list");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
@@ -261,7 +259,7 @@ mod success {
                     let template_lister_mock = mock_server
                         .mock("GET", template_lister_service_uri)
                         .with_status(200)
-                        .with_body(test_helper::load_expectation_file("template_list"))
+                        .with_body(DefaultTestUtils::load_expectation_file("template_list"))
                         .create();
 
                     cli_tool
@@ -274,7 +272,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        test_helper::load_expectation_file("template_list");
+                        DefaultTestUtils::load_expectation_file("template_list");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
@@ -293,9 +291,9 @@ mod success {
                 #[serial]
                 fn it_outputs_available_template_list(_ctx: EnvTestContext) {
                     let mut cli_tool = get_test_bin(env!("CARGO_PKG_NAME"));
-                    let template_dir = test_helper::get_resource_file_path("templates");
+                    let template_dir = DefaultTestUtils::get_resource_file_path("templates");
 
-                    set_env_var(
+                    DefaultTestUtils::set_env_var(
                         constant::template_manager::HOME_ENV_VAR,
                         &template_dir,
                     );
@@ -305,7 +303,7 @@ mod success {
                     let template_generator_mock = mock_server
                         .mock("GET", constant::template_manager::LISTER_URI)
                         .with_status(200)
-                        .with_body(test_helper::load_expectation_file("template_list"))
+                        .with_body(DefaultTestUtils::load_expectation_file("template_list"))
                         .create();
 
                     cli_tool
@@ -317,7 +315,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        test_helper::load_expectation_file("local_remote_template_list");
+                        DefaultTestUtils::load_expectation_file("local_remote_template_list");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);
@@ -338,7 +336,7 @@ mod success {
                     let template_generator_mock = mock_server
                         .mock("GET", constant::template_manager::LISTER_URI)
                         .with_status(200)
-                        .with_body(test_helper::load_expectation_file("template_list"))
+                        .with_body(DefaultTestUtils::load_expectation_file("template_list"))
                         .create();
 
                     cli_tool
@@ -350,7 +348,7 @@ mod success {
 
                     let actual_output = String::from_utf8_lossy(&result.stdout);
                     let expected_output =
-                        test_helper::load_expectation_file("template_list");
+                        DefaultTestUtils::load_expectation_file("template_list");
 
                     let actual_status_code = result.status.code();
                     let expected_status_code = Some(exit_status::SUCCESS);

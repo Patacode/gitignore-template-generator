@@ -2,7 +2,7 @@ use std::io::ErrorKind;
 
 use crate::{
     fs::{FileSystemHandler, impls::DirectoryHandler},
-    test_helper,
+    test_helper::{DefaultTestUtils, TestUtils},
 };
 
 mod directory_handler {
@@ -13,14 +13,15 @@ mod directory_handler {
 
         mod success {
             use super::*;
+            use crate::test_helper::DefaultTestUtils;
 
             #[test]
             fn it_fetches_file_content() {
-                let template_dir = test_helper::get_resource_file_path("templates");
+                let template_dir = DefaultTestUtils::get_resource_file_path("templates");
                 let file_name = "rust.txt";
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
-                let expected_content = test_helper::load_resource_file("templates/rust.txt");
+                let expected_content = DefaultTestUtils::load_resource_file("templates/rust.txt");
                 let actual_content = directory_handler.fetch_content(file_name);
 
                 assert!(actual_content.is_ok());
@@ -35,7 +36,7 @@ mod directory_handler {
 
             #[test]
             fn it_fails_if_any_file_system_error() {
-                let template_dir = test_helper::get_resource_file_path("templates");
+                let template_dir = DefaultTestUtils::get_resource_file_path("templates");
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
                 let expected_error_kind = ErrorKind::IsADirectory;
@@ -57,10 +58,10 @@ mod directory_handler {
 
             #[test]
             fn it_list_directory_files() {
-                let template_dir = test_helper::get_resource_file_path("templates");
+                let template_dir = DefaultTestUtils::get_resource_file_path("templates");
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
-                let expected_list = test_helper::to_string_list("python rust");
+                let expected_list = DefaultTestUtils::to_string_list("python rust");
                 let actual_list = directory_handler.list_files();
 
                 assert!(actual_list.is_ok());
@@ -75,7 +76,7 @@ mod directory_handler {
 
             #[test]
             fn it_fails_if_any_file_system_error() {
-                let template_dir = test_helper::get_resource_file_path("inexistent");
+                let template_dir = DefaultTestUtils::get_resource_file_path("inexistent");
                 let directory_handler = DirectoryHandler::new(&template_dir);
 
                 let expected_error_kind = ErrorKind::NotFound;

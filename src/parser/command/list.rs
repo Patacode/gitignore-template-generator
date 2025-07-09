@@ -1,7 +1,10 @@
 use clap::{Arg, ArgAction, ArgMatches};
 
 use super::ClapArg;
-use crate::{constant, helper};
+use crate::{
+    constant,
+    helper::{DefaultUtils, Utils},
+};
 
 pub struct ListClapArg;
 
@@ -9,7 +12,7 @@ impl ClapArg<bool> for ListClapArg {
     fn build() -> Arg {
         Arg::new("list")
             .id("LIST")
-            .short(helper::to_char(constant::cli_options::LIST.short))
+            .short(DefaultUtils::to_char(constant::cli_options::LIST.short))
             .long(constant::cli_options::LIST.long)
             .help(constant::help_messages::LIST)
             .action(ArgAction::SetTrue)

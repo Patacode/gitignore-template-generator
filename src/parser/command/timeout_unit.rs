@@ -3,7 +3,7 @@ use clap::{Arg, ArgMatches, builder::EnumValueParser};
 use super::ClapArg;
 use crate::{
     constant,
-    helper::{self, TimeoutUnit},
+    helper::{DefaultUtils, TimeoutUnit, Utils},
 };
 
 pub struct TimeoutUnitClapArg;
@@ -12,7 +12,9 @@ impl ClapArg<TimeoutUnit> for TimeoutUnitClapArg {
     fn build() -> Arg {
         Arg::new("timeout_unit")
             .id("TIMEOUT_UNIT")
-            .short(helper::to_char(constant::cli_options::TIMEOUT_UNIT.short))
+            .short(DefaultUtils::to_char(
+                constant::cli_options::TIMEOUT_UNIT.short,
+            ))
             .long(constant::cli_options::TIMEOUT_UNIT.long)
             .help(constant::help_messages::TIMEOUT_UNIT)
             .value_parser(EnumValueParser::<TimeoutUnit>::new())

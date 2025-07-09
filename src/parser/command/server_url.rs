@@ -2,7 +2,8 @@ use clap::{Arg, ArgMatches};
 
 use super::ClapArg;
 use crate::{
-    constant, helper,
+    constant,
+    helper::{DefaultUtils, Utils},
     validator::{CliArgsValidator, DefaultCliArgsValidator},
 };
 
@@ -12,7 +13,9 @@ impl ClapArg<String> for ServerUrlClapArg {
     fn build() -> Arg {
         Arg::new("server_url")
             .id("SERVER_URL")
-            .short(helper::to_char(constant::cli_options::SERVER_URL.short))
+            .short(DefaultUtils::to_char(
+                constant::cli_options::SERVER_URL.short,
+            ))
             .long(constant::cli_options::SERVER_URL.long)
             .help(constant::help_messages::SERVER_URL)
             .value_parser(DefaultCliArgsValidator::is_valid_url)

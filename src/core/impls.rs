@@ -1,56 +1,75 @@
 use std::{collections::HashSet, io::ErrorKind, time::Duration};
 
+use clap::Error;
+
 use super::{
     ExitKind, ProgramExit, QualifiedString, StringKind, TemplateGenerator, TemplateLister,
 };
 use crate::{
     constant::{
-        self, error_messages, exit_status,
+        self, error_messages, exit_status, help_texts,
         template_manager::{DEFAULT_TEMPLATE_DIR, GENERATOR_URI, HOME_ENV_VAR, LISTER_URI},
     },
-    core::{TemplateFactory, TemplateManager},
+    core::{
+        GitignoreTemplateManager, LocalGitignoreTemplateManager, RemoteGitignoreTemplateManager,
+        TemplateFactory, TemplateManager,
+    },
     fs::{DirectoryHandler, FileSystemHandler},
-    helper::{self, TimeoutUnit},
+    helper::{DefaultUtils, TimeoutUnit, Utils},
     http_client::{HttpClient, UreqHttpClient},
     parser::Args,
+    printer::{Data, DataPrinter, DefaultDataPrinter},
 };
 
-/// Manager of gitignore templates.
-///
-/// It can generate and list gitignore templates.
-pub struct GitignoreTemplateManager {
-    template_managers: Vec<Box<dyn TemplateManager>>,
+impl ProgramExit {
+    pub fn success(message: &String, kind: &ExitKind) -> Self {
+        Self {
+            message: message.clone(),
+            exit_status: exit_status::SUCCESS,
+            styled_message: None,
+            kind: kind.clone(),
+        }
+    }
+
+    pub fn styled_success(message: &String, styled_message: &String, kind: &ExitKind) -> Self {
+        Self {
+            message: message.clone(),
+            exit_status: exit_status::SUCCESS,
+            styled_message: Some(styled_message.clone()),
+            kind: kind.clone(),
+        }
+    }
+
+    pub fn error(message: &String) -> Self {
+        Self {
+            message: message.clone(),
+            exit_status: exit_status::GENERIC,
+            styled_message: None,
+            kind: ExitKind::Error,
+        }
+    }
+
+    pub fn from_clap_error(error: &Error) -> Self {
+        Self {
+            message: DefaultDataPrinter::ppg(&Data::ClapError(error)),
+            exit_status: error.exit_code(),
+            styled_message: Some(DefaultDataPrinter::ppg(&Data::StyledClapError(error))),
+            kind: ExitKind::Error,
+        }
+    }
+
+    pub fn invalid_mock_uri(uri: &str) -> Self {
+        Self::error(&error_messages::INVALID_MAPPED_URI.replace("{uri}", uri))
+    }
 }
 
-/// Manager of gitignore templates using local filesystem.
-///
-/// It uses a directory on local fs as *search database*.
-///
-/// Whatever the action performed through it, it will always first try to
-/// locate template dir using `GITIGNORE_TEMPLATE_GENERATOR_HOME` env var, and
-/// if not set, will then use provided `default_template_dir`.
-pub struct LocalGitignoreTemplateManager {
-    /// The fallback directory in which templates
-    /// are stored. Will be used in case `GITIGNORE_TEMPLATE_GENERATOR_HOME`
-    /// env var is not set.
-    default_template_dir: String,
-}
-
-/// Manager of gitignore templates using remote API.
-///
-/// The templates are managed via HTTP calls using the given `http_client`.
-pub struct RemoteGitignoreTemplateManager {
-    /// The http client to be used to make the API call.
-    http_client: Box<dyn HttpClient>,
-
-    /// The endpoint URI to generate templates
-    /// (defaults to [`crate::constant::template_manager::GENERATOR_URI`]
-    /// if None).
-    generator_endpoint_uri: String,
-
-    /// The endpoint URI to list templates (defaults to
-    /// [`crate::constant::template_manager::LISTER_URI`] if None).
-    lister_endpoint_uri: String,
+impl QualifiedString {
+    pub fn empty(kind: StringKind) -> Self {
+        Self {
+            value: help_texts::NOTHING_TO_BE_PRINTED.to_string(),
+            kind,
+        }
+    }
 }
 
 impl GitignoreTemplateManager {
@@ -157,7 +176,7 @@ impl GitignoreTemplateManager {
                             .position(|line| list_line <= line.value.as_str());
 
                         if let Some(idx) = lex_high_idx {
-                            helper::insert_at(
+                            DefaultUtils::insert_at(
                                 &mut lines_res,
                                 idx,
                                 QualifiedString {
@@ -252,7 +271,7 @@ impl LocalGitignoreTemplateManager {
             match directory_handler.fetch_content(&file_name) {
                 Ok(template) => templates.push(format!(
                     "### *{} ###\n{}",
-                    helper::capitalize(template_name),
+                    DefaultUtils::capitalize(template_name),
                     template
                 )),
                 Err(error) => {

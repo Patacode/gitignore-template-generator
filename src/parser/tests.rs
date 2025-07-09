@@ -7,7 +7,7 @@ use crate::{
     constant,
     core::{ExitKind, ProgramExit},
     helper::TimeoutUnit,
-    test_helper,
+    test_helper::{DefaultTestUtils, TestUtils},
 };
 
 mod default_args_parser {
@@ -33,8 +33,10 @@ mod default_args_parser {
             #[case("-aV")]
             #[case("rust -l -V")]
             fn it_parses_version_cli_option(#[case] cli_args: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
@@ -64,15 +66,17 @@ mod default_args_parser {
             #[case("-aVh")]
             #[case("rust -l -h")]
             fn it_parses_help_cli_option(#[case] cli_args: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::get_help_message(),
+                    message: DefaultTestUtils::get_help_message(),
                     exit_status: 0,
-                    styled_message: Some(test_helper::get_ansi_help_message()),
+                    styled_message: Some(DefaultTestUtils::get_ansi_help_message()),
                     kind: ExitKind::HelpInfos,
                 };
                 let expected_error = Some(&expected_error);
@@ -94,8 +98,10 @@ mod default_args_parser {
             #[case("rust -u second -a")]
             #[case("rust -l -a")]
             fn it_parses_author_cli_option_preemptively(#[case] cli_args: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
@@ -115,13 +121,15 @@ mod default_args_parser {
             #[case("rust")]
             #[case("rust python node")]
             fn it_parses_pos_args_without_server_url_cli_option(#[case] cli_options: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_options, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_options,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result =
-                    Args::new().with_template_names(test_helper::to_string_list(cli_options));
+                    Args::new().with_template_names(DefaultTestUtils::to_string_list(cli_options));
                 let expected_result = Some(&expected_result);
 
                 println!("{:?}", parsed_args);
@@ -133,13 +141,15 @@ mod default_args_parser {
             #[case("rust -s https://test.com")]
             #[case("rust --server-url https://test.com")]
             fn it_parses_pos_args_with_server_url_cli_option(#[case] cli_args: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(test_helper::to_string_list("rust"))
+                    .with_template_names(DefaultTestUtils::to_string_list("rust"))
                     .with_server_url("https://test.com");
                 let expected_result = Some(&expected_result);
 
@@ -151,13 +161,15 @@ mod default_args_parser {
             #[case("rust -g /test/api")]
             #[case("rust --generator-uri /test/api")]
             fn it_parses_pos_args_with_generator_uri_cli_option(#[case] cli_args: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(test_helper::to_string_list("rust"))
+                    .with_template_names(DefaultTestUtils::to_string_list("rust"))
                     .with_server_url(constant::template_manager::BASE_URL)
                     .with_generator_uri("/test/api");
                 let expected_result = Some(&expected_result);
@@ -170,13 +182,15 @@ mod default_args_parser {
             #[case("rust -i /test/api")]
             #[case("rust --lister-uri /test/api")]
             fn it_parses_pos_args_with_lister_uri_cli_option(#[case] cli_args: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(test_helper::to_string_list("rust"))
+                    .with_template_names(DefaultTestUtils::to_string_list("rust"))
                     .with_lister_uri("/test/api");
                 let expected_result = Some(&expected_result);
 
@@ -190,13 +204,15 @@ mod default_args_parser {
             #[case("rust --list", "rust")]
             #[case("rust python --list", "rust python")]
             fn it_parses_list_cli_option(#[case] cli_args: &str, #[case] template_names: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(test_helper::to_string_list(template_names))
+                    .with_template_names(DefaultTestUtils::to_string_list(template_names))
                     .with_show_list(true);
                 let expected_result = Some(&expected_result);
 
@@ -208,13 +224,15 @@ mod default_args_parser {
             #[case("rust python -c")]
             #[case("rust python --check")]
             fn it_parses_check_option(#[case] cli_args: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(test_helper::to_string_list("rust python"))
+                    .with_template_names(DefaultTestUtils::to_string_list("rust python"))
                     .with_check_template_names(true);
                 let expected_result = Some(&expected_result);
 
@@ -226,13 +244,15 @@ mod default_args_parser {
             #[case("rust python -t 5")]
             #[case("rust python --timeout 5")]
             fn it_parses_timeout_option(#[case] cli_args: &str) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(test_helper::to_string_list("rust python"))
+                    .with_template_names(DefaultTestUtils::to_string_list("rust python"))
                     .with_timeout(5);
                 let expected_result = Some(&expected_result);
 
@@ -244,13 +264,15 @@ mod default_args_parser {
             #[case("rust python -u second", TimeoutUnit::SECOND)]
             #[case("rust python --timeout-unit millisecond", TimeoutUnit::MILLISECOND)]
             fn it_parses_timeout_unit_option(#[case] cli_args: &str, #[case] unit: TimeoutUnit) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_result = parsed_args.as_ref().ok();
                 let expected_result = Args::new()
-                    .with_template_names(test_helper::to_string_list("rust python"))
+                    .with_template_names(DefaultTestUtils::to_string_list("rust python"))
                     .with_timeout_unit(unit)
                     .with_timeout(if unit == TimeoutUnit::MILLISECOND {
                         constant::template_manager::TIMEOUT_MILLISECOND_INT
@@ -269,15 +291,16 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_no_pos_args_given() {
-                let cli_args = test_helper::parse_and_map_cli_args("", test_helper::to_os_string);
+                let cli_args =
+                    DefaultTestUtils::parse_and_map_cli_args("", DefaultTestUtils::to_os_string);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("no_pos_args_error"),
+                    message: DefaultTestUtils::load_expectation_file("no_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -290,16 +313,18 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_commas_in_pos_args() {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args("python,java", test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    "python,java",
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("comma_pos_args_error"),
+                    message: DefaultTestUtils::load_expectation_file("comma_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_comma_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -317,10 +342,10 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("whitespace_pos_args_error"),
+                    message: DefaultTestUtils::load_expectation_file("whitespace_pos_args_error"),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_whitespace_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -341,10 +366,12 @@ mod default_args_parser {
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("comma_whitespace_pos_args_error"),
+                    message: DefaultTestUtils::load_expectation_file(
+                        "comma_whitespace_pos_args_error",
+                    ),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_comma_whitespace_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -357,18 +384,20 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_server_url_but_no_pos_args() {
-                let cli_args = test_helper::parse_and_map_cli_args(
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
                     "-s https://test.com",
-                    test_helper::to_os_string,
+                    DefaultTestUtils::to_os_string,
                 );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("server_url_no_pos_args_error"),
+                    message: DefaultTestUtils::load_expectation_file(
+                        "server_url_no_pos_args_error",
+                    ),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_server_url_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -381,16 +410,20 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_generator_uri_but_no_pos_args() {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args("-g /test/api", test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    "-g /test/api",
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("generator_uri_no_pos_args_error"),
+                    message: DefaultTestUtils::load_expectation_file(
+                        "generator_uri_no_pos_args_error",
+                    ),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_generator_uri_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -403,16 +436,20 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_lister_uri_but_no_pos_args() {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args("-i /test/api", test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    "-i /test/api",
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("lister_uri_no_pos_args_error"),
+                    message: DefaultTestUtils::load_expectation_file(
+                        "lister_uri_no_pos_args_error",
+                    ),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_lister_uri_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -425,16 +462,20 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_check_option_but_no_pos_args() {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args("--check", test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    "--check",
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("check_option_no_pos_args_error"),
+                    message: DefaultTestUtils::load_expectation_file(
+                        "check_option_no_pos_args_error",
+                    ),
                     exit_status: constant::exit_status::GENERIC,
 
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_check_option_no_pos_args_error",
                     )),
                     kind: ExitKind::Error,
@@ -447,14 +488,15 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_inexistent_cli_option() {
-                let cli_args = test_helper::parse_and_map_cli_args("-x", test_helper::to_os_string);
+                let cli_args =
+                    DefaultTestUtils::parse_and_map_cli_args("-x", DefaultTestUtils::to_os_string);
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("unexpected_argument_error"),
+                    message: DefaultTestUtils::load_expectation_file("unexpected_argument_error"),
                     exit_status: constant::exit_status::GENERIC,
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_unexpected_argument_error",
                     )),
                     kind: ExitKind::Error,
@@ -467,15 +509,17 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_non_positive_integer_as_timeout() {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args("-t x", test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    "-t x",
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("non_integer_timeout_error"),
+                    message: DefaultTestUtils::load_expectation_file("non_integer_timeout_error"),
                     exit_status: constant::exit_status::GENERIC,
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_non_integer_timeout_error",
                     )),
                     kind: ExitKind::Error,
@@ -488,15 +532,19 @@ mod default_args_parser {
 
             #[test]
             fn it_fails_parsing_when_non_allowed_timeout_unit() {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args("-u millisecon", test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    "-u millisecon",
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("non_allowed_timeout_unit_error"),
+                    message: DefaultTestUtils::load_expectation_file(
+                        "non_allowed_timeout_unit_error",
+                    ),
                     exit_status: constant::exit_status::GENERIC,
-                    styled_message: Some(test_helper::load_expectation_file(
+                    styled_message: Some(DefaultTestUtils::load_expectation_file(
                         "ansi_non_allowed_timeout_unit_error",
                     )),
                     kind: ExitKind::Error,
@@ -522,17 +570,19 @@ mod default_args_parser {
                 #[case] cli_args: &str,
                 #[case] option_name: &str,
             ) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("given_multiple_times_error")
+                    message: DefaultTestUtils::load_expectation_file("given_multiple_times_error")
                         .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        test_helper::load_expectation_file("ansi_given_multiple_times_error")
+                        DefaultTestUtils::load_expectation_file("ansi_given_multiple_times_error")
                             .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
@@ -553,18 +603,24 @@ mod default_args_parser {
                 #[case] cli_args: &str,
                 #[case] option_name: &str,
             ) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("boolean_option_with_value_error")
-                        .replace("{argument_name}", option_name),
+                    message: DefaultTestUtils::load_expectation_file(
+                        "boolean_option_with_value_error",
+                    )
+                    .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        test_helper::load_expectation_file("ansi_boolean_option_with_value_error")
-                            .replace("{argument_name}", option_name),
+                        DefaultTestUtils::load_expectation_file(
+                            "ansi_boolean_option_with_value_error",
+                        )
+                        .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
                 };
@@ -581,18 +637,24 @@ mod default_args_parser {
                 #[case] cli_args: &str,
                 #[case] option_name: &str,
             ) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file("uri_without_starting_slash_error")
-                        .replace("{argument_name}", option_name),
+                    message: DefaultTestUtils::load_expectation_file(
+                        "uri_without_starting_slash_error",
+                    )
+                    .replace("{argument_name}", option_name),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        test_helper::load_expectation_file("ansi_uri_without_starting_slash_error")
-                            .replace("{argument_name}", option_name),
+                        DefaultTestUtils::load_expectation_file(
+                            "ansi_uri_without_starting_slash_error",
+                        )
+                        .replace("{argument_name}", option_name),
                     ),
                     kind: ExitKind::Error,
                 };
@@ -614,18 +676,22 @@ mod default_args_parser {
                 #[case] invalid_value: &str,
                 #[case] expectation_filename: &str,
             ) {
-                let cli_args =
-                    test_helper::parse_and_map_cli_args(cli_args, test_helper::to_os_string);
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
+                    cli_args,
+                    DefaultTestUtils::to_os_string,
+                );
                 let parsed_args = ClapArgsParser::new().try_parse(cli_args);
 
                 let actual_error = parsed_args.as_ref().err();
                 let expected_error = ProgramExit {
-                    message: test_helper::load_expectation_file(expectation_filename)
+                    message: DefaultTestUtils::load_expectation_file(expectation_filename)
                         .replace("{input_value}", invalid_value),
                     exit_status: constant::exit_status::GENERIC,
                     styled_message: Some(
-                        test_helper::load_expectation_file(&format!("ansi_{expectation_filename}"))
-                            .replace("{input_value}", invalid_value),
+                        DefaultTestUtils::load_expectation_file(&format!(
+                            "ansi_{expectation_filename}"
+                        ))
+                        .replace("{input_value}", invalid_value),
                     ),
                     kind: ExitKind::Error,
                 };
@@ -645,14 +711,14 @@ mod default_args_parser {
 
             #[test]
             fn it_parses_given_cli_options() {
-                let cli_args = test_helper::parse_and_map_cli_args(
+                let cli_args = DefaultTestUtils::parse_and_map_cli_args(
                     "rust python -s https://test -g /foo -i /bar --check --list -t 6 -u millisecond",
-                    test_helper::to_os_string,
+                    DefaultTestUtils::to_os_string,
                 );
 
                 let actual_result = ClapArgsParser::new().parse(cli_args);
                 let expected_result = Args::new()
-                    .with_template_names(test_helper::to_string_list("rust python"))
+                    .with_template_names(DefaultTestUtils::to_string_list("rust python"))
                     .with_server_url("https://test")
                     .with_generator_uri("/foo")
                     .with_lister_uri("/bar")

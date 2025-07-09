@@ -1,9 +1,11 @@
 use clap::Error;
 
-use crate::{
-    constant::{help_texts, template_manager},
-    core::{ProgramExit, QualifiedString},
-};
+use crate::core::{ProgramExit, QualifiedString};
+
+mod impls;
+
+#[cfg(test)]
+mod tests;
 
 pub enum Data<'a> {
     QualifiedString(&'a QualifiedString),
@@ -17,35 +19,9 @@ pub enum Data<'a> {
     Any(&'a str),
 }
 
-pub fn pp(data: &Data) {
-    let value = ppg(data);
-    match data {
-        Data::ProgramExit(_) => eprintln!("{value}"),
-        _ => println!("{value}"),
-    }
+pub trait DataPrinter {
+    fn pp(data: &Data);
+    fn ppg(data: &Data) -> String;
 }
 
-pub fn ppg(data: &Data) -> String {
-    match data {
-        Data::QualifiedString(qs) => qs.value.clone(),
-        Data::ProgramExit(pe) => pe.message.clone(),
-        Data::EnvVarReset(ev) => help_texts::ENV_VAR_RESET
-            .replace("{name}", template_manager::HOME_ENV_VAR)
-            .replace("{value}", ev),
-        Data::EnvVarRemovalBefore() => {
-            help_texts::ENV_VAR_REMOVAL_BEFORE.replace("{name}", template_manager::HOME_ENV_VAR)
-        }
-        Data::EnvVarRemovalAfter() => {
-            help_texts::ENV_VAR_REMOVAL_AFTER.replace("{name}", template_manager::HOME_ENV_VAR)
-        }
-        Data::DefaultTimeout() => help_texts::DEFAULT_TIMEOUT
-            .replace("{second}", template_manager::TIMEOUT)
-            .replace("{millis}", template_manager::TIMEOUT_MILLISECOND),
-        Data::ClapError(error) => {
-            help_texts::HELP_FOR_MORE_INFOS.replace("{error}", &error.render().to_string())
-        }
-        Data::StyledClapError(error) => help_texts::STYLED_HELP_FOR_MORE_INFOS
-            .replace("{error}", &error.render().ansi().to_string()),
-        Data::Any(value) => value.to_string(),
-    }
-}
+pub struct DefaultDataPrinter;

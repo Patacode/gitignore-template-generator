@@ -1,7 +1,6 @@
 use url::Url;
 
-use super::api::CliArgsValidator;
-use crate::constant;
+use crate::{constant, validator::CliArgsValidator};
 
 /// Default implementation of cli args validator.
 ///

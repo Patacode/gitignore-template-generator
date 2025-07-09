@@ -56,6 +56,21 @@ impl Args {
         }
     }
 
+    pub fn get_global_options(&self) -> [(bool, fn(&Command) -> ProgramExit); 3] {
+        [
+            (self.show_help, HelpClapArg::as_program_exit),
+            (self.show_version, VersionClapArg::as_program_exit),
+            (self.show_author, AuthorClapArg::as_program_exit),
+        ]
+    }
+
+    pub fn get_action_options(&self) -> [(bool, Action); 2] {
+        [
+            (self.show_list, Action::List),
+            (self.check_template_names, Action::RobustGenerate),
+        ]
+    }
+
     pub fn to_action(&self) -> Action {
         self.get_action_options()
             .into_iter()
@@ -202,21 +217,6 @@ impl Args {
         self.timeout_unit = timeout_unit;
         self
     }
-
-    fn get_global_options(&self) -> [(bool, fn(&Command) -> ProgramExit); 3] {
-        [
-            (self.show_help, ProgramExit::help_option),
-            (self.show_version, ProgramExit::version_option),
-            (self.show_author, ProgramExit::author_option),
-        ]
-    }
-
-    fn get_action_options(&self) -> [(bool, Action); 2] {
-        [
-            (self.show_list, Action::List),
-            (self.check_template_names, Action::RobustGenerate),
-        ]
-    }
 }
 
 impl ClapArgsParser {
@@ -239,6 +239,14 @@ impl ClapArgsParser {
             _ => println!("{message}"),
         }
         Some(message.to_string())
+    }
+
+    fn process_arg_matches(&self, arg_matches: &ArgMatches) -> Result<Args, ProgramExit> {
+        let args = Args::from_arg_matches(&arg_matches);
+        match args.as_program_exit(&self.cli_parser) {
+            Some(value) => Err(value),
+            None => Ok(args),
+        }
     }
 }
 
@@ -270,13 +278,7 @@ impl ArgsParser for ClapArgsParser {
 
     fn try_parse(&self, args: impl IntoIterator<Item = OsString>) -> Result<Args, ProgramExit> {
         match self.cli_parser.clone().try_get_matches_from(args) {
-            Ok(arg_matches) => {
-                let args = Args::from_arg_matches(&arg_matches);
-                match args.as_program_exit(&self.cli_parser) {
-                    Some(value) => Err(value),
-                    None => Ok(args),
-                }
-            }
+            Ok(arg_matches) => self.process_arg_matches(&arg_matches),
             Err(error) => Err(ProgramExit::from_clap_error(&error)),
         }
     }

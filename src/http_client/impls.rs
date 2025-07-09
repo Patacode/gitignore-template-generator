@@ -1,38 +1,12 @@
-use std::{collections::HashMap, time::Duration};
+use std::time::Duration;
 
 use ureq::Agent;
 
 use crate::{
-    constant,
+    constant::{error_messages, exit_status, template_manager},
     core::{ExitKind, ProgramExit},
-    http_client::api::HttpClient,
+    http_client::{HttpClient, MockEndpointHttpClient, MockHttpClient, UreqHttpClient},
 };
-
-/// Http client implementation relying on [`ureq`].
-#[derive(Default)]
-pub struct UreqHttpClient {
-    /// The base url of the HTTP server to reach.
-    ///
-    /// Used as base url when calling [`UreqHttpClient::get`] method.
-    pub server_url: String,
-
-    /// The timeout for the entire HTTP call.
-    pub global_timeout: Option<Duration>,
-}
-
-/// Http client implementation to mock a response.
-pub struct MockHttpClient {
-    /// The mocked response to be returned when calling [`MockHttpClient::get`]
-    /// method.
-    pub response: Result<String, ProgramExit>,
-}
-
-/// Http client implementation to mock a response.
-pub struct MockEndpointHttpClient {
-    /// The mocked response to be returned when calling [`MockHttpClient::get`]
-    /// method.
-    pub response: HashMap<String, Result<String, ProgramExit>>,
-}
 
 impl HttpClient for UreqHttpClient {
     /// Make a GET HTTP call using a [`ureq`] client.
@@ -46,9 +20,9 @@ impl HttpClient for UreqHttpClient {
         let agent: Agent = Agent::config_builder()
             .timeout_global(Some(
                 self.global_timeout.unwrap_or(Duration::from_secs(
-                    constant::template_manager::TIMEOUT
+                    template_manager::TIMEOUT
                         .parse()
-                        .expect(constant::error_messages::FAILED_U64_CONVERSION),
+                        .expect(error_messages::FAILED_U64_CONVERSION),
                 )),
             ))
             .build()
@@ -61,15 +35,14 @@ impl HttpClient for UreqHttpClient {
                 Ok(body) => Ok(body.trim().to_string()),
                 Err(error) => Err(ProgramExit {
                     message: error.to_string(),
-                    exit_status: constant::exit_status::HTTP_CLIENT_ERROR,
+                    exit_status: exit_status::HTTP_CLIENT_ERROR,
                     styled_message: None,
                     kind: ExitKind::Error,
                 }),
             },
             Err(error) => Err(ProgramExit {
-                message: constant::error_messages::API_CALL_FAILURE
-                    .replace("{error}", &error.to_string()),
-                exit_status: constant::exit_status::GENERIC,
+                message: error_messages::API_CALL_FAILURE.replace("{error}", &error.to_string()),
+                exit_status: exit_status::GENERIC,
                 styled_message: None,
                 kind: ExitKind::Error,
             }),
@@ -93,6 +66,13 @@ impl HttpClient for MockEndpointHttpClient {
     /// The given `url` will only be used to get proper result from linked
     /// hashmap.
     fn get(&self, url: &str) -> Result<String, ProgramExit> {
-        self.response[url].clone()
+        println!("{:?}", self.response[url]);
+
+        match self.response.get(url) {
+            Some(value) => value.clone(),
+            None => Err(ProgramExit::error(
+                &error_messages::INVALID_MAPPED_URI.replace("{uri}", url),
+            )),
+        }
     }
 }
